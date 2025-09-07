@@ -393,9 +393,9 @@ from django.contrib import messages
 
 def about_us(request):
     context = {
-        'page_title': 'About Us - Calculator.net | Free Online Calculators',
-        'meta_description': 'Learn about Calculator.net - your trusted source for free, accurate online calculators. Discover our mission to provide professional-grade calculation tools for everyone.',
-        'meta_keywords': 'about calculator.net, online calculator company, free calculation tools, calculator website'
+        'page_title': 'About Us - myCalculator.us | Free Online Calculators',
+        'meta_description': 'Learn about myCalculator.us - your trusted source for free, accurate online calculators. Discover our mission to provide professional-grade calculation tools for everyone.',
+        'meta_keywords': 'about myCalculator.us, online calculator company, free calculation tools, calculator website'
     }
     return render(request, 'calculators/about_us.html', context)
 
@@ -413,7 +413,7 @@ def contact_us(request):
                     f'Contact Form: {subject}',
                     f'From: {name} ({email})\n\nMessage:\n{message}',
                     email,
-                    ['support@calculator.net'],  # Replace with your email
+                    ['support@myCalculator.us'],  # Replace with your email
                     fail_silently=False,
                 )
                 messages.success(request, 'Thank you for your message! We\'ll get back to you soon.')
@@ -424,24 +424,24 @@ def contact_us(request):
             messages.error(request, 'Please fill in all required fields.')
     
     context = {
-        'page_title': 'Contact Us - Calculator.net | Get in Touch',
-        'meta_description': 'Contact Calculator.net for support, feedback, or questions about our free online calculators. We\'re here to help with all your calculation needs.',
-        'meta_keywords': 'contact calculator.net, calculator support, feedback, help, customer service'
+        'page_title': 'Contact Us - myCalculator.us | Get in Touch',
+        'meta_description': 'Contact myCalculator.us for support, feedback, or questions about our free online calculators. We\'re here to help with all your calculation needs.',
+        'meta_keywords': 'contact myCalculator.us, calculator support, feedback, help, customer service'
     }
     return render(request, 'calculators/contact_us.html', context)
 
 def privacy_policy(request):
     context = {
-        'page_title': 'Privacy Policy - Calculator.net | Your Privacy Matters',
-        'meta_description': 'Read Calculator.net\'s privacy policy to understand how we protect your personal information and ensure your privacy while using our free online calculators.',
+        'page_title': 'Privacy Policy - myCalculator.us | Your Privacy Matters',
+        'meta_description': 'Read myCalculator.us\'s privacy policy to understand how we protect your personal information and ensure your privacy while using our free online calculators.',
         'meta_keywords': 'privacy policy, data protection, personal information, calculator privacy'
     }
     return render(request, 'calculators/privacy_policy.html', context)
 
 def terms_conditions(request):
     context = {
-        'page_title': 'Terms and Conditions - Calculator.net | Terms of Use',
-        'meta_description': 'Read the terms and conditions for using Calculator.net\'s free online calculators. Understand your rights and responsibilities as a user.',
+        'page_title': 'Terms and Conditions - myCalculator.us | Terms of Use',
+        'meta_description': 'Read the terms and conditions for using myCalculator.us\'s free online calculators. Understand your rights and responsibilities as a user.',
         'meta_keywords': 'terms and conditions, terms of use, calculator terms, legal information'
     }
     return render(request, 'calculators/terms_conditions.html', context)
@@ -452,8 +452,8 @@ def sitemap_page(request):
     
     context = {
         'calculators': calculators,
-        'page_title': 'Sitemap - Calculator.net | Find All Our Tools',
-        'meta_description': 'Navigate Calculator.net easily with our sitemap. Find all our free online calculators, tools, and pages in one convenient location.',
+        'page_title': 'Sitemap - myCalculator.us | Find All Our Tools',
+        'meta_description': 'Navigate myCalculator.us easily with our sitemap. Find all our free online calculators, tools, and pages in one convenient location.',
         'meta_keywords': 'sitemap, calculator list, navigation, website map, all calculators'
     }
     return render(request, 'calculators/sitemap.html', context)
