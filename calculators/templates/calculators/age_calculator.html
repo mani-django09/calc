@@ -1,0 +1,1261 @@
+{% extends 'calculators/base.html' %}
+{% load static %}
+
+{% block title %}Age Calculator - Calculator Hub{% endblock %}
+
+{% block content %}
+<div class="calculator-net-style">
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="{% url 'calculators:home' %}">home</a> / 
+        <a href="{% url 'calculators:home' %}">other</a> / 
+        <span>age calculator</span>
+    </div>
+
+    <!-- Main Heading -->
+    <h1 class="main-title">Age Calculator</h1>
+
+    <!-- Description -->
+    <p class="description">
+        The Age Calculator can determine the age or interval between two dates. The calculated age will be 
+        displayed in years, months, weeks, days, hours, minutes, and seconds.
+    </p>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left Content -->
+        <div class="left-content">
+            <!-- Instruction Banner -->
+            <div class="instruction-banner">
+                <i class="check-icon">✓</i>
+                Modify the values and click the Calculate button to use
+            </div>
+
+            <!-- Calculator Form -->
+            <div class="calculator-form">
+                <table class="form-table">
+                    <tr>
+                        <td class="label-cell">Date of Birth</td>
+                        <td class="input-cell">
+                            <select id="birth-month" class="date-select">
+                                <option value="1">Jan</option>
+                                <option value="2">Feb</option>
+                                <option value="3">Mar</option>
+                                <option value="4">Apr</option>
+                                <option value="5">May</option>
+                                <option value="6">Jun</option>
+                                <option value="7">Jul</option>
+                                <option value="8">Aug</option>
+                                <option value="9" selected>Sep</option>
+                                <option value="10">Oct</option>
+                                <option value="11">Nov</option>
+                                <option value="12">Dec</option>
+                            </select>
+                            <select id="birth-day" class="date-select">
+                                <option value="6" selected>6</option>
+                            </select>
+                            <input type="text" id="birth-year" class="year-input" value="2025">
+                            <button type="button" class="calendar-btn" data-type="birth">
+                                📅
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">Age at the Date of</td>
+                        <td class="input-cell">
+                            <select id="target-month" class="date-select">
+                                <option value="1">Jan</option>
+                                <option value="2">Feb</option>
+                                <option value="3">Mar</option>
+                                <option value="4">Apr</option>
+                                <option value="5">May</option>
+                                <option value="6">Jun</option>
+                                <option value="7">Jul</option>
+                                <option value="8">Aug</option>
+                                <option value="9" selected>Sep</option>
+                                <option value="10">Oct</option>
+                                <option value="11">Nov</option>
+                                <option value="12">Dec</option>
+                            </select>
+                            <select id="target-day" class="date-select">
+                                <option value="6" selected>6</option>
+                            </select>
+                            <input type="text" id="target-year" class="year-input" value="2025">
+                            <button type="button" class="calendar-btn" data-type="target">
+                                📅
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="button-cell">
+                            <button type="button" class="calculate-button" id="calculate-btn">
+                                <span class="play-icon">▶</span> Calculate
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results-section" style="display: none;">
+                <div class="results-container">
+                    <h3>Age Calculation Results</h3>
+                    <div id="results-grid"></div>
+                    <div id="detailed-results"></div>
+                </div>
+            </div>
+
+            <!-- Related Section -->
+            <div class="related-section">
+                <h3 class="related-title">Related</h3>
+                <div class="related-buttons">
+                    <button class="related-btn" onclick="window.location.href='{% url 'calculators:home' %}'">Date Calculator</button>
+                    <button class="related-btn" onclick="window.location.href='{% url 'calculators:home' %}'">Time Calculator</button>
+                </div>
+            </div>
+
+            <!-- Information Content -->
+            <div class="info-content">
+                <p>The age of a person can be counted differently in different cultures. This calculator is based on the most common age system. In this system, age increases on a person's birthday. For example, the age of a person who has lived for 3 years and 11 months is 3, and their age will increase to 4 on their next birthday one month later. Most western countries use this age system.</p>
+                
+                <p>In some cultures, age is expressed by counting years with or without including the current year. For example, a person who is twenty years old is the same age as another person who is in their twenty-first year of life. In one of the traditional Chinese age systems, people are born at age 1 and their age increases up at the Traditional Chinese New Year rather than their birthday. For example, if one baby is born just one day before the Traditional Chinese New Year, 2 days later, the baby will be 2 even though he/she is only 2 days old.</p>
+                
+                <p>In some situations, the months and day result of this age calculator may be confusing, especially when the starting date is the end of a month. For example, we count Feb. 20 to Mar. 20 to be one month. However, there are two ways to calculate the age from Feb. 28, 2022 to Mar. 31, 2022. If we consider Feb. 28 to Mar. 28 to be one month, then the result is one month and 3 days. If we consider both Feb. 28 and Mar. 31 as the end of the month, then the result is one month. Both calculation results are reasonable. Similar situations exist for dates like Apr. 30 to May 31, May 30 to June 30, etc. The confusion comes from the uneven number of days in different months. In our calculations, we use the former method.</p>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <!-- Search Box -->
+            <div class="search-section">
+                <input type="text" class="search-input" placeholder="">
+                <button class="search-button">Search</button>
+            </div>
+
+            <!-- Other Calculators Widget -->
+            <div class="sidebar-widget">
+                <div class="widget-header">Other Calculators</div>
+                <div class="widget-content">
+                    <div class="calculator-grid">
+                        <div class="calc-column">
+                            <a href="{% url 'calculators:age_calculator' %}" class="calc-link active">Age</a>
+                            <a href="#" class="calc-link">Time</a>
+                            <a href="{% url 'calculators:gpa_calculator' %}" class="calc-link">GPA</a>
+                            <a href="#" class="calc-link">Height</a>
+                            <a href="#" class="calc-link">IP Subnet</a>
+                            <a href="#" class="calc-link">Password Generator</a>
+                            <a href="#" class="calc-link">Conversion</a>
+                        </div>
+                        <div class="calc-column">
+                            <a href="#" class="calc-link">Date</a>
+                            <a href="#" class="calc-link">Hours</a>
+                            <a href="#" class="calc-link">Grade</a>
+                            <a href="#" class="calc-link">Concrete</a>
+                            <a href="{% url 'calculators:bmi_calculator' %}" class="calc-link">Bra Size</a>
+                            <a href="#" class="calc-link">Dice Roller</a>
+                            <a href="#" class="calc-link">More Other Calculators</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Category Tabs -->
+                    <div class="category-tabs">
+                        <button class="tab-button">Financial</button>
+                        <button class="tab-button">Fitness and Health</button>
+                        <button class="tab-button active">Math</button>
+                        <button class="tab-button">Other</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Modal -->
+    <div id="calendar-modal" class="calendar-modal">
+        <div class="calendar-overlay"></div>
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button class="nav-btn" id="prev-month" type="button">❮</button>
+                <span id="calendar-title">September 2025</span>
+                <button class="nav-btn" id="next-month" type="button">❯</button>
+            </div>
+            <div class="calendar-body">
+                <div class="calendar-weekdays">
+                    <div class="weekday">Su</div>
+                    <div class="weekday">Mo</div>
+                    <div class="weekday">Tu</div>
+                    <div class="weekday">We</div>
+                    <div class="weekday">Th</div>
+                    <div class="weekday">Fr</div>
+                    <div class="weekday">Sa</div>
+                </div>
+                <div class="calendar-days" id="calendar-days">
+                    <!-- Calendar days will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="calendar-footer">
+                <button class="calendar-btn-close" id="close-calendar" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Calculator.net Style Replication */
+.calculator-net-style {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #333;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+}
+
+/* Breadcrumb */
+.breadcrumb-nav {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.breadcrumb-nav a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.breadcrumb-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Main Title */
+.main-title {
+    font-size: 24px;
+    font-weight: normal;
+    color: #1f4788;
+    margin: 0 0 15px 0;
+}
+
+/* Description */
+.description {
+    margin-bottom: 20px;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* Main Layout */
+.main-layout {
+    display: flex;
+    gap: 20px;
+}
+
+.left-content {
+    flex: 1;
+    max-width: 800px;
+}
+
+.right-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+/* Instruction Banner */
+.instruction-banner {
+    background: #4a90e2;
+    color: white;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.check-icon {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Calculator Form */
+.calculator-form {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.form-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+.form-table tr:last-child td {
+    border-bottom: none;
+}
+
+.label-cell {
+    background: #f8f8f8;
+    font-weight: normal;
+    width: 180px;
+    color: #333;
+}
+
+.input-cell {
+    background: white;
+}
+
+.button-cell {
+    background: white;
+    text-align: center;
+}
+
+/* Form Controls */
+.date-select {
+    width: 60px;
+    padding: 4px 2px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+    font-size: 13px;
+    background: white;
+}
+
+.year-input {
+    width: 60px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.calendar-btn {
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    padding: 4px 6px;
+    vertical-align: middle;
+    font-size: 12px;
+    border-radius: 2px;
+    outline: none;
+}
+
+.calendar-btn:hover {
+    background: #e8e8e8;
+}
+
+.calendar-btn:active {
+    background: #ddd;
+}
+
+/* Calculate Button */
+.calculate-button {
+    background: #5cb85c;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.calculate-button:hover {
+    background: #449d44;
+}
+
+.play-icon {
+    font-size: 12px;
+}
+
+/* Calendar Modal */
+.calendar-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.calendar-container {
+    position: relative;
+    background: white;
+    border: 2px solid #4a90e2;
+    border-radius: 6px;
+    width: 320px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 100000;
+}
+
+.calendar-header {
+    background: #4a90e2;
+    color: white;
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 8px;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.calendar-body {
+    padding: 10px;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    margin-bottom: 5px;
+}
+
+.weekday {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    padding: 8px 2px;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+}
+
+.calendar-day {
+    text-align: center;
+    padding: 8px 2px;
+    cursor: pointer;
+    font-size: 13px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    transition: background-color 0.2s;
+}
+
+.calendar-day:hover {
+    background: #e0f0ff;
+}
+
+.calendar-day.other-month {
+    color: #ccc;
+}
+
+.calendar-day.today {
+    background: #4a90e2;
+    color: white;
+    font-weight: bold;
+}
+
+.calendar-day.selected {
+    background: #28a745;
+    color: white;
+    font-weight: bold;
+}
+
+.calendar-footer {
+    padding: 10px;
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+}
+
+.calendar-btn-close {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.calendar-btn-close:hover {
+    background: #545b62;
+}
+
+/* Results Section */
+.results-container {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.results-container h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: normal;
+    color: #333;
+}
+
+#results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.result-item {
+    text-align: center;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+}
+
+.result-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+    line-height: 1;
+}
+
+.result-label {
+    font-size: 12px;
+    color: #666;
+}
+
+/* Related Section */
+.related-section {
+    margin-bottom: 30px;
+}
+
+.related-title {
+    background: #e8e8e8;
+    padding: 8px 12px;
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: normal;
+    border-radius: 3px;
+    color: #333;
+}
+
+.related-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.related-btn {
+    background: #4a90e2;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s;
+}
+
+.related-btn:hover {
+    background: #357abd;
+}
+
+/* Info Content */
+.info-content p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    text-align: justify;
+    color: #333;
+}
+
+/* Sidebar */
+.search-section {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.search-button {
+    background: #4a90e2;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.search-button:hover {
+    background: #357abd;
+}
+
+/* Sidebar Widget */
+.sidebar-widget {
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.widget-header {
+    background: #4a90e2;
+    color: white;
+    padding: 10px 15px;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.widget-content {
+    padding: 15px;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.calc-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.calc-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 0;
+    line-height: 1.3;
+}
+
+.calc-link:hover {
+    text-decoration: underline;
+}
+
+.calc-link.active {
+    color: #cc0000;
+}
+
+/* Category Tabs */
+.category-tabs {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tab-button {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background-color 0.2s;
+}
+
+.tab-button:hover {
+    background: #e0e0e0;
+}
+
+.tab-button.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+    }
+    
+    .right-sidebar {
+        width: 100%;
+    }
+    
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-table td {
+        padding: 10px 15px;
+    }
+    
+    .label-cell {
+        width: auto;
+    }
+    
+    .calendar-container {
+        width: 300px;
+        margin: 10px;
+    }
+    
+    #results-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .calculator-net-style {
+        padding: 10px;
+    }
+    
+    #results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .calendar-container {
+        width: 280px;
+    }
+}
+</style>
+
+<script>
+// Global variables for calendar
+let currentCalendarDate = new Date();
+let currentCalendarType = '';
+let selectedDate = null;
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded, initializing...');
+    
+    populateDays();
+    setCurrentDate();
+    initializeEventListeners();
+});
+
+// Initialize all event listeners
+function initializeEventListeners() {
+    // Calendar button listeners
+    const calendarButtons = document.querySelectorAll('.calendar-btn');
+    calendarButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const type = this.getAttribute('data-type');
+            console.log('Calendar button clicked for:', type);
+            openCalendar(type);
+        });
+    });
+    
+    // Calculate button listener
+    const calculateBtn = document.getElementById('calculate-btn');
+    if (calculateBtn) {
+        calculateBtn.addEventListener('click', calculateAge);
+    }
+    
+    // Calendar navigation listeners
+    const prevBtn = document.getElementById('prev-month');
+    const nextBtn = document.getElementById('next-month');
+    const closeBtn = document.getElementById('close-calendar');
+    
+    if (prevBtn) prevBtn.addEventListener('click', previousMonth);
+    if (nextBtn) nextBtn.addEventListener('click', nextMonth);
+    if (closeBtn) closeBtn.addEventListener('click', closeCalendar);
+    
+    // Modal close listeners
+    const modal = document.getElementById('calendar-modal');
+    const overlay = document.querySelector('.calendar-overlay');
+    
+    if (overlay) {
+        overlay.addEventListener('click', closeCalendar);
+    }
+    
+    // Keyboard listener
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeCalendar();
+        }
+    });
+    
+    // Month/year change listeners
+    document.getElementById('birth-month').addEventListener('change', () => updateDaysInMonth('birth'));
+    document.getElementById('target-month').addEventListener('change', () => updateDaysInMonth('target'));
+    document.getElementById('birth-year').addEventListener('change', () => updateDaysInMonth('birth'));
+    document.getElementById('target-year').addEventListener('change', () => updateDaysInMonth('target'));
+}
+
+// Populate day dropdowns with all days 1-31
+function populateDays() {
+    const birthDaySelect = document.getElementById('birth-day');
+    const targetDaySelect = document.getElementById('target-day');
+    
+    // Clear existing options
+    birthDaySelect.innerHTML = '';
+    targetDaySelect.innerHTML = '';
+    
+    for (let i = 1; i <= 31; i++) {
+        const option1 = new Option(i, i);
+        const option2 = new Option(i, i);
+        
+        if (i === 6) {
+            option1.selected = true;
+            option2.selected = true;
+        }
+        
+        birthDaySelect.add(option1);
+        targetDaySelect.add(option2);
+    }
+}
+
+// Set current date as default for target date
+function setCurrentDate() {
+    const today = new Date();
+    document.getElementById('target-month').value = today.getMonth() + 1;
+    document.getElementById('target-day').value = today.getDate();
+    document.getElementById('target-year').value = today.getFullYear();
+}
+
+// Open calendar modal
+function openCalendar(type) {
+    console.log('Opening calendar for type:', type);
+    
+    if (!type) {
+        console.error('No calendar type provided');
+        return;
+    }
+    
+    currentCalendarType = type;
+    const modal = document.getElementById('calendar-modal');
+    
+    if (!modal) {
+        console.error('Calendar modal not found');
+        return;
+    }
+    
+    // Get current values from form
+    const monthField = document.getElementById(type + '-month');
+    const dayField = document.getElementById(type + '-day');
+    const yearField = document.getElementById(type + '-year');
+    
+    if (!monthField || !dayField || !yearField) {
+        console.error('Form fields not found for type:', type);
+        return;
+    }
+    
+    const year = parseInt(yearField.value) || new Date().getFullYear();
+    const month = parseInt(monthField.value) || new Date().getMonth() + 1;
+    const day = parseInt(dayField.value) || 1;
+    
+    currentCalendarDate = new Date(year, month - 1, 1);
+    selectedDate = new Date(year, month - 1, day);
+    
+    // Show modal
+    modal.style.display = 'flex';
+    
+    // Render calendar
+    renderCalendar();
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+    
+    console.log('Calendar opened successfully');
+}
+
+// Close calendar modal
+function closeCalendar() {
+    console.log('Closing calendar');
+    const modal = document.getElementById('calendar-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    document.body.style.overflow = 'auto';
+}
+
+// Navigate calendar months
+function previousMonth() {
+    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+    renderCalendar();
+}
+
+function nextMonth() {
+    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+    renderCalendar();
+}
+
+// Render calendar
+function renderCalendar() {
+    const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    
+    const year = currentCalendarDate.getFullYear();
+    const month = currentCalendarDate.getMonth();
+    
+    // Update title
+    const titleElement = document.getElementById('calendar-title');
+    if (titleElement) {
+        titleElement.textContent = monthNames[month] + ' ' + year;
+    }
+    
+    // Calculate calendar grid
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+    
+    const calendarDays = document.getElementById('calendar-days');
+    if (!calendarDays) return;
+    
+    calendarDays.innerHTML = '';
+    
+    const today = new Date();
+    
+    // Previous month's trailing days
+    for (let i = firstDay - 1; i >= 0; i--) {
+        const day = daysInPrevMonth - i;
+        const dayElement = createDayElement(day, 'other-month');
+        calendarDays.appendChild(dayElement);
+    }
+    
+    // Current month's days
+    for (let day = 1; day <= daysInMonth; day++) {
+        const isToday = (
+            today.getDate() === day &&
+            today.getMonth() === month &&
+            today.getFullYear() === year
+        );
+        
+        const isSelected = selectedDate && (
+            selectedDate.getDate() === day &&
+            selectedDate.getMonth() === month &&
+            selectedDate.getFullYear() === year
+        );
+        
+        let className = '';
+        if (isToday) className = 'today';
+        if (isSelected) className = 'selected';
+        
+        const dayElement = createDayElement(day, className);
+        dayElement.addEventListener('click', () => selectDate(day, month, year));
+        calendarDays.appendChild(dayElement);
+    }
+    
+   // Next month's leading days
+   const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+   const remainingCells = totalCells - (firstDay + daysInMonth);
+   for (let day = 1; day <= remainingCells; day++) {
+       const dayElement = createDayElement(day, 'other-month');
+       calendarDays.appendChild(dayElement);
+   }
+}
+
+// Create day element
+function createDayElement(day, className) {
+   const dayElement = document.createElement('div');
+   dayElement.className = 'calendar-day ' + (className || '');
+   dayElement.textContent = day;
+   dayElement.setAttribute('data-day', day);
+   return dayElement;
+}
+
+// Select date from calendar
+function selectDate(day, month, year) {
+   console.log('Date selected:', day, month + 1, year);
+   
+   if (!currentCalendarType) {
+       console.error('No calendar type set');
+       return;
+   }
+   
+   // Update form fields
+   const monthField = document.getElementById(currentCalendarType + '-month');
+   const dayField = document.getElementById(currentCalendarType + '-day');
+   const yearField = document.getElementById(currentCalendarType + '-year');
+   
+   if (monthField && dayField && yearField) {
+       monthField.value = month + 1;
+       dayField.value = day;
+       yearField.value = year;
+       
+       // Update days dropdown for the selected month
+       updateDaysInMonth(currentCalendarType);
+       
+       // Set the selected day again after updating
+       dayField.value = day;
+   }
+   
+   // Update selected date
+   selectedDate = new Date(year, month, day);
+   
+   // Close calendar
+   closeCalendar();
+}
+
+// Calculate age
+function calculateAge() {
+   console.log('Calculating age...');
+   
+   try {
+       const birthMonth = parseInt(document.getElementById('birth-month').value);
+       const birthDay = parseInt(document.getElementById('birth-day').value);
+       const birthYear = parseInt(document.getElementById('birth-year').value);
+       
+       const targetMonth = parseInt(document.getElementById('target-month').value);
+       const targetDay = parseInt(document.getElementById('target-day').value);
+       const targetYear = parseInt(document.getElementById('target-year').value);
+       
+       if (!birthMonth || !birthDay || !birthYear || !targetMonth || !targetDay || !targetYear) {
+           alert('Please fill in all date fields');
+           return;
+       }
+       
+       const birthDate = new Date(birthYear, birthMonth - 1, birthDay);
+       const targetDate = new Date(targetYear, targetMonth - 1, targetDay);
+       
+       if (birthDate > targetDate) {
+           alert('Birth date cannot be after the target date!');
+           return;
+       }
+       
+       // Calculate age components
+       let years = targetDate.getFullYear() - birthDate.getFullYear();
+       let months = targetDate.getMonth() - birthDate.getMonth();
+       let days = targetDate.getDate() - birthDate.getDate();
+       
+       // Adjust for negative days
+       if (days < 0) {
+           months--;
+           const lastMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
+           days += lastMonth.getDate();
+       }
+       
+       // Adjust for negative months
+       if (months < 0) {
+           years--;
+           months += 12;
+       }
+       
+       // Calculate totals
+       const totalDays = Math.floor((targetDate - birthDate) / (1000 * 60 * 60 * 24));
+       const totalWeeks = Math.floor(totalDays / 7);
+       const totalHours = totalDays * 24;
+       const totalMinutes = totalHours * 60;
+       const totalSeconds = totalMinutes * 60;
+       
+       // Display results
+       displayResults({
+           years,
+           months,
+           days,
+           totalDays,
+           totalWeeks,
+           totalHours,
+           totalMinutes,
+           totalSeconds,
+           birthDate,
+           targetDate
+       });
+       
+   } catch (error) {
+       alert('Error calculating age. Please check your input dates.');
+       console.error('Age calculation error:', error);
+   }
+}
+
+// Display calculation results
+function displayResults(result) {
+   const resultsSection = document.getElementById('results-section');
+   const resultsGrid = document.getElementById('results-grid');
+   const detailedResults = document.getElementById('detailed-results');
+   
+   if (!resultsSection || !resultsGrid || !detailedResults) {
+       console.error('Results elements not found');
+       return;
+   }
+   
+   // Create results grid
+   resultsGrid.innerHTML = `
+       <div class="result-item">
+           <div class="result-value">${result.years}</div>
+           <div class="result-label">Years</div>
+       </div>
+       <div class="result-item">
+           <div class="result-value">${result.months}</div>
+           <div class="result-label">Months</div>
+       </div>
+       <div class="result-item">
+           <div class="result-value">${result.totalWeeks}</div>
+           <div class="result-label">Weeks</div>
+       </div>
+       <div class="result-item">
+           <div class="result-value">${result.days}</div>
+           <div class="result-label">Days</div>
+       </div>
+       <div class="result-item">
+           <div class="result-value">${result.totalHours.toLocaleString()}</div>
+           <div class="result-label">Hours</div>
+       </div>
+       <div class="result-item">
+           <div class="result-value">${result.totalMinutes.toLocaleString()}</div>
+           <div class="result-label">Minutes</div>
+       </div>
+       <div class="result-item">
+           <div class="result-value">${result.totalSeconds.toLocaleString()}</div>
+           <div class="result-label">Seconds</div>
+       </div>
+   `;
+   
+   // Create detailed results
+   detailedResults.innerHTML = `
+       <div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 3px;">
+           <h4 style="margin: 0 0 10px 0; font-size: 14px; font-weight: normal; color: #333;">Detailed Information</h4>
+           <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f0f0f0;">
+               <span style="color: #666;">Birth Date:</span>
+               <span style="color: #333;">${result.birthDate.toLocaleDateString('en-US', { 
+                   year: 'numeric', 
+                   month: 'long', 
+                   day: 'numeric' 
+               })}</span>
+           </div>
+           <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f0f0f0;">
+               <span style="color: #666;">Target Date:</span>
+               <span style="color: #333;">${result.targetDate.toLocaleDateString('en-US', { 
+                   year: 'numeric', 
+                   month: 'long', 
+                   day: 'numeric' 
+               })}</span>
+           </div>
+           <div style="display: flex; justify-content: space-between; padding: 5px 0;">
+               <span style="color: #666;">Total Days:</span>
+               <span style="color: #333;">${result.totalDays.toLocaleString()} days</span>
+           </div>
+       </div>
+   `;
+   
+   // Show results section
+   resultsSection.style.display = 'block';
+   
+   // Scroll to results smoothly
+   setTimeout(() => {
+       resultsSection.scrollIntoView({ 
+           behavior: 'smooth', 
+           block: 'start' 
+       });
+   }, 100);
+}
+
+// Update days in month based on selected month and year
+function updateDaysInMonth(type) {
+   const monthSelect = document.getElementById(type + '-month');
+   const daySelect = document.getElementById(type + '-day');
+   const yearInput = document.getElementById(type + '-year');
+   
+   if (!monthSelect || !daySelect || !yearInput) return;
+   
+   const month = parseInt(monthSelect.value);
+   const year = parseInt(yearInput.value) || new Date().getFullYear();
+   const currentDay = parseInt(daySelect.value);
+   
+   // Get number of days in selected month
+   const daysInMonth = new Date(year, month, 0).getDate();
+   
+   // Clear current options
+   daySelect.innerHTML = '';
+   
+   // Add new options
+   for (let i = 1; i <= daysInMonth; i++) {
+       const option = new Option(i, i);
+       if (i === currentDay && i <= daysInMonth) {
+           option.selected = true;
+       } else if (currentDay > daysInMonth && i === daysInMonth) {
+           option.selected = true;
+       }
+       daySelect.add(option);
+   }
+   
+   // If no day is selected, select the first day
+   if (!daySelect.value) {
+       daySelect.value = 1;
+   }
+}
+
+// Add input validation for year fields
+function setupYearValidation() {
+   const birthYearInput = document.getElementById('birth-year');
+   const targetYearInput = document.getElementById('target-year');
+   
+   if (birthYearInput) {
+       birthYearInput.addEventListener('input', function() {
+           let value = parseInt(this.value);
+           if (value < 1900) this.value = 1900;
+           if (value > new Date().getFullYear() + 10) this.value = new Date().getFullYear() + 10;
+       });
+   }
+   
+   if (targetYearInput) {
+       targetYearInput.addEventListener('input', function() {
+           let value = parseInt(this.value);
+           if (value < 1900) this.value = 1900;
+           if (value > new Date().getFullYear() + 100) this.value = new Date().getFullYear() + 100;
+       });
+   }
+}
+
+// Initialize year validation when page loads
+document.addEventListener('DOMContentLoaded', function() {
+   setupYearValidation();
+});
+
+// Prevent form submission on Enter key
+document.addEventListener('keydown', function(event) {
+   if (event.key === 'Enter' && event.target.tagName !== 'BUTTON') {
+       event.preventDefault();
+       calculateAge();
+   }
+});
+
+// Debug function to test calendar
+function testCalendar() {
+   console.log('Testing calendar...');
+   openCalendar('birth');
+}
+
+// Make test function available globally for debugging
+window.testCalendar = testCalendar;
+window.openCalendar = openCalendar;
+</script>
+{% endblock %}

@@ -1,0 +1,896 @@
+{% extends 'calculators/base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<style>
+/* Loan Calculator Specific Styles */
+.loan-calculator-page {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.hero-banner {
+    background: linear-gradient(135deg, #1f4788 0%, #2d5aa0 100%);
+    color: white;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+.hero-features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.calculator-section, .results-section {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    height: fit-content;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    color: #1f4788;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #fafafa;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #1f4788;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(31, 71, 136, 0.1);
+}
+
+.form-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #1f4788;
+    background: white;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-prefix {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.input-group .form-input {
+    padding-left: 40px;
+}
+
+.input-suffix {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.input-group .form-input.with-suffix {
+    padding-right: 45px;
+}
+
+.calculate-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #1f4788 0%, #2d5aa0 100%);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.calculate-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(31, 71, 136, 0.3);
+}
+
+.calculate-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.result-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid #e9ecef;
+}
+
+.result-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f4788;
+    margin-bottom: 5px;
+}
+
+.result-value.large {
+    font-size: 2.2rem;
+}
+
+.result-value.highlight {
+    color: #28a745;
+}
+
+.result-subtitle {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.empty-results {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-state {
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.amortization-section {
+    margin-top: 30px;
+}
+
+.amortization-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.amortization-table th,
+.amortization-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.amortization-table th {
+    background: #1f4788;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.amortization-table tr:hover {
+    background: #f8f9fa;
+}
+
+.amortization-table .currency {
+    text-align: right;
+    font-weight: 500;
+}
+
+.recommendations-section {
+    margin-top: 30px;
+    padding: 25px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+}
+
+.recommendation-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid #1f4788;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.recommendation-card h4 {
+    color: #1f4788;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.recommendation-card p {
+    color: #666;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.recommendation-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.tips-section {
+    margin-top: 40px;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.tip-card {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #28a745;
+}
+
+.tip-card h4 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.tip-card p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.seo-content {
+    margin-top: 40px;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.seo-content h2 {
+    color: #1f4788;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.seo-content h3 {
+    color: #333;
+    font-size: 1.3rem;
+    margin: 25px 0 15px 0;
+}
+
+.seo-content p {
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.seo-content ul {
+    color: #666;
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.seo-content li {
+    margin-bottom: 8px;
+}
+
+.breadcrumb {
+    background: none;
+    padding: 20px 0 0 0;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #666;
+}
+
+.breadcrumb-item a {
+    color: #1f4788;
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: #666;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #1f4788;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 30px 15px;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .hero-features {
+        gap: 15px;
+    }
+    
+    .hero-feature {
+        font-size: 0.85rem;
+    }
+    
+    .main-container {
+        padding: 20px 10px;
+    }
+    
+    .calculator-section,
+    .results-section,
+    .tips-section,
+    .seo-content {
+        padding: 20px;
+    }
+    
+    .amortization-table {
+        font-size: 0.85rem;
+    }
+    
+    .amortization-table th,
+    .amortization-table td {
+        padding: 8px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 1.5rem;
+    }
+    
+    .hero-features {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .result-value {
+        font-size: 1.5rem;
+    }
+    
+    .result-value.large {
+        font-size: 1.8rem;
+    }
+}
+</style>
+
+<div class="loan-calculator-page">
+    <!-- Breadcrumb -->
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'calculators:home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'calculators:home' %}">Calculators</a></li>
+                <li class="breadcrumb-item active">Loan Calculator</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Free Loan Calculator - Calculate Monthly Payments & Total Interest</h1>
+                <p class="hero-subtitle">
+                    Calculate loan payments, compare interest rates, and view detailed amortization schedules for mortgages, auto loans, personal loans, and more.
+                </p>
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <i class="fas fa-calculator"></i>
+                        <span>Instant Calculations</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Amortization Schedule</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-compare"></i>
+                        <span>Compare Loan Options</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Mobile Friendly</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Calculator -->
+    <div class="container">
+        <div class="main-container">
+            <!-- Calculator Form -->
+            <div class="calculator-section">
+                <h2 class="section-title">Loan Payment Calculator</h2>
+                <form id="loan-form" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="loan_amount" class="form-label">Loan Amount</label>
+                        <div class="input-group">
+                            <span class="input-prefix">$</span>
+                            <input type="text" 
+                                   id="loan_amount" 
+                                   name="loan_amount" 
+                                   class="form-input" 
+                                   placeholder="250,000"
+                                   value="{{ form_data.loan_amount|default:'' }}"
+                                   maxlength="15"
+                                   required>
+                        </div>
+                        <small class="text-muted">Enter the total amount you want to borrow (max $10,000,000)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interest_rate" class="form-label">Annual Interest Rate</label>
+                        <div class="input-group">
+                            <input type="number" 
+                                   id="interest_rate" 
+                                   name="interest_rate" 
+                                   class="form-input with-suffix" 
+                                   placeholder="6.5"
+                                   value="{{ form_data.interest_rate|default:'' }}"
+                                   step="0.001"
+                                   min="0"
+                                   max="50"
+                                   required>
+                            <span class="input-suffix">%</span>
+                        </div>
+                        <small class="text-muted">Enter the annual percentage rate (APR)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loan_term" class="form-label">Loan Term</label>
+                        <div class="input-group">
+                            <input type="number" 
+                                   id="loan_term" 
+                                   name="loan_term" 
+                                   class="form-input with-suffix" 
+                                   placeholder="30"
+                                   value="{{ form_data.loan_term|default:'' }}"
+                                   step="0.5"
+                                   min="0.5"
+                                   max="50"
+                                   required>
+                            <span class="input-suffix">years</span>
+                        </div>
+                        <small class="text-muted">Enter the length of the loan in years</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment_frequency" class="form-label">Payment Frequency</label>
+                        <select id="payment_frequency" name="payment_frequency" class="form-select">
+                            <option value="12" {% if form_data.payment_frequency == '12' %}selected{% endif %}>Monthly (12 per year)</option>
+                            <option value="26" {% if form_data.payment_frequency == '26' %}selected{% endif %}>Bi-weekly (26 per year)</option>
+                            <option value="52" {% if form_data.payment_frequency == '52' %}selected{% endif %}>Weekly (52 per year)</option>
+                            <option value="4" {% if form_data.payment_frequency == '4' %}selected{% endif %}>Quarterly (4 per year)</option>
+                            <option value="1" {% if form_data.payment_frequency == '1' %}selected{% endif %}>Annual (1 per year)</option>
+                        </select>
+                        <small class="text-muted">Choose how often you'll make payments</small>
+                    </div>
+
+                    <button type="submit" class="calculate-btn" id="calculate-btn">
+                        <i class="fas fa-calculator"></i> Calculate Loan Payment
+                    </button>
+                </form>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="results-section">
+                {% if result %}
+                <h2 class="section-title">Loan Calculation Results</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">{{ result.payment_frequency_text }} Payment</div>
+                        <div class="result-value large highlight">${{ result.payment_amount|floatformat:2 }}</div>
+                        <div class="result-subtitle">Every payment period</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Total Amount Paid</div>
+                        <div class="result-value">${{ result.total_amount|floatformat:2 }}</div>
+                        <div class="result-subtitle">Principal + Interest</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Total Interest</div>
+                        <div class="result-value">${{ result.total_interest|floatformat:2 }}</div>
+                        <div class="result-subtitle">{{ result.interest_percentage }}% of loan amount</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Monthly Payment</div>
+                        <div class="result-value">${{ result.monthly_payment|floatformat:2 }}</div>
+                        <div class="result-subtitle">For budgeting purposes</div>
+                    </div>
+                </div>
+
+                <!-- Amortization Schedule -->
+                <div class="amortization-section">
+                    <h3>Amortization Schedule (First 12 Payments)</h3>
+                    <div class="table-responsive">
+                        <table class="amortization-table">
+                            <thead>
+                                <tr>
+                                    <th>Payment #</th>
+                                    <th>Payment Amount</th>
+                                    <th>Principal</th>
+                                    <th>Interest</th>
+                                    <th>Remaining Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in result.amortization_schedule %}
+                                <tr>
+                                    <td>{{ payment.payment_number }}</td>
+                                    <td class="currency">${{ payment.payment_amount }}</td>
+                                    <td class="currency">${{ payment.principal_payment }}</td>
+                                    <td class="currency">${{ payment.interest_payment }}</td>
+                                    <td class="currency">${{ payment.remaining_balance }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Loan Recommendations -->
+                {% if result.recommendations %}
+                <div class="recommendations-section">
+                    <h3>Loan Type Recommendations</h3>
+                    {% for recommendation in result.recommendations %}
+                    <div class="recommendation-card">
+                        <h4>{{ recommendation.type }}</h4>
+                        <p>{{ recommendation.description }}</p>
+                        <div class="recommendation-meta">
+                            <span><strong>Typical Rate:</strong> {{ recommendation.typical_rate }}</span>
+                            <span><strong>Term:</strong> {{ recommendation.term }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="empty-results">
+                    <h2 class="section-title">Loan Payment Results</h2>
+                    <div class="empty-state">
+                        <i class="fas fa-calculator"></i>
+                        <p>Enter your loan details to calculate monthly payments, total interest, and view the amortization schedule.</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <h2 class="section-title">Loan Calculator Tips & Strategies</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h4>Compare Interest Rates</h4>
+                    <p>Shop around with multiple lenders. Even a 0.5% difference in interest rate can save thousands over the life of a loan.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Consider Loan Terms</h4>
+                    <p>Shorter loan terms mean higher monthly payments but less total interest paid. Longer terms lower monthly payments but increase total cost.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Make Extra Payments</h4>
+                    <p>Additional principal payments can significantly reduce the total interest paid and shorten the loan term.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Check Your Credit Score</h4>
+                    <p>Higher credit scores typically qualify for better interest rates. Check your credit report and improve your score before applying.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Down Payment Benefits</h4>
+                    <p>Larger down payments reduce loan amount, monthly payments, and may help you avoid private mortgage insurance (PMI).</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Understand Total Cost</h4>
+                    <p>Look beyond monthly payments. Consider total interest, fees, and the overall cost of the loan over its entire term.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEO Content Section -->
+        <div class="seo-content">
+            <h2>Complete Guide to Loan Calculations: Everything You Need to Know</h2>
+            
+            <h3>How Does Our Loan Payment Calculator Work?</h3>
+            <p>Our comprehensive loan calculator uses the standard amortization formula to calculate exact monthly payments, total interest costs, and detailed payment schedules. Whether you're calculating mortgage payments, auto loan costs, personal loan terms, or business loan expenses, our tool provides accurate results instantly.</p>
+            
+            <h3>Understanding Loan Payment Calculations</h3>
+            <p>Loan payments depend on four key factors:</p>
+            <ul>
+                <li><strong>Principal Amount:</strong> The total amount you're borrowing</li>
+                <li><strong>Interest Rate:</strong> The annual percentage rate (APR) charged by the lender</li>
+                <li><strong>Loan Term:</strong> The length of time to repay the loan</li>
+                <li><strong>Payment Frequency:</strong> How often you make payments (monthly, bi-weekly, etc.)</li>
+            </ul>
+            
+            <h3>Types of Loans You Can Calculate</h3>
+            <p>Our loan calculator works for virtually any type of installment loan including mortgages, auto loans, personal loans, student loans, and business loans. Calculate payments for different loan terms and compare financing options to find the best deal for your situation.</p>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('loan-form');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loanAmountInput = document.getElementById('loan_amount');
+    const interestRateInput = document.getElementById('interest_rate');
+    const loanTermInput = document.getElementById('loan_term');
+    
+    // Enhanced loan amount formatting
+    loanAmountInput.addEventListener('input', function() {
+        let value = this.value.replace(/[^0-9]/g, ''); // Remove all non-numeric characters
+        
+        if (value.length > 0) {
+            // Convert to number and format with commas
+            let number = parseInt(value);
+            if (number > 10000000) {
+                number = 10000000; // Cap at 10 million
+            }
+            this.value = number.toLocaleString();
+        }
+    });
+    
+    // Remove commas before form submission
+    form.addEventListener('submit', function(e) {
+        const cleanValue = loanAmountInput.value.replace(/,/g, '');
+        loanAmountInput.value = cleanValue;
+    });
+    
+    // Real-time validation
+    function validateForm() {
+        const loanAmount = parseFloat(loanAmountInput.value.replace(/,/g, ''));
+        const interestRate = parseFloat(interestRateInput.value);
+        const loanTerm = parseFloat(loanTermInput.value);
+        
+        let isValid = true;
+        
+        if (!loanAmount || loanAmount < 1000 || loanAmount > 10000000) {
+            isValid = false;
+        }
+        
+        if (!interestRate || interestRate < 0 || interestRate > 50) {
+            isValid = false;
+        }
+        
+        if (!loanTerm || loanTerm < 0.5 || loanTerm > 50) {
+            isValid = false;
+        }
+        
+        calculateBtn.disabled = !isValid;
+        
+        if (!isValid) {
+            calculateBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Check Your Input';
+            calculateBtn.style.background = '#dc3545';
+        } else {
+            calculateBtn.innerHTML = '<i class="fas fa-calculator"></i> Calculate Loan Payment';
+            calculateBtn.style.background = '';
+        }
+        
+        return isValid;
+    }
+    
+    // Add validation listeners
+    [loanAmountInput, interestRateInput, loanTermInput].forEach(input => {
+        input.addEventListener('input', validateForm);
+        input.addEventListener('blur', validateForm);
+    });
+    
+    // Enhanced form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (!validateForm()) {
+            return;
+        }
+        
+        // Show loading state
+        loadingOverlay.style.display = 'flex';
+        calculateBtn.disabled = true;
+        calculateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
+        
+        // Submit the form normally (not AJAX for now)
+        setTimeout(() => {
+            this.submit();
+        }, 500);
+    });
+    
+    // Initial validation
+    validateForm();
+    
+    // Format existing value on page load
+    if (loanAmountInput.value) {
+        const value = loanAmountInput.value.replace(/[^0-9]/g, '');
+        if (value) {
+            loanAmountInput.value = parseInt(value).toLocaleString();
+        }
+    }
+});
+</script>
+
+<!-- Schema.org structured data for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Loan Calculator",
+  "description": "Free online loan calculator to calculate monthly payments, total interest, and amortization schedule for mortgages, auto loans, personal loans, and more.",
+  "url": "{{ request.build_absolute_uri }}",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "Calculator.net",
+    "url": "{% url 'calculators:home' %}"
+  },
+  "featureList": [
+    "Calculate monthly loan payments",
+    "View detailed amortization schedule",
+    "Compare different loan terms",
+    "Multiple payment frequency options",
+    "Loan type recommendations",
+    "Mobile-friendly interface"
+  ]
+}
+</script>
+{% endblock %}

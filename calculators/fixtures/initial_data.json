@@ -1,0 +1,90 @@
+[
+    {
+        "model": "calculators.calculator",
+        "pk": 1,
+        "fields": {
+            "name": "Age Calculator",
+            "description": "Calculate your exact age in years, months, and days",
+            "icon": "🎂",
+            "slug": "age-calculator",
+            "is_active": true,
+            "order": 1,
+            "meta_title": "Age Calculator - Calculate Your Exact Age Online",
+            "meta_description": "Free online age calculator to find your exact age in years, months, days, and more. Fast and accurate results."
+        }
+    },
+    {
+        "model": "calculators.calculator",
+        "pk": 2,
+        "fields": {
+            "name": "BMI Calculator",
+            "description": "Calculate your Body Mass Index and health category",
+            "icon": "⚖️",
+            "slug": "bmi-calculator",
+            "is_active": true,
+            "order": 2,
+            "meta_title": "BMI Calculator - Body Mass Index Calculator Online",
+            "meta_description": "Calculate your BMI (Body Mass Index) with our free online calculator. Supports metric and imperial units."
+        }
+    },
+    {
+        "model": "calculators.calculator",
+        "pk": 3,
+        "fields": {
+            "name": "GPA Calculator",
+            "description": "Calculate your Grade Point Average from your grades and credit hours",
+            "icon": "🎓",
+            "slug": "gpa-calculator",
+            "is_active": true,
+            "order": 3,
+            "meta_title": "GPA Calculator - Calculate Your Grade Point Average",
+            "meta_description": "Free online GPA calculator to calculate your Grade Point Average. Enter grades and credit hours for accurate results."
+        }
+    },
+    {
+        "model": "calculators.homepagecontent",
+        "pk": 1,
+        "fields": {
+            "title": "Calculator Hub",
+            "subtitle": "Your one-stop destination for free online calculators",
+            "hero_text": "Fast, accurate, and easy-to-use calculators for all your daily needs.",
+            "show_features": true,
+            "meta_title": "Calculator Hub - Free Online Calculators",
+            "meta_description": "Free online calculators including Age Calculator, BMI Calculator, GPA Calculator and more. Fast, accurate, mobile-friendly tools.",
+            "is_active": true
+        }
+    },
+    {
+        "model": "calculators.feature",
+        "pk": 1,
+        "fields": {
+            "title": "Free to Use",
+            "description": "All calculators are completely free with no hidden costs or registration required.",
+            "icon": "✅",
+            "order": 1,
+            "is_active": true
+        }
+    },
+    {
+        "model": "calculators.feature",
+        "pk": 2,
+        "fields": {
+            "title": "Mobile Friendly",
+            "description": "Works perfectly on all devices - desktop, tablet, and mobile phones.",
+            "icon": "📱",
+            "order": 2,
+            "is_active": true
+        }
+    },
+    {
+        "model": "calculators.feature",
+        "pk": 3,
+        "fields": {
+            "title": "Secure & Private",
+            "description": "Your data is processed securely and never stored on our servers.",
+            "icon": "🔒",
+            "order": 3,
+            "is_active": true
+        }
+    }
+]

@@ -1,0 +1,57 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://calculator.net/sitemap.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /ajax/
+Disallow: /api/
+Disallow: /static/admin/
+
+# Allow all calculator pages
+Allow: /age-calculator/
+Allow: /bmi-calculator/
+Allow: /gpa-calculator/
+Allow: /loan-calculator/
+Allow: /percentage-calculator/
+Allow: /calorie-calculator/
+
+# Allow static pages
+Allow: /about/
+Allow: /contact/
+Allow: /privacy/
+Allow: /terms/
+Allow: /sitemap/
+
+# Block common bot traps
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /private/
+
+# Google-specific directives
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing-specific directives
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Prevent scraping of assets
+User-agent: *
+Disallow: /static/css/
+Disallow: /static/js/
+Allow: /static/images/
+
+# Social media crawlers
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /

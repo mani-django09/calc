@@ -1,0 +1,319 @@
+{% extends 'calculators/base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="page-title">Sitemap</h1>
+                <p class="page-subtitle">Find all our calculators and pages in one place</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Main Pages -->
+            <section class="sitemap-section">
+                <h2 class="section-title">
+                    <i class="fas fa-home me-2"></i>Main Pages
+                </h2>
+                <div class="sitemap-grid">
+                    <a href="{% url 'calculators:home' %}" class="sitemap-link">
+                        <i class="fas fa-home"></i>
+                        <span>Homepage</span>
+                    </a>
+                    <a href="{% url 'calculators:about_us' %}" class="sitemap-link">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About Us</span>
+                    </a>
+                    <a href="{% url 'calculators:contact_us' %}" class="sitemap-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact Us</span>
+                    </a>
+                    <a href="{% url 'calculators:sitemap_page' %}" class="sitemap-link active">
+                        <i class="fas fa-sitemap"></i>
+                        <span>Sitemap</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Financial Calculators -->
+            <section class="sitemap-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line me-2"></i>Financial Calculators
+                </h2>
+                <div class="sitemap-grid">
+                    <a href="{% url 'calculators:loan_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-university"></i>
+                        <div class="link-content">
+                            <span class="link-title">Loan Calculator</span>
+                            <small class="link-desc">Calculate monthly payments and interest</small>
+                        </div>
+                    </a>
+                    <a href="{% url 'calculators:percentage_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-percentage"></i>
+                        <div class="link-content">
+                            <span class="link-title">Percentage Calculator</span>
+                            <small class="link-desc">Calculate percentages, discounts, and tips</small>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Health & Wellness Calculators -->
+            <section class="sitemap-section">
+                <h2 class="section-title">
+                    <i class="fas fa-heartbeat me-2"></i>Health & Wellness
+                </h2>
+                <div class="sitemap-grid">
+                    <a href="{% url 'calculators:bmi_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-weight-scale"></i>
+                        <div class="link-content">
+                            <span class="link-title">BMI Calculator</span>
+                            <small class="link-desc">Calculate Body Mass Index</small>
+                        </div>
+                    </a>
+                    <a href="{% url 'calculators:calorie_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-fire"></i>
+                        <div class="link-content">
+                            <span class="link-title">Calorie Calculator</span>
+                            <small class="link-desc">Calculate daily calorie needs</small>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Academic Calculators -->
+            <section class="sitemap-section">
+                <h2 class="section-title">
+                    <i class="fas fa-graduation-cap me-2"></i>Academic Tools
+                </h2>
+                <div class="sitemap-grid">
+                    <a href="{% url 'calculators:gpa_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-graduation-cap"></i>
+                        <div class="link-content">
+                            <span class="link-title">GPA Calculator</span>
+                            <small class="link-desc">Calculate Grade Point Average</small>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Other Tools -->
+            <section class="sitemap-section">
+                <h2 class="section-title">
+                    <i class="fas fa-tools me-2"></i>Other Tools
+                </h2>
+                <div class="sitemap-grid">
+                    <a href="{% url 'calculators:age_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-birthday-cake"></i>
+                        <div class="link-content">
+                            <span class="link-title">Age Calculator</span>
+                            <small class="link-desc">Calculate exact age and time differences</small>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Legal Pages -->
+            <section class="sitemap-section">
+                <h2 class="section-title">
+                    <i class="fas fa-balance-scale me-2"></i>Legal & Policy
+                </h2>
+                <div class="sitemap-grid">
+                    <a href="{% url 'calculators:privacy_policy' %}" class="sitemap-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Privacy Policy</span>
+                    </a>
+                    <a href="{% url 'calculators:terms_conditions' %}" class="sitemap-link">
+                        <i class="fas fa-file-contract"></i>
+                        <span>Terms & Conditions</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Statistics -->
+            <section class="stats-section">
+                <h2 class="section-title">Site Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Active Calculators</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-number">{{ calculators|length|add:9 }}</div>
+                        <div class="stat-label">Total Pages</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-number">2M+</div>
+                        <div class="stat-label">Happy Users</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    padding: 4rem 0 2rem;
+}
+
+.sitemap-section {
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.sitemap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.sitemap-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #374151;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sitemap-link:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    color: #1e40af;
+}
+
+.sitemap-link.active {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    color: #1e40af;
+}
+
+.sitemap-link i {
+    font-size: 1.5rem;
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+.link-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.link-title {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.link-desc {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+.stats-section {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 16px;
+    margin-top: 2rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-icon {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #6b7280;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .sitemap-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .sitemap-link {
+        padding: 1rem;
+    }
+}
+</style>
+{% endblock %}

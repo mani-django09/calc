@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ meta_description|default:'Free online calculators for various calculations including Age, BMI, GPA, Loan, Percentage, and Calorie calculators' }}">
+    <meta name="keywords" content="{{ meta_keywords|default:'calculator, age calculator, BMI calculator, GPA calculator, loan calculator, percentage calculator, calorie calculator, online tools' }}">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Calculator Hub">
+    
+    <title>{% block title %}{{ page_title|default:'Calculator Hub - Free Online Calculators' }}{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark main-navbar" id="mainNavbar">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="{% url 'calculators:home' %}">
+                <i class="fas fa-calculator me-2"></i>Calculator.net
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <!-- Financial Calculators Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-chart-line me-1"></i>FINANCIAL
+                        </a>
+                        <ul class="dropdown-menu shadow-lg border-0">
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:loan_calculator' %}">
+                                <i class="fas fa-university me-2 text-primary"></i>Loan Calculator
+                                <small class="text-muted d-block">Monthly payments & interest</small>
+                            </a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:percentage_calculator' %}">
+                                <i class="fas fa-percentage me-2 text-success"></i>Percentage Calculator
+                                <small class="text-muted d-block">Calculate any percentage</small>
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2 disabled" href="#">
+                                <i class="fas fa-home me-2 text-info"></i>Mortgage Calculator
+                                <small class="text-muted d-block">Coming soon</small>
+                            </a></li>
+                            <li><a class="dropdown-item py-2 disabled" href="#">
+                                <i class="fas fa-piggy-bank me-2 text-warning"></i>Savings Calculator
+                                <small class="text-muted d-block">Coming soon</small>
+                            </a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Health & Fitness Calculators Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-heartbeat me-1"></i>HEALTH & FITNESS
+                        </a>
+                        <ul class="dropdown-menu shadow-lg border-0">
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:bmi_calculator' %}">
+                                <i class="fas fa-weight-scale me-2 text-danger"></i>BMI Calculator
+                                <small class="text-muted d-block">Body mass index</small>
+                            </a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:calorie_calculator' %}">
+                                <i class="fas fa-fire me-2 text-warning"></i>Calorie Calculator
+                                <small class="text-muted d-block">Daily calorie needs</small>
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2 disabled" href="#">
+                                <i class="fas fa-heart me-2 text-danger"></i>Body Fat Calculator
+                                <small class="text-muted d-block">Coming soon</small>
+                            </a></li>
+                            <li><a class="dropdown-item py-2 disabled" href="#">
+                                <i class="fas fa-running me-2 text-success"></i>Ideal Weight Calculator
+                                <small class="text-muted d-block">Coming soon</small>
+                            </a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Math & Academic Calculators Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-graduation-cap me-1"></i>ACADEMIC
+                        </a>
+                        <ul class="dropdown-menu shadow-lg border-0">
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:gpa_calculator' %}">
+                                <i class="fas fa-graduation-cap me-2 text-primary"></i>GPA Calculator
+                                <small class="text-muted d-block">Grade point average</small>
+                            </a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:percentage_calculator' %}">
+                                <i class="fas fa-percentage me-2 text-success"></i>Percentage Calculator
+                                <small class="text-muted d-block">Math percentages</small>
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2 disabled" href="#">
+                                <i class="fas fa-calculator me-2 text-info"></i>Grade Calculator
+                                <small class="text-muted d-block">Coming soon</small>
+                            </a></li>
+                            <li><a class="dropdown-item py-2 disabled" href="#">
+                                <i class="fas fa-square-root-alt me-2 text-warning"></i>Scientific Calculator
+                                <small class="text-muted d-block">Coming soon</small>
+                            </a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Other Calculators Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white nav-highlight" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-tools me-1"></i>OTHER TOOLS
+                        </a>
+                        <ul class="dropdown-menu shadow-lg border-0">
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:age_calculator' %}">
+                                <i class="fas fa-birthday-cake me-2 text-warning"></i>Age Calculator
+                                <small class="text-muted d-block">Calculate exact age</small>
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2 disabled" href="#">
+                                <i class="fas fa-calendar-alt me-2 text-info"></i>Date Calculator
+                                <small class="text-muted d-block">Coming soon</small>
+                            </a></li>
+                            <li><a class="dropdown-item py-2 disabled" href="#">
+                                <i class="fas fa-clock me-2 text-primary"></i>Time Calculator
+                                <small class="text-muted d-block">Coming soon</small>
+                            </a></li>
+                            <li><a class="dropdown-item py-2 disabled" href="#">
+                                <i class="fas fa-thermometer-half me-2 text-danger"></i>Unit Converter
+                                <small class="text-muted d-block">Coming soon</small>
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <!-- Search Box -->
+                <form class="d-flex me-3 search-form">
+                    <div class="input-group">
+                        <input class="form-control form-control-sm bg-white search-input" type="search" placeholder="Search calculators..." aria-label="Search">
+                        <button class="btn btn-light btn-sm search-btn" type="submit">
+                            <i class="fas fa-search text-primary"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- User Menu -->
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>Account
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-in-alt me-2"></i>Sign In</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user-plus me-2"></i>Sign Up</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-history me-2"></i>Calculator History</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-bookmark me-2"></i>Saved Calculations</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sticky Header (Hidden by default) -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-header" id="stickyHeader">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="{% url 'calculators:home' %}">
+                <i class="fas fa-calculator me-2"></i>Calculator.net
+            </a>
+            
+            <!-- Quick Access Buttons -->
+            <div class="quick-access d-none d-lg-flex">
+                <a href="{% url 'calculators:age_calculator' %}" class="btn btn-sm btn-outline-light me-2">
+                    <i class="fas fa-birthday-cake me-1"></i>Age
+                </a>
+                <a href="{% url 'calculators:bmi_calculator' %}" class="btn btn-sm btn-outline-light me-2">
+                    <i class="fas fa-weight-scale me-1"></i>BMI
+                </a>
+                <a href="{% url 'calculators:loan_calculator' %}" class="btn btn-sm btn-outline-light me-2">
+                    <i class="fas fa-university me-1"></i>Loan
+                </a>
+                <a href="{% url 'calculators:gpa_calculator' %}" class="btn btn-sm btn-outline-light">
+                    <i class="fas fa-graduation-cap me-1"></i>GPA
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">
+                <i class="fas fa-calculator me-2"></i>Calculator.net
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="list-group list-group-flush">
+                <a href="{% url 'calculators:age_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-birthday-cake me-2"></i>Age Calculator
+                </a>
+                <a href="{% url 'calculators:bmi_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-weight-scale me-2"></i>BMI Calculator
+                </a>
+                <a href="{% url 'calculators:loan_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-university me-2"></i>Loan Calculator
+                </a>
+                <a href="{% url 'calculators:gpa_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-graduation-cap me-2"></i>GPA Calculator
+                </a>
+                <a href="{% url 'calculators:percentage_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-percentage me-2"></i>Percentage Calculator
+                </a>
+                <a href="{% url 'calculators:calorie_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-fire me-2"></i>Calorie Calculator
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show m-3" role="alert">
+                    <i class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% elif message.tags == 'success' %}check-circle{% elif message.tags == 'info' %}info-circle{% else %}bell{% endif %}"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Enhanced Footer -->
+    <footer class="enhanced-footer">
+        <!-- Wave Animation -->
+        <div class="footer-wave">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0V60c0,20,20,40,40,40H1160c20,0,40-20,40-40V0Z" fill="currentColor"></path>
+            </svg>
+        </div>
+        
+        <!-- Main Footer Content -->
+        <div class="footer-content">
+            <div class="container py-5">
+                <div class="row g-5">
+                    <!-- Brand Section -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-brand">
+                            <h3 class="brand-title">
+                                <i class="fas fa-calculator me-2"></i>Calculator.net
+                            </h3>
+                            <p class="brand-description">
+                                Your trusted source for free, accurate, and professional-grade online calculators. 
+                                Serving millions of users worldwide with reliable calculation tools.
+                            </p>
+                            
+                            <!-- Social Links -->
+                            <div class="social-links">
+                                <a href="https://facebook.com/calculatornet" target="_blank" rel="noopener" class="social-link" title="Follow us on Facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="https://twitter.com/calculatornet" target="_blank" rel="noopener" class="social-link" title="Follow us on Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="https://linkedin.com/company/calculatornet" target="_blank" rel="noopener" class="social-link" title="Connect on LinkedIn">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="https://github.com/calculatornet" target="_blank" rel="noopener" class="social-link" title="View on GitHub">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="https://instagram.com/calculatornet" target="_blank" rel="noopener" class="social-link" title="Follow us on Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="https://youtube.com/calculatornet" target="_blank" rel="noopener" class="social-link" title="Subscribe on YouTube">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                            </div>
+                            
+                            <!-- Newsletter -->
+                            <div class="newsletter-section">
+                                <h6 class="newsletter-title">
+                                    <i class="fas fa-envelope me-2"></i>Stay Updated
+                                </h6>
+                                <p class="newsletter-desc">Get notified about new calculators and features</p>
+                                <form class="newsletter-form">
+                                    <div class="input-group">
+                                        <input type="email" class="form-control" placeholder="Enter your email" required>
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Calculator Categories - Only 6 Working Tools -->
+                    <div class="col-lg-8">
+                        <div class="row g-4">
+                            <!-- Financial -->
+                            <div class="col-md-4">
+                                <h6 class="footer-section-title">
+                                    <i class="fas fa-chart-line me-2"></i>Financial Tools
+                                </h6>
+                                <ul class="footer-links">
+                                    <li><a href="{% url 'calculators:loan_calculator' %}">Loan Calculator</a></li>
+                                    <li><a href="{% url 'calculators:percentage_calculator' %}">Percentage Calculator</a></li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Health -->
+                            <div class="col-md-4">
+                                <h6 class="footer-section-title">
+                                    <i class="fas fa-heartbeat me-2"></i>Health Tools
+                                </h6>
+                                <ul class="footer-links">
+                                    <li><a href="{% url 'calculators:bmi_calculator' %}">BMI Calculator</a></li>
+                                    <li><a href="{% url 'calculators:calorie_calculator' %}">Calorie Calculator</a></li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Academic & Other -->
+                            <div class="col-md-4">
+                                <h6 class="footer-section-title">
+                                    <i class="fas fa-graduation-cap me-2"></i>Academic & Other
+                                </h6>
+                                <ul class="footer-links">
+                                    <li><a href="{% url 'calculators:gpa_calculator' %}">GPA Calculator</a></li>
+                                    <li><a href="{% url 'calculators:age_calculator' %}">Age Calculator</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Links Section -->
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <h6 class="footer-section-title">
+                                    <i class="fas fa-info-circle me-2"></i>Company
+                                </h6>
+                                <ul class="footer-links">
+                                    <li><a href="#about">About Us</a></li>
+                                    <li><a href="#contact">Contact</a></li>
+                                    <li><a href="#blog">Blog</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <h6 class="footer-section-title">
+                                    <i class="fas fa-shield-alt me-2"></i>Legal
+                                </h6>
+                                <ul class="footer-links">
+                                    <li><a href="{% url 'calculators:privacy_policy' %}">Privacy Policy</a></li>
+                                    <li><a href="{% url 'calculators:terms_conditions' %}">Terms of Service</a></li>
+                                    <li><a href="{% url 'calculators:sitemap_page' %}">Sitemap</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <h6 class="footer-section-title">
+                                    <i class="fas fa-headset me-2"></i>Support
+                                </h6>
+                                <ul class="footer-links">
+                                    <li><a href="#help">Help Center</a></li>
+                                    <li><a href="#faq">FAQ</a></li>
+                                    <li><a href="#feedback">Feedback</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="container py-4">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="footer-nav">
+                            <a href="{% url 'calculators:about_us' %}">About Us</a>
+                            <a href="{% url 'calculators:privacy_policy' %}">Privacy Policy</a>
+                            <a href="{% url 'calculators:terms_conditions' %}">Terms of Service</a>
+                            <a href="{% url 'calculators:contact_us' %}">Contact</a>
+                            <a href="{% url 'calculators:sitemap_page' %}">Sitemap</a>
+                            <a href="#blog">Blog</a>
+                        </div>
+                        <p class="copyright">
+                            © 2008 - 2025 <a href="{% url 'calculators:home' %}">Calculator.net</a>. 
+                            All rights reserved. Built with Django & Bootstrap.
+                        </p>
+                    </div>
+                    
+                    <div class="col-lg-6 text-lg-end">
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <i class="fas fa-envelope me-2"></i>
+                                <span>support@calculator.net</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-clock me-2"></i>
+                                <span>24/7 Online Support</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Back to Top Button -->
+                        <button class="back-to-top" id="backToTop" title="Back to top">
+                            <i class="fas fa-chevron-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Enhanced JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sticky Header Functionality
+            const mainNavbar = document.getElementById('mainNavbar');
+            const stickyHeader = document.getElementById('stickyHeader');
+            const backToTop = document.getElementById('backToTop');
+            let lastScrollTop = 0;
+            
+            function handleScroll() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const navbarHeight = mainNavbar.offsetHeight;
+                
+                // Show/hide sticky header
+                if (scrollTop > navbarHeight) {
+                    stickyHeader.classList.add('show');
+                } else {
+                    stickyHeader.classList.remove('show');
+                }
+                
+                // Show/hide back to top button
+                if (scrollTop > 300) {
+                    backToTop.classList.add('show');
+                } else {
+                    backToTop.classList.remove('show');
+                }
+                
+                lastScrollTop = scrollTop;
+            }
+            
+            // Throttled scroll handler
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(function() {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            
+            // Back to top functionality
+            backToTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Newsletter subscription
+            document.querySelector('.newsletter-form')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[type="email"]').value;
+                if (email) {
+                    const button = this.querySelector('button');
+                    const originalHTML = button.innerHTML;
+                    
+                    button.innerHTML = '<i class="fas fa-check"></i>';
+                    button.classList.add('btn-success');
+                    button.classList.remove('btn-primary');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalHTML;
+                        button.classList.remove('btn-success');
+                        button.classList.add('btn-primary');
+                        this.querySelector('input[type="email"]').value = '';
+                    }, 2500);
+                    
+                    // Here you would typically send the email to your backend
+                    console.log('Newsletter subscription:', email);
+                }
+            });
+            
+            // Social media link tracking
+            document.querySelectorAll('.social-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const platform = this.title.toLowerCase();
+                    console.log(`Social media click: ${platform}`);
+                    // Here you would typically send analytics data
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        const headerOffset = 80;
+                        const elementPosition = target.offsetTop;
+                        const offsetPosition = elementPosition - headerOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Animate trust indicators on scroll
+            const observerOptions = {
+                threshold: 0.3,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.trust-item').forEach(item => {
+                observer.observe(item);
+            });
+        });
+    </script>
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1f4788 0%, #2d5aa0 100%);
+            --footer-gradient: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Main Navbar */
+        .main-navbar {
+            background: var(--primary-gradient);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        
+        /* Disabled menu items */
+        .dropdown-item.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        /* Sticky Header */
+        .sticky-header {
+            position: fixed;
+            top: -100px;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            background: rgba(31, 71, 136, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+        
+        .sticky-header.show {
+            top: 0;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+@keyframes slideDown {
+            from { top: -100px; opacity: 0; }
+            to { top: 0; opacity: 1; }
+        }
+        
+        /* Quick Access Buttons */
+        .quick-access .btn {
+            border-radius: 20px;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            transition: var(--transition);
+        }
+        
+        .quick-access .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        /* Search Form */
+        .search-form {
+            width: 280px;
+        }
+        
+        .search-input {
+            border-radius: 20px 0 0 20px;
+        }
+        
+        .search-btn {
+            border-radius: 0 20px 20px 0;
+        }
+        
+        /* Navigation Highlight */
+        .nav-highlight {
+            background: rgba(40, 167, 69, 0.8);
+            border-radius: 4px;
+            padding: 0.5rem 1rem !important;
+        }
+        
+        /* Dropdown Menus */
+        .dropdown-menu {
+            border-radius: 12px;
+            padding: 0.75rem 0;
+            margin-top: 0.5rem;
+            min-width: 280px;
+            border: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .dropdown-item {
+            border-radius: 8px;
+            margin: 0 0.5rem;
+            transition: var(--transition);
+            padding: 0.7rem 1rem;
+        }
+        
+        .dropdown-item:hover:not(.disabled) {
+            background: rgba(0, 123, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        /* Enhanced Footer */
+        .enhanced-footer {
+            position: relative;
+            background: var(--footer-gradient);
+            color: white;
+            overflow: hidden;
+        }
+        
+        /* Footer Wave Animation */
+        .footer-wave {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            color: #f8fafc;
+            z-index: 1;
+        }
+        
+        .footer-wave svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        .footer-content {
+            position: relative;
+            z-index: 2;
+            padding-top: 40px;
+        }
+        
+        /* Brand Section */
+        .footer-brand {
+            position: relative;
+        }
+        
+        .brand-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .brand-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+        
+        .social-link:hover {
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+        }
+        
+        /* Specific social media colors on hover */
+        .social-link[title*="Facebook"]:hover {
+            background: #1877f2;
+            border-color: #1877f2;
+        }
+        
+        .social-link[title*="Twitter"]:hover {
+            background: #1da1f2;
+            border-color: #1da1f2;
+        }
+        
+        .social-link[title*="LinkedIn"]:hover {
+            background: #0077b5;
+            border-color: #0077b5;
+        }
+        
+        .social-link[title*="GitHub"]:hover {
+            background: #333;
+            border-color: #333;
+        }
+        
+        .social-link[title*="Instagram"]:hover {
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            border-color: #e6683c;
+        }
+        
+        .social-link[title*="YouTube"]:hover {
+            background: #ff0000;
+            border-color: #ff0000;
+        }
+        
+        /* Newsletter Section */
+        .newsletter-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .newsletter-title {
+            color: white;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .newsletter-desc {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .newsletter-form .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .newsletter-form .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .newsletter-form .btn {
+            border-radius: 0 8px 8px 0;
+            border-left: none;
+        }
+        
+        /* Footer Section Titles */
+        .footer-section-title {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        /* Footer Links */
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+            position: relative;
+        }
+        
+        .footer-links a::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background: #3b82f6;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .footer-links a:hover::before {
+            width: 100%;
+        }
+        
+        /* Trust Section */
+        .trust-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .trust-title {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .trust-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .trust-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .trust-item.animate {
+            opacity: 1;
+            transform: translateY(0);
+            animation: trustItemFloat 0.6s ease-out forwards;
+        }
+        
+        .trust-item:nth-child(1).animate { animation-delay: 0.1s; }
+        .trust-item:nth-child(2).animate { animation-delay: 0.2s; }
+        .trust-item:nth-child(3).animate { animation-delay: 0.3s; }
+        .trust-item:nth-child(4).animate { animation-delay: 0.4s; }
+        .trust-item:nth-child(5).animate { animation-delay: 0.5s; }
+        .trust-item:nth-child(6).animate { animation-delay: 0.6s; }
+        
+        @keyframes trustItemFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .trust-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .trust-item i {
+            font-size: 1.5rem;
+            color: #3b82f6;
+        }
+        
+        .trust-item span {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        /* Footer Bottom */
+        .footer-bottom {
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-nav {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-nav a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        
+        .footer-nav a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        .copyright a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-item {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .search-form {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            .quick-access {
+                display: none !important;
+            }
+            
+            .trust-indicators {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.3rem !important;
+            }
+            
+            .footer-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .contact-info {
+                text-align: center;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+            
+            .trust-indicators {
+                grid-template-columns: 1fr;
+            }
+            
+            .newsletter-section {
+                text-align: center;
+            }
+            
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .footer-brand {
+                text-align: center;
+            }
+            
+            .brand-title {
+                font-size: 1.5rem;
+            }
+            
+            .trust-section {
+                padding: 1.5rem;
+            }
+            
+            .footer-content {
+                padding-top: 20px;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+        
+        /* Additional Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .newsletter-form .btn-success {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Performance Optimizations */
+        .enhanced-footer * {
+            will-change: transform;
+        }
+        
+        .social-link,
+        .trust-item,
+        .footer-links a {
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+    </style>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

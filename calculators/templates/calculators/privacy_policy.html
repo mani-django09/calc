@@ -1,0 +1,184 @@
+{% extends 'calculators/base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="page-title">Privacy Policy</h1>
+                <p class="page-subtitle">Last updated: January 2025</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="privacy-content">
+                <section class="content-section">
+                    <h2>Information We Collect</h2>
+                    <p>At Calculator.net, we are committed to protecting your privacy. We collect minimal information to provide our services:</p>
+                    
+                    <h4>Information You Don't Need to Provide</h4>
+                    <ul>
+                        <li>No registration or account creation required</li>
+                        <li>No personal information needed to use calculators</li>
+                        <li>No calculation data is stored on our servers</li>
+                    </ul>
+                    
+                    <h4>Automatically Collected Information</h4>
+                    <ul>
+                        <li>Basic analytics data (page views, session duration)</li>
+                        <li>Technical information (browser type, device type)</li>
+                        <li>IP address for security and analytics purposes</li>
+                    </ul>
+                </section>
+
+                <section class="content-section">
+                    <h2>How We Use Your Information</h2>
+                    <p>We use the limited information we collect to:</p>
+                    <ul>
+                        <li>Improve our website performance and user experience</li>
+                        <li>Understand which calculators are most popular</li>
+                        <li>Ensure website security and prevent abuse</li>
+                        <li>Analyze traffic patterns to optimize our services</li>
+                    </ul>
+                </section>
+
+                <section class="content-section">
+                    <h2>Cookies and Local Storage</h2>
+                    <p>We use cookies and local storage to enhance your experience:</p>
+                    
+                    <h4>Essential Cookies</h4>
+                    <ul>
+                        <li>Session management and security</li>
+                        <li>Remembering your calculator preferences</li>
+                    </ul>
+                    
+                    <h4>Analytics Cookies</h4>
+                    <ul>
+                        <li>Google Analytics for website usage statistics</li>
+                        <li>Performance monitoring and optimization</li>
+                    </ul>
+                    
+                    <p>You can disable cookies in your browser settings, though this may affect website functionality.</p>
+                </section>
+
+                <section class="content-section">
+                    <h2>Data Security</h2>
+                    <p>We implement appropriate security measures to protect your information:</p>
+                    <ul>
+                        <li>All calculations are performed in your browser</li>
+                        <li>HTTPS encryption for all data transmission</li>
+                        <li>Regular security audits and updates</li>
+                        <li>No sensitive calculation data is transmitted to our servers</li>
+                    </ul>
+                </section>
+
+                <section class="content-section">
+                    <h2>Third-Party Services</h2>
+                    <p>We use the following third-party services:</p>
+                    
+                    <h4>Google Analytics</h4>
+                    <p>We use Google Analytics to understand how visitors use our site. Google Analytics collects anonymous information about your visit. You can opt-out using Google's opt-out tools.</p>
+                    
+                    <h4>Content Delivery Networks</h4>
+                    <p>We use CDNs to deliver website assets faster. These services may collect basic technical information.</p>
+                </section>
+
+                <section class="content-section">
+                    <h2>Your Rights</h2>
+                    <p>You have the following rights regarding your privacy:</p>
+                    <ul>
+                        <li>Access: Request information about data we collect</li>
+                        <li>Correction: Request correction of inaccurate information</li>
+                        <li>Deletion: Request deletion of your data</li>
+                        <li>Opt-out: Disable analytics tracking</li>
+                    </ul>
+                </section>
+
+                <section class="content-section">
+                    <h2>Children's Privacy</h2>
+                    <p>Our service is not directed to children under 13. We do not knowingly collect personal information from children under 13. If you are a parent and believe your child has provided us with personal information, please contact us.</p>
+                </section>
+
+                <section class="content-section">
+                    <h2>Changes to This Policy</h2>
+                    <p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.</p>
+                </section>
+
+                <section class="content-section">
+                    <h2>Contact Us</h2>
+                    <p>If you have any questions about this Privacy Policy, please contact us:</p>
+                    <ul>
+                        <li>Email: privacy@calculator.net</li>
+                        <li>Contact form: <a href="{% url 'calculators:contact_us' %}">Contact Us</a></li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    padding: 4rem 0 2rem;
+}
+
+.privacy-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.content-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.content-section:last-child {
+    border-bottom: none;
+}
+
+.content-section h2 {
+    color: #1e293b;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.content-section h4 {
+    color: #374151;
+    font-size: 1.1rem;
+    margin: 1.5rem 0 0.75rem 0;
+    font-weight: 500;
+}
+
+.content-section ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.content-section li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.content-section a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.content-section a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}
