@@ -56,11 +56,25 @@
                             <small class="link-desc">Calculate monthly payments and interest</small>
                         </div>
                     </a>
+                    <a href="{% url 'calculators:mortgage_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-home"></i>
+                        <div class="link-content">
+                            <span class="link-title">Mortgage Calculator</span>
+                            <small class="link-desc">Calculate mortgage payments and schedules</small>
+                        </div>
+                    </a>
                     <a href="{% url 'calculators:percentage_calculator' %}" class="sitemap-link">
                         <i class="fas fa-percentage"></i>
                         <div class="link-content">
                             <span class="link-title">Percentage Calculator</span>
                             <small class="link-desc">Calculate percentages, discounts, and tips</small>
+                        </div>
+                    </a>
+                    <a href="{% url 'calculators:401k_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-piggy-bank"></i>
+                        <div class="link-content">
+                            <span class="link-title">401k Calculator</span>
+                            <small class="link-desc">Plan your retirement savings</small>
                         </div>
                     </a>
                 </div>
@@ -79,11 +93,25 @@
                             <small class="link-desc">Calculate Body Mass Index</small>
                         </div>
                     </a>
-                    <a href="{% url 'calculators:calorie_calculator' %}" class="sitemap-link">
+                    <a href="{% url 'calculators:bmr_calculator' %}" class="sitemap-link">
                         <i class="fas fa-fire"></i>
+                        <div class="link-content">
+                            <span class="link-title">BMR Calculator</span>
+                            <small class="link-desc">Calculate Basal Metabolic Rate</small>
+                        </div>
+                    </a>
+                    <a href="{% url 'calculators:calorie_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-apple-alt"></i>
                         <div class="link-content">
                             <span class="link-title">Calorie Calculator</span>
                             <small class="link-desc">Calculate daily calorie needs</small>
+                        </div>
+                    </a>
+                    <a href="{% url 'calculators:pregnancy_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-baby"></i>
+                        <div class="link-content">
+                            <span class="link-title">Pregnancy Calculator</span>
+                            <small class="link-desc">Calculate due date and pregnancy timeline</small>
                         </div>
                     </a>
                 </div>
@@ -102,6 +130,20 @@
                             <small class="link-desc">Calculate Grade Point Average</small>
                         </div>
                     </a>
+                    <a href="{% url 'calculators:grade_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-clipboard-check"></i>
+                        <div class="link-content">
+                            <span class="link-title">Grade Calculator</span>
+                            <small class="link-desc">Calculate final grades and scores</small>
+                        </div>
+                    </a>
+                    <a href="{% url 'calculators:citation_generator' %}" class="sitemap-link">
+                        <i class="fas fa-quote-right"></i>
+                        <div class="link-content">
+                            <span class="link-title">Citation Generator</span>
+                            <small class="link-desc">Generate APA, MLA, and Chicago citations</small>
+                        </div>
+                    </a>
                 </div>
             </section>
 
@@ -116,6 +158,13 @@
                         <div class="link-content">
                             <span class="link-title">Age Calculator</span>
                             <small class="link-desc">Calculate exact age and time differences</small>
+                        </div>
+                    </a>
+                    <a href="{% url 'calculators:date_of_birth_calculator' %}" class="sitemap-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div class="link-content">
+                            <span class="link-title">Date of Birth Calculator</span>
+                            <small class="link-desc">Calculate date of birth from age</small>
                         </div>
                     </a>
                 </div>
@@ -146,14 +195,14 @@
                         <div class="stat-icon">
                             <i class="fas fa-calculator"></i>
                         </div>
-                        <div class="stat-number">6</div>
+                        <div class="stat-number">13</div>
                         <div class="stat-label">Active Calculators</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">
                             <i class="fas fa-file-alt"></i>
                         </div>
-                        <div class="stat-number">{{ calculators|length|add:9 }}</div>
+                        <div class="stat-number">19</div>
                         <div class="stat-label">Total Pages</div>
                     </div>
                     <div class="stat-card">

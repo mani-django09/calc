@@ -507,6 +507,7 @@ def sitemap_xml(request):
     ]
     
     # Calculator pages with high priority
+    # Calculator pages with high priority
     calculator_pages = [
         {
             'loc': request.build_absolute_uri(reverse('calculators:age_calculator')),
@@ -521,13 +522,31 @@ def sitemap_xml(request):
             'lastmod': datetime.now().strftime('%Y-%m-%d')
         },
         {
+            'loc': request.build_absolute_uri(reverse('calculators:bmr_calculator')),
+            'changefreq': 'weekly',
+            'priority': '0.9',
+            'lastmod': datetime.now().strftime('%Y-%m-%d')
+        },
+        {
             'loc': request.build_absolute_uri(reverse('calculators:gpa_calculator')),
             'changefreq': 'weekly',
             'priority': '0.9',
             'lastmod': datetime.now().strftime('%Y-%m-%d')
         },
         {
+            'loc': request.build_absolute_uri(reverse('calculators:grade_calculator')),
+            'changefreq': 'weekly',
+            'priority': '0.9',
+            'lastmod': datetime.now().strftime('%Y-%m-%d')
+        },
+        {
             'loc': request.build_absolute_uri(reverse('calculators:loan_calculator')),
+            'changefreq': 'weekly',
+            'priority': '0.9',
+            'lastmod': datetime.now().strftime('%Y-%m-%d')
+        },
+        {
+            'loc': request.build_absolute_uri(reverse('calculators:mortgage_calculator')),
             'changefreq': 'weekly',
             'priority': '0.9',
             'lastmod': datetime.now().strftime('%Y-%m-%d')
@@ -543,7 +562,32 @@ def sitemap_xml(request):
             'changefreq': 'weekly',
             'priority': '0.9',
             'lastmod': datetime.now().strftime('%Y-%m-%d')
+        },
+        {
+            'loc': request.build_absolute_uri(reverse('calculators:date_of_birth_calculator')),
+            'changefreq': 'weekly',
+            'priority': '0.9',
+            'lastmod': datetime.now().strftime('%Y-%m-%d')
+        },
+        {
+            'loc': request.build_absolute_uri(reverse('calculators:pregnancy_calculator')),
+            'changefreq': 'weekly',
+            'priority': '0.9',
+            'lastmod': datetime.now().strftime('%Y-%m-%d')
+        },
+        {
+            'loc': request.build_absolute_uri(reverse('calculators:401k_calculator')),
+            'changefreq': 'weekly',
+            'priority': '0.9',
+            'lastmod': datetime.now().strftime('%Y-%m-%d')
+        },
+        {
+            'loc': request.build_absolute_uri(reverse('calculators:citation_generator')),
+            'changefreq': 'weekly',
+            'priority': '0.9',
+            'lastmod': datetime.now().strftime('%Y-%m-%d')
         }
+        
     ]
     
     # Combine all pages
