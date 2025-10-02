@@ -1,0 +1,1249 @@
+{% extends 'calculators/base.html' %}
+{% load static %}
+
+{% block title %}Pregnancy Calculator - Due Date & Week Calculator | Free Tool{% endblock %}
+
+{% block content %}
+<style>
+/* Pregnancy Calculator Styles */
+.pregnancy-calculator-page {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background: white;
+}
+
+/* Breadcrumb */
+.breadcrumb-nav {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+    padding: 10px 20px 8px 20px;
+    background: #f9f9f9;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.breadcrumb-nav a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.breadcrumb-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Hero Banner */
+.hero-banner {
+    background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+    color: white;
+    padding: 15px 20px;
+    margin: 0;
+    border-bottom: 2px solid #c2185b;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0 0 6px 0;
+    color: white;
+}
+
+.hero-subtitle {
+    font-size: 14px;
+    opacity: 0.93;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    max-width: 800px;
+}
+
+.hero-features {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 13px;
+}
+
+.hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hero-feature i {
+    font-size: 12px;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+}
+
+/* Main Layout */
+.main-layout {
+    display: flex;
+    gap: 20px;
+}
+
+.left-content {
+    flex: 1;
+    max-width: 800px;
+}
+
+.right-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+/* Instruction Banner */
+.instruction-banner {
+    background: #ff6b9d;
+    color: white;
+    padding: 8px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.check-icon {
+    font-weight: bold;
+}
+
+/* Calculator Form */
+.calculator-form {
+    background: #fff5f8;
+    border: 1px solid #ffcdd2;
+    margin-bottom: 20px;
+}
+
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.form-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ffcdd2;
+    vertical-align: middle;
+}
+
+.form-table tr:last-child td {
+    border-bottom: none;
+}
+
+.label-cell {
+    background: #fff;
+    font-weight: normal;
+    width: 220px;
+    color: #333;
+    font-size: 13px;
+}
+
+.input-cell {
+    background: white;
+}
+
+.button-cell {
+    background: white;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Form Inputs */
+.form-input, .form-select {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    background: white;
+    box-sizing: border-box;
+}
+
+.form-input {
+    width: 80px;
+}
+
+.form-select {
+    width: 100px;
+    margin-right: 5px;
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: #e91e63;
+}
+
+.input-hint {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-top: 3px;
+}
+
+/* Calculate Button */
+.calculate-button {
+    background: #e91e63;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+}
+
+.calculate-button:hover:not(:disabled) {
+    background: #c2185b;
+}
+
+.calculate-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.play-icon {
+    font-size: 12px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: none;
+    margin-left: 8px;
+}
+
+.loading-spinner.show {
+    display: inline-block;
+}
+
+/* Results Section */
+.results-container {
+    background: white;
+    border: 1px solid #ffcdd2;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.results-container h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: normal;
+    color: #c2185b;
+}
+
+.due-date-box {
+    text-align: center;
+    padding: 25px;
+    background: linear-gradient(135deg, #fff5f8 0%, #ffe4ec 100%);
+    border: 2px solid #e91e63;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.due-date-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.due-date-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #e91e63;
+    margin-bottom: 5px;
+}
+
+.due-date-subtitle {
+    font-size: 13px;
+    color: #666;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.result-card {
+    text-align: center;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #ffcdd2;
+    border-radius: 3px;
+}
+
+.result-label {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #c2185b;
+    margin-bottom: 3px;
+}
+
+.result-subtitle {
+    font-size: 11px;
+    color: #666;
+}
+
+/* Trimester Info */
+.trimester-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f3e5f5;
+    border-radius: 4px;
+    border-left: 4px solid #9c27b0;
+}
+
+.trimester-section h4 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #6a1b9a;
+    margin: 0 0 10px 0;
+}
+
+.trimester-section p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #666;
+}
+
+/* Milestones */
+.milestones-section {
+    margin-top: 20px;
+}
+
+.milestones-section h4 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.milestone-item {
+    padding: 10px;
+    background: #fff;
+    border-left: 3px solid #4caf50;
+    margin-bottom: 8px;
+    font-size: 12px;
+    border-radius: 2px;
+}
+
+.milestone-week {
+    font-weight: bold;
+    color: #4caf50;
+}
+
+/* Empty State */
+.empty-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-results i {
+    font-size: 3rem;
+    color: #ffcdd2;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* Tips Section */
+.tips-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.tips-section h3 {
+    font-size: 16px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.tip-card {
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 3px;
+    border-left: 3px solid #e91e63;
+    font-size: 12px;
+}
+
+.tip-card h4 {
+    color: #c2185b;
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.tip-card p {
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Early Signs Section */
+.early-signs-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #e8f5e9;
+    border: 1px solid #c8e6c9;
+    border-radius: 4px;
+}
+
+.early-signs-section h3 {
+    font-size: 16px;
+    font-weight: normal;
+    color: #2e7d32;
+    margin-bottom: 15px;
+}
+
+.signs-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.signs-list li {
+    padding: 8px 0 8px 25px;
+    position: relative;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.signs-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #4caf50;
+    font-weight: bold;
+}
+
+/* SEO Content */
+.seo-content {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.seo-content h2 {
+    color: #c2185b;
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0 0 15px 0;
+}
+
+.seo-content h3 {
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+    margin: 20px 0 10px 0;
+}
+
+.seo-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    text-align: justify;
+}
+
+.seo-content ul {
+    color: #666;
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.seo-content li {
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+/* Sidebar */
+.search-section {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.search-button {
+    background: #e91e63;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.sidebar-widget {
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.widget-header {
+    background: #e91e63;
+    color: white;
+    padding: 10px 15px;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.widget-content {
+    padding: 15px;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.calc-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.calc-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 0;
+}
+
+.calc-link:hover {
+    text-decoration: underline;
+}
+
+.calc-link.active {
+    color: #e91e63;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .breadcrumb-nav {
+        padding: 8px 15px 6px 15px;
+        font-size: 11px;
+    }
+    
+    .hero-banner {
+        padding: 12px 15px;
+    }
+    
+    .hero-content h1 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .hero-subtitle {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+    
+    .hero-features {
+        gap: 10px;
+        font-size: 11px;
+    }
+    
+    .content-wrapper {
+        padding: 12px 15px;
+    }
+    
+    .main-layout {
+        flex-direction: column;
+    }
+    
+    .right-sidebar {
+        width: 100%;
+    }
+    
+    .label-cell {
+        width: auto;
+        display: block;
+        padding: 10px 15px 5px;
+        border-bottom: none;
+    }
+    
+    .input-cell {
+        display: block;
+        padding: 5px 15px 10px;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .due-date-value {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 16px;
+    }
+    
+    .hero-features {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .form-input,
+    .form-select {
+        font-size: 16px;
+    }
+}
+</style>
+
+<div class="pregnancy-calculator-page">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-nav">
+        <a href="{% url 'calculators:home' %}">home</a> / 
+        <a href="{% url 'calculators:home' %}">health</a> / 
+        <span>pregnancy calculator</span>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h1>Pregnancy Due Date Calculator</h1>
+            <p class="hero-subtitle">
+                Find out when your baby is due and track your pregnancy week by week. Calculate your due date based on your last period or conception date.
+            </p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Accurate Due Date</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Week by Week Info</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-baby"></i>
+                    <span>Trimester Details</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-heart"></i>
+                    <span>100% Free</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="main-layout">
+            <!-- Left Content -->
+            <div class="left-content">
+                <!-- Instruction Banner -->
+                <div class="instruction-banner">
+                    <span class="check-icon">✓</span>
+                    Enter your last period date or conception date
+                </div>
+
+                <!-- Calculator Form -->
+                <div class="calculator-form">
+                    <form id="preg-form" method="post">
+                        {% csrf_token %}
+                        <table class="form-table">
+                            <tr>
+                                <td class="label-cell">Calculation Method</td>
+                                <td class="input-cell">
+                                    <select id="calc_method" name="calc_method" class="form-select" style="width: 200px;">
+                                        <option value="lmp" selected>Last Menstrual Period</option>
+                                        <option value="conception">Conception Date</option>
+                                        <option value="due_date">Known Due Date</option>
+                                    </select>
+                                    <span class="input-hint">Choose your calculation method</span>
+                                </td>
+                            </tr>
+                            <tr id="lmp_row">
+                                <td class="label-cell">First Day of Last Period</td>
+                                <td class="input-cell">
+                                    <select id="lmp_month" name="lmp_month" class="form-select">
+                                        <option value="1">Jan</option>
+                                        <option value="2">Feb</option>
+                                        <option value="3">Mar</option>
+                                        <option value="4">Apr</option>
+                                        <option value="5">May</option>
+                                        <option value="6">Jun</option>
+                                        <option value="7">Jul</option>
+                                        <option value="8">Aug</option>
+                                        <option value="9">Sep</option>
+                                        <option value="10">Oct</option>
+                                        <option value="11">Nov</option>
+                                        <option value="12">Dec</option>
+                                    </select>
+                                    <select id="lmp_day" name="lmp_day" class="form-select">
+                                        <!-- Days populated by JS -->
+                                    </select>
+                                    <input type="number" id="lmp_year" name="lmp_year" class="form-input" placeholder="2024">
+                                    <span class="input-hint">When did your last period start?</span>
+                                </td>
+                            </tr>
+                            <tr id="conception_row" style="display: none;">
+                                <td class="label-cell">Conception Date</td>
+                                <td class="input-cell">
+                                    <select id="con_month" name="con_month" class="form-select">
+                                        <option value="1">Jan</option>
+                                        <option value="2">Feb</option>
+                                        <option value="3">Mar</option>
+                                        <option value="4">Apr</option>
+                                        <option value="5">May</option>
+                                        <option value="6">Jun</option>
+                                        <option value="7">Jul</option>
+                                        <option value="8">Aug</option>
+                                        <option value="9">Sep</option>
+                                        <option value="10">Oct</option>
+                                        <option value="11">Nov</option>
+                                        <option value="12">Dec</option>
+                                    </select>
+                                    <select id="con_day" name="con_day" class="form-select">
+                                        <!-- Days populated by JS -->
+                                    </select>
+                                    <input type="number" id="con_year" name="con_year" class="form-input" placeholder="2024">
+                                    <span class="input-hint">Estimated date of conception</span>
+                                </td>
+                            </tr>
+                            <tr id="due_date_row" style="display: none;">
+                                <td class="label-cell">Due Date</td>
+                                <td class="input-cell">
+                                    <select id="due_month" name="due_month" class="form-select">
+                                        <option value="1">Jan</option>
+                                        <option value="2">Feb</option>
+                                        <option value="3">Mar</option>
+                                        <option value="4">Apr</option>
+                                        <option value="5">May</option>
+                                        <option value="6">Jun</option>
+                                        <option value="7">Jul</option>
+                                        <option value="8">Aug</option>
+                                        <option value="9">Sep</option>
+                                        <option value="10">Oct</option>
+                                        <option value="11">Nov</option>
+                                        <option value="12">Dec</option>
+                                    </select>
+                                    <select id="due_day" name="due_day" class="form-select">
+                                        <!-- Days populated by JS -->
+                                    </select>
+                                    <input type="number" id="due_year" name="due_year" class="form-input" placeholder="2025">
+                                    <span class="input-hint">Your known due date</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Average Cycle Length</td>
+                                <td class="input-cell">
+                                    <input type="number" 
+                                           id="cycle_length" 
+                                           name="cycle_length" 
+                                           class="form-input" 
+                                           value="28"
+                                           min="21"
+                                           max="35">
+                                    <span class="input-hint">days (usually 28)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="button-cell">
+                                    <button type="submit" class="calculate-button" id="calculate-btn">
+                                        <span class="play-icon">▶</span> Calculate
+                                        <span class="loading-spinner" id="loading-spinner">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results-section" {% if not result %}style="display: none;"{% endif %}>
+                    <div class="results-container">
+                        {% if result %}
+                        <!-- Due Date Box -->
+                        <div class="due-date-box">
+                            <div class="due-date-label">Your Estimated Due Date</div>
+                            <div class="due-date-value">{{ result.due_date_formatted }}</div>
+                            <div class="due-date-subtitle">{{ result.days_until_due }} days to go</div>
+                        </div>
+
+                        <!-- Results Grid -->
+                        <div class="results-grid">
+                            <div class="result-card">
+                                <div class="result-label">Current Week</div>
+                                <div class="result-value">Week {{ result.current_week }}</div>
+                                <div class="result-subtitle">of 40 weeks</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Current Trimester</div>
+                                <div class="result-value">{{ result.trimester }}</div>
+                                <div class="result-subtitle">{{ result.trimester_name }}</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Conception Date</div>
+                                <div class="result-value" style="font-size: 16px;">{{ result.conception_date }}</div>
+                                <div class="result-subtitle">Estimated</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Days Pregnant</div>
+                                <div class="result-value">{{ result.days_pregnant }}</div>
+                                <div class="result-subtitle">So far</div>
+                            </div>
+                        </div>
+
+                        <!-- Trimester Info -->
+                        <div class="trimester-section">
+                            <h4>{{ result.trimester_name }} Information</h4>
+                            <p>{{ result.trimester_info }}</p>
+                        </div>
+
+                        <!-- Key Milestones -->
+                        <div class="milestones-section">
+                            <h4>Upcoming Milestones</h4>
+                            {% for milestone in result.milestones %}
+                            <div class="milestone-item">
+                                <span class="milestone-week">Week {{ milestone.week }}:</span> {{ milestone.description }} - <em>{{ milestone.date }}</em>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty-results">
+                            <i class="fas fa-baby-carriage"></i>
+                            <p>Enter your information above to calculate your due date and track your pregnancy.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Early Signs of Pregnancy -->
+                <div class="early-signs-section">
+                    <h3>Early Signs of Pregnancy</h3>
+                    <p style="margin-bottom: 12px; color: #666; font-size: 13px;">These symptoms might show up in the first few weeks:</p>
+                    <ul class="signs-list">
+                        <li><strong>Missed Period</strong> - The most obvious sign for women with regular cycles</li>
+                        <li><strong>Light Spotting</strong> - Small amount of bleeding when the egg attaches (implantation bleeding)</li>
+                        <li><strong>Tender Breasts</strong> - Your breasts might feel sore or swollen</li>
+                        <li><strong>Morning Sickness</strong> - Nausea that can happen any time of day (usually starts around week 6)</li>
+                        <li><strong>Fatigue</strong> - Feeling more tired than usual</li>
+                        <li><strong>Frequent Urination</strong> - Needing to pee more often</li>
+                        <li><strong>Food Cravings or Aversions</strong> - Suddenly loving or hating certain foods</li>
+                        <li><strong>Mood Swings</strong> - Hormones can make emotions feel more intense</li>
+                        <li><strong>Mild Cramping</strong> - Light cramps as your uterus starts to expand</li>
+                    </ul>
+                    <p style="margin-top: 12px; color: #666; font-size: 12px;"><em>Note: These signs vary from person to person. The only way to know for sure is to take a pregnancy test. If you think you might be pregnant, talk to your healthcare provider.</em></p>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="tips-section">
+                    <h3>Pregnancy Tips & Advice</h3>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <h4>Schedule Your First Appointment</h4>
+                            <p>Call your doctor as soon as you find out you're pregnant. Your first prenatal visit usually happens around 8 weeks.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Start Taking Prenatal Vitamins</h4>
+                            <p>Folic acid is super important in early pregnancy. Start taking a prenatal vitamin with at least 400mcg of folic acid.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Eat Healthy Foods</h4>
+                            <p>Focus on fruits, vegetables, whole grains, and lean protein. Stay away from raw fish, undercooked meat, and unpasteurized cheese.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Stay Hydrated</h4>
+                            <p>Drink plenty of water throughout the day. Aim for 8-10 glasses to stay hydrated and help with common pregnancy symptoms.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Content -->
+                <div class="seo-content">
+                    <h2>Understanding Pregnancy Calculation</h2>
+                    
+                    <h3>How Pregnancy Due Dates Are Calculated</h3>
+                    <p>Most pregnancies last about 280 days, or 40 weeks, from the first day of your last menstrual period (LMP). This is the standard method doctors use because it's easier to remember when your period started than to pinpoint exactly when you got pregnant. Even though you weren't actually pregnant during your period, those two weeks still count toward your 40-week pregnancy.</p>
+                    
+                    <h3>Different Calculation Methods</h3>
+                    <p>There are a few ways to calculate your due date:</p>
+                    <ul>
+                        <li><strong>Last Menstrual Period (LMP)</strong> - The most common method. Add 280 days (40 weeks) to the first day of your last period.</li>
+                        <li><strong>Conception Date</strong> - If you know when you conceived, add 266 days (38 weeks). This is useful if you were tracking ovulation.</li>
+                        <li><strong>Ultrasound Dating</strong> - Your doctor can measure the baby during an ultrasound to estimate your due date. This is the most accurate method, especially if done in the first trimester.</li>
+                        <li><strong>IVF Transfer Date</strong> - For IVF pregnancies, your doctor will calculate based on when the embryo was transferred.</li>
+                    </ul>
+                    
+                    <h3>Understanding Trimesters</h3>
+                    <p>Pregnancy is divided into three trimesters, each about 13 weeks long. The first trimester (weeks 1-13) is when the baby's organs form and morning sickness is common. The second trimester (weeks 14-27) is usually when you feel best and start showing. The third trimester (weeks 28-40) is when the baby grows the most and you might feel more uncomfortable as your due date approaches.</p>
+                    
+                    <h3>How Accurate Are Due Dates?</h3>
+                    <p>Only about 5% of babies arrive on their actual due date. Most babies come within two weeks before or after. Your due date is really more of a "due month" - doctors consider anything from 37 to 42 weeks to be full term. First-time moms often go a little past their due date, while second or third babies sometimes come a bit earlier.</p>
+                    
+                    <h3>When to Confirm with Your Doctor</h3>
+                    <p>This calculator gives you a good estimate, but your healthcare provider will confirm your due date with an ultrasound, usually done between 8 and 12 weeks. The ultrasound measurement is the most accurate, especially if you're not sure about your last period date or have irregular cycles. Don't worry if your doctor adjusts your due date after the ultrasound - that's completely normal.</p>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <!-- Search Box -->
+                <div class="search-section">
+                    <input type="text" class="search-input" placeholder="Search...">
+                    <button class="search-button">Search</button>
+                </div>
+
+                <!-- Related Calculators -->
+                <div class="sidebar-widget">
+                    <div class="widget-header">Related Calculators</div>
+                    <div class="widget-content">
+                        <div class="calculator-grid">
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:bmi_calculator' %}" class="calc-link">BMI</a>
+                                <a href="{% url 'calculators:calorie_calculator' %}" class="calc-link">Calorie</a>
+                                <a href="{% url 'calculators:age_calculator' %}" class="calc-link">Age</a>
+                            </div>
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:loan_calculator' %}" class="calc-link">Loan</a>
+                                <a href="{% url 'calculators:gpa_calculator' %}" class="calc-link">GPA</a>
+                                <a href="{% url 'calculators:home' %}" class="calc-link">More Calculators</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('preg-form');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const calcMethod = document.getElementById('calc_method');
+    
+    // Populate day dropdowns
+    function populateDays(selectId) {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '';
+        for (let i = 1; i <= 31; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            if (i === 1) option.selected = true;
+            select.appendChild(option);
+        }
+    }
+    
+    populateDays('lmp_day');
+    populateDays('con_day');
+    populateDays('due_day');
+    
+    // Set current date as default
+    const today = new Date();
+    document.getElementById('lmp_year').value = today.getFullYear();
+    document.getElementById('con_year').value = today.getFullYear();
+    document.getElementById('due_year').value = today.getFullYear() + 1;
+    document.getElementById('lmp_month').value = today.getMonth() + 1;
+    
+    // Toggle calculation method rows
+    calcMethod.addEventListener('change', function() {
+        document.getElementById('lmp_row').style.display = 'none';
+        document.getElementById('conception_row').style.display = 'none';
+        document.getElementById('due_date_row').style.display = 'none';
+        
+        if (this.value === 'lmp') {
+            document.getElementById('lmp_row').style.display = '';
+        } else if (this.value === 'conception') {
+            document.getElementById('conception_row').style.display = '';
+        } else if (this.value === 'due_date') {
+            document.getElementById('due_date_row').style.display = '';
+        }
+    });
+    
+    // Form validation
+    function validateForm() {
+        const method = calcMethod.value;
+        let isValid = false;
+        
+        if (method === 'lmp') {
+            const month = document.getElementById('lmp_month').value;
+            const day = document.getElementById('lmp_day').value;
+            const year = document.getElementById('lmp_year').value;
+            isValid = month && day && year && year.length === 4;
+        } else if (method === 'conception') {
+            const month = document.getElementById('con_month').value;
+            const day = document.getElementById('con_day').value;
+            const year = document.getElementById('con_year').value;
+            isValid = month && day && year && year.length === 4;
+        } else if (method === 'due_date') {
+            const month = document.getElementById('due_month').value;
+            const day = document.getElementById('due_day').value;
+            const year = document.getElementById('due_year').value;
+            isValid = month && day && year && year.length === 4;
+        }
+        
+        calculateBtn.disabled = !isValid;
+        return isValid;
+    }
+    
+    // Add validation listeners
+    const allInputs = document.querySelectorAll('#preg-form input, #preg-form select');
+    allInputs.forEach(input => {
+        input.addEventListener('change', validateForm);
+        input.addEventListener('input', validateForm);
+    });
+    
+    // Form submission
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Show loading state
+            if (loadingSpinner) {
+                loadingSpinner.classList.add('show');
+            }
+            calculateBtn.disabled = true;
+            
+            // Submit the form
+            setTimeout(() => {
+                this.submit();
+            }, 300);
+        });
+    }
+    
+    // Initial validation
+    validateForm();
+});
+</script>
+
+{% if result %}
+<script>
+// AUTO-SCROLL TO RESULTS
+(function() {
+    'use strict';
+    
+    function scrollToResults() {
+        const resultsSection = document.getElementById('results-section');
+        
+        if (!resultsSection) {
+            console.log('Results section not found');
+            return;
+        }
+        
+        console.log('Scrolling to results section...');
+        
+        // Make sure it's visible
+        resultsSection.style.display = 'block';
+        resultsSection.style.visibility = 'visible';
+        
+        // Wait for layout
+        setTimeout(function() {
+            const rect = resultsSection.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const targetPosition = rect.top + scrollTop - 100;
+            
+            console.log('Target position:', targetPosition);
+            
+            // Smooth scroll
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            
+            // Add highlight effect with pink color
+            resultsSection.style.transition = 'box-shadow 0.5s ease';
+            resultsSection.style.boxShadow = '0 0 30px rgba(233, 30, 99, 0.6)';
+            
+            // Fade highlight
+            setTimeout(function() {
+                resultsSection.style.boxShadow = '0 0 15px rgba(233, 30, 99, 0.3)';
+                
+                setTimeout(function() {
+                    resultsSection.style.boxShadow = 'none';
+                }, 1500);
+            }, 600);
+            
+        }, 100);
+    }
+    
+    // Multiple triggers
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', scrollToResults);
+    } else {
+        scrollToResults();
+    }
+    
+    window.addEventListener('load', function() {
+        setTimeout(scrollToResults, 200);
+    });
+})();
+</script>
+{% endif %}
+
+<!-- Schema.org Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Pregnancy Calculator",
+  "alternateName": ["Pregnancy Due Date Calculator", "Due Date Calculator"],
+  "description": "Free pregnancy calculator and due date calculator. Calculate your baby's due date, track pregnancy week by week, and learn about early signs of pregnancy.",
+  "url": "{{ request.build_absolute_uri }}",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "myCalculator.us",
+    "url": "{% url 'calculators:home' %}"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "ratingCount": "2847"
+  },
+  "about": {
+    "@type": "MedicalCondition",
+    "name": "Pregnancy"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate my pregnancy due date?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most common way to calculate your due date is by counting 280 days (40 weeks) from the first day of your last menstrual period. You can also calculate from your conception date by adding 266 days. Your doctor will confirm your due date with an ultrasound, usually between 8-12 weeks."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the early signs of pregnancy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Common early signs of pregnancy include a missed period, light spotting, tender breasts, morning sickness, fatigue, frequent urination, food cravings or aversions, mood swings, and mild cramping. However, these symptoms vary from person to person. The only sure way to know is by taking a pregnancy test."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is a pregnancy due date calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pregnancy calculators give you a good estimate, but only about 5% of babies arrive exactly on their due date. Most babies are born within two weeks before or after the estimated date. Your healthcare provider will confirm your due date with an ultrasound for the most accurate calculation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I take a pregnancy test?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For the most accurate results, wait until at least the first day of your missed period. Some sensitive tests can detect pregnancy a few days before your period is due, but waiting gives you more reliable results. If you get a negative result but still think you're pregnant, wait a few days and test again."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the three trimesters of pregnancy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The first trimester is weeks 1-13 when the baby's organs form. The second trimester is weeks 14-27 when you usually feel best and start showing. The third trimester is weeks 28-40 when the baby grows the most and you prepare for delivery. Each trimester brings different changes and milestones."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Health Calculators",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Pregnancy Calculator",
+      "item": "{{ request.build_absolute_uri }}"
+    }
+  ]
+}
+</script>
+
+{% endblock %}

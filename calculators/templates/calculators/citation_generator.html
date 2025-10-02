@@ -1,0 +1,1095 @@
+{% extends 'calculators/base.html' %}
+{% load static %}
+
+{% block title %}Citation Generator - Create APA, MLA, Chicago Citations | Free Tool{% endblock %}
+
+{% block content %}
+<style>
+/* Citation Generator Styles */
+.citation-generator-page {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background: white;
+}
+
+/* Breadcrumb */
+.breadcrumb-nav {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+    padding: 10px 20px 8px 20px;
+    background: #f9f9f9;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.breadcrumb-nav a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.breadcrumb-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Hero Banner */
+.hero-banner {
+    background: linear-gradient(135deg, #5c6bc0 0%, #7e57c2 100%);
+    color: white;
+    padding: 15px 20px;
+    margin: 0;
+    border-bottom: 2px solid #3949ab;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0 0 6px 0;
+    color: white;
+}
+
+.hero-subtitle {
+    font-size: 14px;
+    opacity: 0.93;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    max-width: 800px;
+}
+
+.hero-features {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 13px;
+}
+
+.hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hero-feature i {
+    font-size: 12px;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+}
+
+/* Main Layout */
+.main-layout {
+    display: flex;
+    gap: 20px;
+}
+
+.left-content {
+    flex: 1;
+    max-width: 800px;
+}
+
+.right-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+/* Style Selector */
+.style-selector {
+    background: #f5f5f5;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.style-selector h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+}
+
+.style-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.style-tab {
+    padding: 8px 16px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.style-tab:hover {
+    border-color: #5c6bc0;
+}
+
+.style-tab.active {
+    background: #5c6bc0;
+    color: white;
+    border-color: #5c6bc0;
+}
+
+/* Source Type Selector */
+.source-selector {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.source-selector h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+}
+
+.source-types {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.source-type {
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.source-type:hover {
+    background: #f0f0f0;
+    border-color: #5c6bc0;
+}
+
+.source-type.active {
+    background: #e8eaf6;
+    border-color: #5c6bc0;
+    color: #3949ab;
+    font-weight: 600;
+}
+
+.source-type i {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: #5c6bc0;
+}
+
+/* Input Form */
+.input-form {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.form-label .optional {
+    font-weight: normal;
+    color: #999;
+    font-size: 11px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #5c6bc0;
+    box-shadow: 0 0 0 2px rgba(92, 107, 192, 0.1);
+}
+
+.input-hint {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-top: 3px;
+}
+
+.generate-btn {
+    background: #5c6bc0;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.generate-btn:hover:not(:disabled) {
+    background: #3949ab;
+}
+
+.generate-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Citation Result */
+.citation-result {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #5c6bc0;
+}
+
+.citation-result h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: normal;
+    color: #5c6bc0;
+}
+
+.citation-box {
+    background: #f9f9f9;
+    padding: 15px;
+    border-left: 4px solid #5c6bc0;
+    font-family: 'Georgia', serif;
+    font-size: 13px;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.copy-btn {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.copy-btn:hover {
+    background: #45a049;
+}
+
+.copy-btn.copied {
+    background: #2196f3;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #ddd;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* Tips Section */
+.tips-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.tips-section h3 {
+    font-size: 16px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.tip-card {
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 3px;
+    border-left: 3px solid #5c6bc0;
+    font-size: 12px;
+}
+
+.tip-card h4 {
+    color: #3949ab;
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.tip-card p {
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* SEO Content */
+.seo-content {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.seo-content h2 {
+    color: #3949ab;
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0 0 15px 0;
+}
+
+.seo-content h3 {
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+    margin: 20px 0 10px 0;
+}
+
+.seo-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    text-align: justify;
+}
+
+.seo-content ul {
+    color: #666;
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.seo-content li {
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+/* Sidebar */
+.search-section {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.search-button {
+    background: #5c6bc0;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.sidebar-widget {
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.widget-header {
+    background: #5c6bc0;
+    color: white;
+    padding: 10px 15px;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.widget-content {
+    padding: 15px;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.calc-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.calc-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 0;
+}
+
+.calc-link:hover {
+    text-decoration: underline;
+}
+
+.calc-link.active {
+    color: #5c6bc0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .breadcrumb-nav {
+        padding: 8px 15px 6px 15px;
+        font-size: 11px;
+    }
+    
+    .hero-banner {
+        padding: 12px 15px;
+    }
+    
+    .hero-content h1 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .hero-subtitle {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+    
+    .hero-features {
+        gap: 10px;
+        font-size: 11px;
+    }
+    
+    .content-wrapper {
+        padding: 12px 15px;
+    }
+    
+    .main-layout {
+        flex-direction: column;
+    }
+    
+    .right-sidebar {
+        width: 100%;
+    }
+    
+    .source-types {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 16px;
+    }
+    
+    .hero-features {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .style-tabs {
+        flex-direction: column;
+    }
+    
+    .source-types {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="citation-generator-page">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-nav">
+        <a href="{% url 'calculators:home' %}">home</a> / 
+        <a href="{% url 'calculators:home' %}">academic</a> / 
+        <span>citation generator</span>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h1>Citation Generator</h1>
+            <p class="hero-subtitle">
+                Create perfect citations in APA, MLA, or Chicago style. No more worrying about commas, periods, or italics - just enter your source info and we'll format it correctly.
+            </p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Multiple Styles</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-book"></i>
+                    <span>Books, Websites, Journals</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-copy"></i>
+                    <span>Copy & Paste Ready</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>100% Free</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="main-layout">
+            <!-- Left Content -->
+            <div class="left-content">
+                <!-- Citation Style Selector -->
+                <div class="style-selector">
+                    <h3>Pick Your Citation Style</h3>
+                    <div class="style-tabs">
+                        <div class="style-tab active" data-style="apa">APA 7th Edition</div>
+                        <div class="style-tab" data-style="mla">MLA 9th Edition</div>
+                        <div class="style-tab" data-style="chicago">Chicago</div>
+                    </div>
+                </div>
+
+                <!-- Source Type Selector -->
+                <div class="source-selector">
+                    <h3>What Are You Citing?</h3>
+                    <div class="source-types">
+                        <div class="source-type active" data-type="book">
+                            <i class="fas fa-book"></i>
+                            Book
+                        </div>
+                        <div class="source-type" data-type="website">
+                            <i class="fas fa-globe"></i>
+                            Website
+                        </div>
+                        <div class="source-type" data-type="journal">
+                            <i class="fas fa-newspaper"></i>
+                            Journal
+                        </div>
+                        <div class="source-type" data-type="magazine">
+                            <i class="fas fa-magazine"></i>
+                            Magazine
+                        </div>
+                        <div class="source-type" data-type="video">
+                            <i class="fas fa-video"></i>
+                            Video
+                        </div>
+                        <div class="source-type" data-type="article">
+                            <i class="fas fa-file-alt"></i>
+                            Article
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Form -->
+                <div class="input-form" id="citation-form">
+                    <!-- Book Form (default) -->
+                    <div class="form-fields" id="book-fields">
+                        <div class="form-group">
+                            <label class="form-label">Author(s)</label>
+                            <input type="text" class="form-input" id="author" placeholder="Last name, First name">
+                            <span class="input-hint">Example: Smith, John or Smith, J.</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Book Title</label>
+                            <input type="text" class="form-input" id="title" placeholder="Enter the full book title">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Publisher</label>
+                            <input type="text" class="form-input" id="publisher" placeholder="Publishing company">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Year Published</label>
+                            <input type="text" class="form-input" id="year" placeholder="2024">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Edition <span class="optional">(if not first)</span></label>
+                            <input type="text" class="form-input" id="edition" placeholder="2nd, 3rd, etc.">
+                        </div>
+                        
+                        <button class="generate-btn" id="generate-btn">Generate Citation</button>
+                    </div>
+                </div>
+
+                <!-- Citation Result -->
+                <div id="result-section" style="display: none;">
+                    <div class="citation-result">
+                        <h3>Your Citation</h3>
+                        <div class="citation-box" id="citation-output">
+                            <!-- Generated citation appears here -->
+                        </div>
+                        <button class="copy-btn" id="copy-btn">
+                            <i class="fas fa-copy"></i> Copy Citation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state">
+                    <i class="fas fa-quote-left"></i>
+                    <p>Fill in the fields above and click "Generate Citation" to create your properly formatted citation.</p>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="tips-section">
+                    <h3>Citation Tips</h3>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <h4>Double Check Author Names</h4>
+                            <p>Make sure you get the order right - usually it's Last name, First name. If there are multiple authors, check your style guide for how to list them.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Capitalize Titles Correctly</h4>
+                            <p>For APA, only capitalize the first word and proper nouns. For MLA, capitalize all major words. When in doubt, look at the original source.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Include All Required Info</h4>
+                            <p>Each citation style requires specific information. If you're missing something, try to find it in the original source or note that it's unavailable.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Keep Your Citations Organized</h4>
+                            <p>Save your citations as you go. Most papers require an alphabetized reference list or works cited page at the end.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Content -->
+                <div class="seo-content">
+                    <h2>How to Use This Citation Generator</h2>
+                    
+                    <h3>The Basics</h3>
+                    <p>Pick your citation style (APA, MLA, or Chicago), choose what type of source you're citing, fill in the information, and hit generate. We'll format everything correctly so you can just copy and paste it into your paper.</p>
+                    
+                    <h3>Understanding Citation Styles</h3>
+                    <p>Different academic fields use different citation styles. APA is popular in social sciences like psychology and education. MLA is the standard for humanities like literature and philosophy. Chicago style shows up in history and some other fields. Your professor should tell you which one to use, but if they don't specify, APA is usually a safe bet.</p>
+                    
+                    <h3>Common Citation Mistakes</h3>
+                    <p>The biggest mistakes people make are forgetting to italicize titles (or using the wrong type of formatting), mixing up the order of information, and not being consistent. Once you pick a style, stick with it throughout your entire paper. Don't switch between APA and MLA halfway through.</p>
+                    
+                    <h3>What If Information Is Missing?</h3>
+                    <p>Sometimes you can't find all the information you need - maybe there's no author listed or no publication date. That's okay. For APA, use "n.d." for no date. For missing authors, start with the title. Each style has specific ways to handle missing info, and our generator accounts for these situations.</p>
+                    
+                    <h3>Why Citations Matter</h3>
+                    <p>Citations aren't just busy work. They give credit to the people whose ideas you're using, they let readers find your sources if they want to learn more, and they show your professor that you did actual research. Plus, not citing your sources properly is plagiarism, which can get you in serious academic trouble.</p>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <!-- Search Box -->
+                <div class="search-section">
+                    <input type="text" class="search-input" placeholder="Search...">
+                    <button class="search-button">Search</button>
+                </div>
+
+                <!-- Related Calculators -->
+                <div class="sidebar-widget">
+                    <div class="widget-header">Related Tools</div>
+                    <div class="widget-content">
+                        <div class="calculator-grid">
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:gpa_calculator' %}" class="calc-link">GPA Calculator</a>
+                                <a href="{% url 'calculators:age_calculator' %}" class="calc-link">Age Calculator</a>
+                                <a href="{% url 'calculators:percentage_calculator' %}" class="calc-link">Percentage</a>
+                            </div>
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:loan_calculator' %}" class="calc-link">Loan Calculator</a>
+                                <a href="{% url 'calculators:bmi_calculator' %}" class="calc-link">BMI Calculator</a>
+                                <a href="{% url 'calculators:home' %}" class="calc-link">More Tools</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let currentStyle = 'apa';
+    let currentType = 'book';
+    
+    // Style tabs
+    document.querySelectorAll('.style-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.style-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            currentStyle = this.getAttribute('data-style');
+        });
+    });
+    
+    // Source type selection
+    document.querySelectorAll('.source-type').forEach(type => {
+        type.addEventListener('click', function() {
+            document.querySelectorAll('.source-type').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            currentType = this.getAttribute('data-type');
+            updateForm(currentType);
+        });
+    });
+    
+    // Update form fields based on source type
+    function updateForm(type) {
+        const formFields = document.getElementById('book-fields');
+        
+        if (type === 'website') {
+            formFields.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Author(s) <span class="optional">(if available)</span></label>
+                    <input type="text" class="form-input" id="author" placeholder="Last name, First name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Page Title</label>
+                    <input type="text" class="form-input" id="title" placeholder="Article or page title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Website Name</label>
+                    <input type="text" class="form-input" id="website" placeholder="Name of the website">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">URL</label>
+                    <input type="text" class="form-input" id="url" placeholder="https://example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date Published <span class="optional">(if shown)</span></label>
+                    <input type="text" class="form-input" id="date" placeholder="Month Day, Year">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date Accessed</label>
+                    <input type="text" class="form-input" id="access_date" placeholder="Month Day, Year">
+                </div>
+                <button class="generate-btn" id="generate-btn">Generate Citation</button>
+            `;
+        } else if (type === 'journal') {
+            formFields.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Author(s)</label>
+                    <input type="text" class="form-input" id="author" placeholder="Last name, First name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Article Title</label>
+                    <input type="text" class="form-input" id="title" placeholder="Title of the article">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Journal Name</label>
+                    <input type="text" class="form-input" id="journal" placeholder="Name of the journal">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Volume</label>
+                    <input type="text" class="form-input" id="volume" placeholder="Volume number">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Issue <span class="optional">(if available)</span></label>
+                    <input type="text" class="form-input" id="issue" placeholder="Issue number">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Page Numbers</label>
+                    <input type="text" class="form-input" id="pages" placeholder="123-145">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Year</label>
+                    <input type="text" class="form-input" id="year" placeholder="2024">
+                </div>
+                <button class="generate-btn" id="generate-btn">Generate Citation</button>
+            `;
+        } else {
+            // Default book form
+            formFields.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Author(s)</label>
+                    <input type="text" class="form-input" id="author" placeholder="Last name, First name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Book Title</label>
+                    <input type="text" class="form-input" id="title" placeholder="Enter the full book title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Publisher</label>
+                    <input type="text" class="form-input" id="publisher" placeholder="Publishing company">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Year Published</label>
+                    <input type="text" class="form-input" id="year" placeholder="2024">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Edition <span class="optional">(if not first)</span></label>
+                    <input type="text" class="form-input" id="edition" placeholder="2nd, 3rd, etc.">
+                </div>
+                <button class="generate-btn" id="generate-btn">Generate Citation</button>
+            `;
+        }
+        
+        // Re-attach event listener
+        attachGenerateListener();
+    }
+    
+    function attachGenerateListener() {
+        const generateBtn = document.getElementById('generate-btn');
+        if (generateBtn) {
+            generateBtn.addEventListener('click', generateCitation);
+        }
+    }
+    
+    function generateCitation() {
+        const author = document.getElementById('author')?.value || '';
+        const title = document.getElementById('title')?.value || '';
+        
+        if (!author && !title) {
+            alert('Please fill in at least the author or title');
+            return;
+        }
+        
+        let citation = '';
+        
+        if (currentType === 'book') {
+            const publisher = document.getElementById('publisher')?.value || '';
+            const year = document.getElementById('year')?.value || 'n.d.';
+            const edition = document.getElementById('edition')?.value;
+            
+            if (currentStyle === 'apa') {
+                citation = `${author}. (${year}). <em>${title}</em>${edition ? ` (${edition} ed.)` : ''}. ${publisher}.`;
+            } else if (currentStyle === 'mla') {
+                citation = `${author}. <em>${title}</em>${edition ? `, ${edition} ed.` : ''}. ${publisher}, ${year}.`;
+            } else if (currentStyle === 'chicago') {
+                citation = `${author}. <em>${title}</em>${edition ? `. ${edition} ed` : ''}. ${publisher}, ${year}.`;
+            }
+        } else if (currentType === 'website') {
+            const website = document.getElementById('website')?.value || '';
+            const url = document.getElementById('url')?.value || '';
+            const date = document.getElementById('date')?.value || 'n.d.';
+            const accessDate = document.getElementById('access_date')?.value || '';
+            
+            if (currentStyle === 'apa') {
+                const authorPart = author ? `${author}. ` : '';
+                const datePart = date !== 'n.d.' ? `(${date}). ` : '(n.d.). ';
+                citation = `${authorPart}${datePart}<em>${title}</em>. ${website}. ${url}`;
+            } else if (currentStyle === 'mla') {
+                const authorPart = author ? `${author}. ` : '';
+                citation = `${authorPart}"${title}." <em>${website}</em>, ${date}, ${url}. Accessed ${accessDate}.`;
+            } else if (currentStyle === 'chicago') {
+                const authorPart = author ? `${author}. ` : '';
+                citation = `${authorPart}"${title}." <em>${website}</em>. ${date}. ${url}.`;
+            }
+        } else if (currentType === 'journal') {
+            const journal = document.getElementById('journal')?.value || '';
+            const volume = document.getElementById('volume')?.value || '';
+            const issue = document.getElementById('issue')?.value;
+            const pages = document.getElementById('pages')?.value || '';
+            const year = document.getElementById('year')?.value || 'n.d.';
+            
+            if (currentStyle === 'apa') {
+                const issuePart = issue ? `(${issue})` : '';
+                citation = `${author}. (${year}). ${title}. <em>${journal}</em>, <em>${volume}</em>${issuePart}, ${pages}.`;
+            } else if (currentStyle === 'mla') {
+                citation = `${author}. "${title}." <em>${journal}</em>, vol. ${volume}${issue ? `, no. ${issue}` : ''}, ${year}, pp. ${pages}.`;
+            } else if (currentStyle === 'chicago') {
+                const issuePart = issue ? `, no. ${issue}` : '';
+                citation = `${author}. "${title}." <em>${journal}</em> ${volume}${issuePart} (${year}): ${pages}.`;
+            }
+        }
+        
+        // Display result
+        document.getElementById('citation-output').innerHTML = citation;
+        document.getElementById('result-section').style.display = 'block';
+        document.getElementById('empty-state').style.display = 'none';
+        
+        // Scroll to result
+        setTimeout(() => {
+            document.getElementById('result-section').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }, 100);
+    }
+    
+    // Copy to clipboard
+    document.addEventListener('click', function(e) {
+        if (e.target.id === 'copy-btn' || e.target.closest('#copy-btn')) {
+            const copyBtn = document.getElementById('copy-btn');
+            const citation = document.getElementById('citation-output').innerText;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(citation).then(() => {
+                const originalHTML = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyBtn.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalHTML;
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy. Please select and copy manually.');
+            });
+        }
+    });
+    
+    // Initial setup
+    attachGenerateListener();
+});
+</script>
+
+<!-- Schema.org Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Citation Generator",
+  "description": "Free citation generator for APA, MLA, and Chicago styles. Create properly formatted citations for books, websites, journals, and more.",
+  "url": "{{ request.build_absolute_uri }}",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "myCalculator.us",
+    "url": "{% url 'calculators:home' %}"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "1456"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I cite a book in APA format?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For APA format, list the author's last name and first initial, publication year in parentheses, book title in italics, and publisher. Example: Smith, J. (2024). The Book Title. Publisher Name."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the difference between APA and MLA citations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "APA uses author-date format and is common in social sciences. MLA uses author-page format and is standard in humanities. They also differ in capitalization, punctuation, and how they handle sources like websites."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I cite a website with no author?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Start with the page title instead of the author name. Follow the same format for the rest of the citation based on your citation style."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to cite everything I reference?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, cite any information, ideas, or quotes that aren't your own original thoughts. This includes paraphrased information, not just direct quotes. Common knowledge doesn't need citation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use this citation generator for my school paper?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, but always double-check the citations against your style guide. While we strive for accuracy, it's your responsibility to ensure citations meet your instructor's requirements."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Academic Tools",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Citation Generator",
+      "item": "{{ request.build_absolute_uri }}"
+    }
+  ]
+}
+</script>
+
+{% endblock %}

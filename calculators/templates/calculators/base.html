@@ -21,6 +21,7 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
     <!-- Main Navigation -->
+    <!-- Main Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark main-navbar" id="mainNavbar">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold" href="{% url 'calculators:home' %}">
@@ -43,18 +44,17 @@
                                 <i class="fas fa-university me-2 text-primary"></i>Loan Calculator
                                 <small class="text-muted d-block">Monthly payments & interest</small>
                             </a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:mortgage_calculator' %}">
+                                <i class="fas fa-home me-2 text-info"></i>Mortgage Calculator
+                                <small class="text-muted d-block">Home loan payments & schedule</small>
+                            </a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:401k_calculator' %}">
+                                <i class="fas fa-piggy-bank me-2 text-warning"></i>401k Calculator
+                                <small class="text-muted d-block">Retirement savings planner</small>
+                            </a></li>
                             <li><a class="dropdown-item py-2" href="{% url 'calculators:percentage_calculator' %}">
                                 <i class="fas fa-percentage me-2 text-success"></i>Percentage Calculator
                                 <small class="text-muted d-block">Calculate any percentage</small>
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item py-2 disabled" href="#">
-                                <i class="fas fa-home me-2 text-info"></i>Mortgage Calculator
-                                <small class="text-muted d-block">Coming soon</small>
-                            </a></li>
-                            <li><a class="dropdown-item py-2 disabled" href="#">
-                                <i class="fas fa-piggy-bank me-2 text-warning"></i>Savings Calculator
-                                <small class="text-muted d-block">Coming soon</small>
                             </a></li>
                         </ul>
                     </li>
@@ -69,23 +69,22 @@
                                 <i class="fas fa-weight-scale me-2 text-danger"></i>BMI Calculator
                                 <small class="text-muted d-block">Body mass index</small>
                             </a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:bmr_calculator' %}">
+                                <i class="fas fa-fire-flame-curved me-2 text-danger"></i>BMR Calculator
+                                <small class="text-muted d-block">Basal metabolic rate</small>
+                            </a></li>
                             <li><a class="dropdown-item py-2" href="{% url 'calculators:calorie_calculator' %}">
                                 <i class="fas fa-fire me-2 text-warning"></i>Calorie Calculator
                                 <small class="text-muted d-block">Daily calorie needs</small>
                             </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item py-2 disabled" href="#">
-                                <i class="fas fa-heart me-2 text-danger"></i>Body Fat Calculator
-                                <small class="text-muted d-block">Coming soon</small>
-                            </a></li>
-                            <li><a class="dropdown-item py-2 disabled" href="#">
-                                <i class="fas fa-running me-2 text-success"></i>Ideal Weight Calculator
-                                <small class="text-muted d-block">Coming soon</small>
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:pregnancy_calculator' %}">
+                                <i class="fas fa-baby me-2 text-info"></i>Pregnancy Calculator
+                                <small class="text-muted d-block">Due date & trimester tracker</small>
                             </a></li>
                         </ul>
                     </li>
                     
-                    <!-- Math & Academic Calculators Dropdown -->
+                    <!-- Academic Calculators Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-graduation-cap me-1"></i>ACADEMIC
@@ -95,48 +94,62 @@
                                 <i class="fas fa-graduation-cap me-2 text-primary"></i>GPA Calculator
                                 <small class="text-muted d-block">Grade point average</small>
                             </a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:grade_calculator' %}">
+                                <i class="fas fa-chart-bar me-2 text-success"></i>Grade Calculator
+                                <small class="text-muted d-block">Final grade & test scores</small>
+                            </a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'calculators:citation_generator' %}">
+                                <i class="fas fa-quote-right me-2 text-info"></i>Citation Generator
+                                <small class="text-muted d-block">APA, MLA, Chicago formats</small>
+                            </a></li>
                             <li><a class="dropdown-item py-2" href="{% url 'calculators:percentage_calculator' %}">
-                                <i class="fas fa-percentage me-2 text-success"></i>Percentage Calculator
+                                <i class="fas fa-percentage me-2 text-warning"></i>Percentage Calculator
                                 <small class="text-muted d-block">Math percentages</small>
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item py-2 disabled" href="#">
-                                <i class="fas fa-calculator me-2 text-info"></i>Grade Calculator
-                                <small class="text-muted d-block">Coming soon</small>
-                            </a></li>
-                            <li><a class="dropdown-item py-2 disabled" href="#">
-                                <i class="fas fa-square-root-alt me-2 text-warning"></i>Scientific Calculator
-                                <small class="text-muted d-block">Coming soon</small>
                             </a></li>
                         </ul>
                     </li>
                     
-                    <!-- Other Calculators Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white nav-highlight" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-tools me-1"></i>OTHER TOOLS
-                        </a>
-                        <ul class="dropdown-menu shadow-lg border-0">
-                            <li><a class="dropdown-item py-2" href="{% url 'calculators:age_calculator' %}">
-                                <i class="fas fa-birthday-cake me-2 text-warning"></i>Age Calculator
-                                <small class="text-muted d-block">Calculate exact age</small>
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item py-2 disabled" href="#">
-                                <i class="fas fa-calendar-alt me-2 text-info"></i>Date Calculator
-                                <small class="text-muted d-block">Coming soon</small>
-                            </a></li>
-                            <li><a class="dropdown-item py-2 disabled" href="#">
-                                <i class="fas fa-clock me-2 text-primary"></i>Time Calculator
-                                <small class="text-muted d-block">Coming soon</small>
-                            </a></li>
-                            <li><a class="dropdown-item py-2 disabled" href="#">
-                                <i class="fas fa-thermometer-half me-2 text-danger"></i>Unit Converter
-                                <small class="text-muted d-block">Coming soon</small>
-                            </a></li>
-                        </ul>
-                    </li>
-                </ul>
+                    <!-- Other Tools Dropdown -->
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle text-white nav-highlight" href="#" role="button" data-bs-toggle="dropdown">
+        <i class="fas fa-tools me-1"></i>OTHER TOOLS
+    </a>
+    <ul class="dropdown-menu shadow-lg border-0">
+        <!-- Age Calculator -->
+        <li>
+            <a class="dropdown-item py-2" href="{% url 'calculators:age_calculator' %}">
+                <i class="fas fa-birthday-cake me-2 text-warning"></i>Age Calculator
+                <small class="text-muted d-block">Calculate exact age</small>
+            </a>
+        </li>
+
+        <!-- Date of Birth Calculator -->
+        <li>
+            <a class="dropdown-item py-2" href="{% url 'calculators:date_of_birth_calculator' %}">
+                <i class="fas fa-user-clock me-2 text-success"></i>Date of Birth Calculator
+                <small class="text-muted d-block">Find DOB from age</small>
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="dropdown-header text-muted" style="font-size: 0.75rem;">MORE COMING SOON</li>
+        <li><a class="dropdown-item py-2 disabled" href="#">
+            <i class="fas fa-calendar-alt me-2 text-info"></i>Date Calculator
+            <small class="text-muted d-block">Coming soon</small>
+        </a></li>
+        <li><a class="dropdown-item py-2 disabled" href="#">
+            <i class="fas fa-clock me-2 text-primary"></i>Time Calculator
+            <small class="text-muted d-block">Coming soon</small>
+        </a></li>
+        <li><a class="dropdown-item py-2 disabled" href="#">
+            <i class="fas fa-thermometer-half me-2 text-danger"></i>Unit Converter
+            <small class="text-muted d-block">Coming soon</small>
+        </a></li>
+    </ul>
+</li>
+</ul>
+
                 
                 <!-- Search Box -->
                 <form class="d-flex me-3 search-form">
@@ -147,22 +160,6 @@
                         </button>
                     </div>
                 </form>
-                
-                <!-- User Menu -->
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i>Account
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-in-alt me-2"></i>Sign In</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user-plus me-2"></i>Sign Up</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-history me-2"></i>Calculator History</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-bookmark me-2"></i>Saved Calculations</a></li>
-                        </ul>
-                    </li>
-                </ul>
             </div>
         </div>
     </nav>
@@ -185,8 +182,11 @@
                 <a href="{% url 'calculators:loan_calculator' %}" class="btn btn-sm btn-outline-light me-2">
                     <i class="fas fa-university me-1"></i>Loan
                 </a>
-                <a href="{% url 'calculators:gpa_calculator' %}" class="btn btn-sm btn-outline-light">
+                <a href="{% url 'calculators:gpa_calculator' %}" class="btn btn-sm btn-outline-light me-2">
                     <i class="fas fa-graduation-cap me-1"></i>GPA
+                </a>
+                <a href="{% url 'calculators:grade_calculator' %}" class="btn btn-sm btn-outline-light">
+                    <i class="fas fa-chart-bar me-1"></i>Grade
                 </a>
             </div>
             
@@ -206,28 +206,60 @@
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
-            <div class="list-group list-group-flush">
-                <a href="{% url 'calculators:age_calculator' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-birthday-cake me-2"></i>Age Calculator
-                </a>
-                <a href="{% url 'calculators:bmi_calculator' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-weight-scale me-2"></i>BMI Calculator
-                </a>
+            <h6 class="text-muted text-uppercase px-3 mb-2" style="font-size: 0.75rem;">Financial</h6>
+            <div class="list-group list-group-flush mb-3">
                 <a href="{% url 'calculators:loan_calculator' %}" class="list-group-item list-group-item-action">
                     <i class="fas fa-university me-2"></i>Loan Calculator
                 </a>
-                <a href="{% url 'calculators:gpa_calculator' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-graduation-cap me-2"></i>GPA Calculator
+                <a href="{% url 'calculators:mortgage_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-home me-2"></i>Mortgage Calculator
+                </a>
+                <a href="{% url 'calculators:401k_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-piggy-bank me-2"></i>401k Calculator
                 </a>
                 <a href="{% url 'calculators:percentage_calculator' %}" class="list-group-item list-group-item-action">
                     <i class="fas fa-percentage me-2"></i>Percentage Calculator
                 </a>
+            </div>
+            
+            <h6 class="text-muted text-uppercase px-3 mb-2" style="font-size: 0.75rem;">Health & Fitness</h6>
+            <div class="list-group list-group-flush mb-3">
+                <a href="{% url 'calculators:bmi_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-weight-scale me-2"></i>BMI Calculator
+                </a>
+                <a href="{% url 'calculators:bmr_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-fire-flame-curved me-2"></i>BMR Calculator
+                </a>
                 <a href="{% url 'calculators:calorie_calculator' %}" class="list-group-item list-group-item-action">
                     <i class="fas fa-fire me-2"></i>Calorie Calculator
+                </a>
+                <a href="{% url 'calculators:pregnancy_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-baby me-2"></i>Pregnancy Calculator
+                </a>
+            </div>
+            
+            <h6 class="text-muted text-uppercase px-3 mb-2" style="font-size: 0.75rem;">Academic</h6>
+            <div class="list-group list-group-flush mb-3">
+                <a href="{% url 'calculators:gpa_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-graduation-cap me-2"></i>GPA Calculator
+                </a>
+                <a href="{% url 'calculators:grade_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-chart-bar me-2"></i>Grade Calculator
+                </a>
+                <a href="{% url 'calculators:citation_generator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-quote-right me-2"></i>Citation Generator
+                </a>
+            </div>
+            
+            <h6 class="text-muted text-uppercase px-3 mb-2" style="font-size: 0.75rem;">Other Tools</h6>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'calculators:age_calculator' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-birthday-cake me-2"></i>Age Calculator
                 </a>
             </div>
         </div>
     </div>
+
 
     <!-- Main Content -->
     <main class="flex-grow-1">
@@ -279,9 +311,7 @@
                                 <a href="https://linkedin.com/company/calculatornet" target="_blank" rel="noopener" class="social-link" title="Connect on LinkedIn">
                                     <i class="fab fa-linkedin-in"></i>
                                 </a>
-                                <a href="https://github.com/calculatornet" target="_blank" rel="noopener" class="social-link" title="View on GitHub">
-                                    <i class="fab fa-github"></i>
-                                </a>
+                                
                                 <a href="https://instagram.com/calculatornet" target="_blank" rel="noopener" class="social-link" title="Follow us on Instagram">
                                     <i class="fab fa-instagram"></i>
                                 </a>
@@ -290,46 +320,35 @@
                                 </a>
                             </div>
                             
-                            <!-- Newsletter -->
-                            <div class="newsletter-section">
-                                <h6 class="newsletter-title">
-                                    <i class="fas fa-envelope me-2"></i>Stay Updated
-                                </h6>
-                                <p class="newsletter-desc">Get notified about new calculators and features</p>
-                                <form class="newsletter-form">
-                                    <div class="input-group">
-                                        <input type="email" class="form-control" placeholder="Enter your email" required>
-                                        <button class="btn btn-primary" type="submit">
-                                            <i class="fas fa-paper-plane"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                                                   </div>
                     </div>
                     
-                    <!-- Calculator Categories - Only 6 Working Tools -->
+                    <!-- Calculator Categories - All Working Tools -->
                     <div class="col-lg-8">
                         <div class="row g-4">
-                            <!-- Financial -->
+                            <!-- Financial Tools -->
                             <div class="col-md-4">
                                 <h6 class="footer-section-title">
                                     <i class="fas fa-chart-line me-2"></i>Financial Tools
                                 </h6>
                                 <ul class="footer-links">
                                     <li><a href="{% url 'calculators:loan_calculator' %}">Loan Calculator</a></li>
+                                    <li><a href="{% url 'calculators:mortgage_calculator' %}">Mortgage Calculator</a></li>
+                                    <li><a href="{% url 'calculators:401k_calculator' %}">401k Calculator</a></li>
                                     <li><a href="{% url 'calculators:percentage_calculator' %}">Percentage Calculator</a></li>
                                 </ul>
                             </div>
                             
-                            <!-- Health -->
+                            <!-- Health & Fitness -->
                             <div class="col-md-4">
                                 <h6 class="footer-section-title">
-                                    <i class="fas fa-heartbeat me-2"></i>Health Tools
+                                    <i class="fas fa-heartbeat me-2"></i>Health & Fitness
                                 </h6>
                                 <ul class="footer-links">
                                     <li><a href="{% url 'calculators:bmi_calculator' %}">BMI Calculator</a></li>
+                                    <li><a href="{% url 'calculators:bmr_calculator' %}">BMR Calculator</a></li>
                                     <li><a href="{% url 'calculators:calorie_calculator' %}">Calorie Calculator</a></li>
+                                    <li><a href="{% url 'calculators:pregnancy_calculator' %}">Pregnancy Calculator</a></li>
                                 </ul>
                             </div>
                             
@@ -340,47 +359,14 @@
                                 </h6>
                                 <ul class="footer-links">
                                     <li><a href="{% url 'calculators:gpa_calculator' %}">GPA Calculator</a></li>
+                                    <li><a href="{% url 'calculators:grade_calculator' %}">Grade Calculator</a></li>
+                                    <li><a href="{% url 'calculators:citation_generator' %}">Citation Generator</a></li>
                                     <li><a href="{% url 'calculators:age_calculator' %}">Age Calculator</a></li>
                                 </ul>
                             </div>
                         </div>
                         
-                        <!-- Quick Links Section -->
-                        <div class="row mt-4">
-                            <div class="col-md-4">
-                                <h6 class="footer-section-title">
-                                    <i class="fas fa-info-circle me-2"></i>Company
-                                </h6>
-                                <ul class="footer-links">
-                                    <li><a href="#about">About Us</a></li>
-                                    <li><a href="#contact">Contact</a></li>
-                                    <li><a href="#blog">Blog</a></li>
-                                </ul>
-                            </div>
-                            
-                            <div class="col-md-4">
-                                <h6 class="footer-section-title">
-                                    <i class="fas fa-shield-alt me-2"></i>Legal
-                                </h6>
-                                <ul class="footer-links">
-                                    <li><a href="{% url 'calculators:privacy_policy' %}">Privacy Policy</a></li>
-                                    <li><a href="{% url 'calculators:terms_conditions' %}">Terms of Service</a></li>
-                                    <li><a href="{% url 'calculators:sitemap_page' %}">Sitemap</a></li>
-                                </ul>
-                            </div>
-                            
-                            <div class="col-md-4">
-                                <h6 class="footer-section-title">
-                                    <i class="fas fa-headset me-2"></i>Support
-                                </h6>
-                                <ul class="footer-links">
-                                    <li><a href="#help">Help Center</a></li>
-                                    <li><a href="#faq">FAQ</a></li>
-                                    <li><a href="#feedback">Feedback</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                                           </div>
                 </div>
                 
                 
@@ -399,12 +385,12 @@
                             <a href="{% url 'calculators:privacy_policy' %}">Privacy Policy</a>
                             <a href="{% url 'calculators:terms_conditions' %}">Terms of Service</a>
                             <a href="{% url 'calculators:contact_us' %}">Contact</a>
-                            <a href="{% url 'calculators:sitemap_page' %}">Sitemap</a>
-                            <a href="#blog">Blog</a>
+                            
+                            
                         </div>
                         <p class="copyright">
                             © 2008 - 2025 <a href="{% url 'calculators:home' %}">myCalculator.us</a>. 
-                            All rights reserved. Built with Django & Bootstrap.
+                            All rights reserved.
                         </p>
                     </div>
                     
@@ -746,10 +732,6 @@
             border-color: #0077b5;
         }
         
-        .social-link[title*="GitHub"]:hover {
-            background: #333;
-            border-color: #333;
-        }
         
         .social-link[title*="Instagram"]:hover {
             background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);

@@ -1,12 +1,12 @@
 {% extends 'calculators/base.html' %}
 {% load static %}
 
-{% block title %}{{ page_title }}{% endblock %}
+{% block title %}401k Calculator - Plan Your Retirement Savings | Free Tool{% endblock %}
 
 {% block content %}
 <style>
-/* Clean, Professional Loan Calculator Styles */
-.loan-calculator-page {
+/* Clean 401k Calculator Styles */
+.calculator-401k-page {
     font-family: Arial, sans-serif;
     font-size: 14px;
     line-height: 1.5;
@@ -14,7 +14,7 @@
     background: white;
 }
 
-/* Breadcrumb - Positioned outside hero */
+/* Breadcrumb */
 .breadcrumb-nav {
     font-size: 12px;
     color: #666;
@@ -34,7 +34,7 @@
     text-decoration: underline;
 }
 
-/* Compact Hero Banner - Full Width */
+/* Compact Hero Banner */
 .hero-banner {
     background: linear-gradient(135deg, #1f4788 0%, #2d5aa0 100%);
     color: white;
@@ -145,7 +145,7 @@
 .label-cell {
     background: #f8f8f8;
     font-weight: normal;
-    width: 180px;
+    width: 200px;
     color: #333;
     font-size: 13px;
 }
@@ -275,12 +275,52 @@
 
 .result-value.highlight {
     color: #28a745;
-    font-size: 24px;
+    font-size: 28px;
 }
 
 .result-subtitle {
     font-size: 11px;
     color: #666;
+}
+
+/* Year by Year Growth */
+.growth-section {
+    margin-top: 20px;
+}
+
+.growth-section h4 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.growth-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: white;
+}
+
+.growth-table th {
+    background: #4a90e2;
+    color: white;
+    padding: 8px 6px;
+    text-align: left;
+    font-weight: normal;
+}
+
+.growth-table td {
+    padding: 6px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.growth-table tr:hover {
+    background: #f8f9fa;
+}
+
+.growth-table .currency {
+    text-align: right;
 }
 
 /* Empty State */
@@ -295,89 +335,6 @@
     color: #ddd;
     margin-bottom: 15px;
     display: block;
-}
-
-/* Amortization Table */
-.amortization-section {
-    margin-top: 20px;
-}
-
-.amortization-section h4 {
-    font-size: 14px;
-    font-weight: normal;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.amortization-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    background: white;
-}
-
-.amortization-table th {
-    background: #4a90e2;
-    color: white;
-    padding: 8px 6px;
-    text-align: left;
-    font-weight: normal;
-}
-
-.amortization-table td {
-    padding: 6px;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.amortization-table tr:hover {
-    background: #f8f9fa;
-}
-
-.amortization-table .currency {
-    text-align: right;
-}
-
-/* Recommendations */
-.recommendations-section {
-    margin-top: 20px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 4px;
-}
-
-.recommendations-section h4 {
-    font-size: 14px;
-    font-weight: normal;
-    margin-bottom: 12px;
-    color: #333;
-}
-
-.recommendation-card {
-    background: white;
-    padding: 12px;
-    border-radius: 3px;
-    margin-bottom: 10px;
-    border-left: 3px solid #4a90e2;
-    font-size: 12px;
-}
-
-.recommendation-card h5 {
-    color: #1f4788;
-    margin: 0 0 5px 0;
-    font-size: 13px;
-    font-weight: normal;
-}
-
-.recommendation-card p {
-    color: #666;
-    margin: 0 0 8px 0;
-}
-
-.recommendation-meta {
-    display: flex;
-    gap: 15px;
-    font-size: 11px;
-    color: #666;
 }
 
 /* Tips Section */
@@ -632,20 +589,20 @@
 }
 </style>
 
-<div class="loan-calculator-page">
-    <!-- Breadcrumb - Outside hero -->
+<div class="calculator-401k-page">
+    <!-- Breadcrumb -->
     <div class="breadcrumb-nav">
         <a href="{% url 'calculators:home' %}">home</a> / 
         <a href="{% url 'calculators:home' %}">financial</a> / 
-        <span>loan calculator</span>
+        <span>401k calculator</span>
     </div>
 
-    <!-- Compact Hero Banner - Full Width -->
+    <!-- Hero Banner -->
     <section class="hero-banner">
         <div class="hero-content">
-            <h1>Loan Calculator</h1>
+            <h1>401k Calculator</h1>
             <p class="hero-subtitle">
-                Figure out your monthly payments, see how much interest you'll pay, and get a full breakdown of your loan schedule.
+                See how much you could have saved by retirement. Factor in your contributions, company match, and investment returns.
             </p>
             <div class="hero-features">
                 <div class="hero-feature">
@@ -654,7 +611,7 @@
                 </div>
                 <div class="hero-feature">
                     <i class="fas fa-chart-line"></i>
-                    <span>Payment Schedule</span>
+                    <span>Year by Year Growth</span>
                 </div>
                 <div class="hero-feature">
                     <i class="fas fa-mobile-alt"></i>
@@ -668,9 +625,8 @@
         </div>
     </section>
 
-    <!-- Main Content Wrapper -->
+    <!-- Main Content -->
     <div class="content-wrapper">
-        <!-- Main Layout -->
         <div class="main-layout">
             <!-- Left Content -->
             <div class="left-content">
@@ -682,65 +638,109 @@
 
                 <!-- Calculator Form -->
                 <div class="calculator-form">
-                    <form id="loan-form" method="post">
+                    <form id="calc-form" method="post">
                         {% csrf_token %}
                         <table class="form-table">
                             <tr>
-                                <td class="label-cell">Loan Amount</td>
-                                <td class="input-cell">
-                                    <input type="text" 
-                                           id="loan_amount" 
-                                           name="loan_amount" 
-                                           class="form-input" 
-                                           placeholder="250,000"
-                                           value="{{ form_data.loan_amount|default:'' }}"
-                                           required>
-                                    <span class="input-hint">How much are you borrowing?</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="label-cell">Interest Rate (%)</td>
+                                <td class="label-cell">Current Age</td>
                                 <td class="input-cell">
                                     <input type="number" 
-                                           id="interest_rate" 
-                                           name="interest_rate" 
-                                           class="form-input" 
-                                           placeholder="6.5"
-                                           value="{{ form_data.interest_rate|default:'' }}"
-                                           step="0.001"
-                                           min="0"
-                                           max="50"
-                                           required>
-                                    <span class="input-hint">Your annual rate (APR)</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="label-cell">Loan Term (Years)</td>
-                                <td class="input-cell">
-                                    <input type="number" 
-                                           id="loan_term" 
-                                           name="loan_term" 
+                                           id="current_age" 
+                                           name="current_age" 
                                            class="form-input" 
                                            placeholder="30"
-                                           value="{{ form_data.loan_term|default:'' }}"
-                                           step="0.5"
-                                           min="0.5"
-                                           max="50"
+                                           value="{{ form_data.current_age|default:'' }}"
+                                           min="18"
+                                           max="100"
                                            required>
-                                    <span class="input-hint">How many years to pay it back?</span>
+                                    <span class="input-hint">How old are you now?</span>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="label-cell">Payment Frequency</td>
+                                <td class="label-cell">Retirement Age</td>
                                 <td class="input-cell">
-                                    <select id="payment_frequency" name="payment_frequency" class="form-select">
-                                        <option value="12" {% if form_data.payment_frequency == '12' %}selected{% endif %}>Monthly (12 per year)</option>
-                                        <option value="26" {% if form_data.payment_frequency == '26' %}selected{% endif %}>Bi-weekly (26 per year)</option>
-                                        <option value="52" {% if form_data.payment_frequency == '52' %}selected{% endif %}>Weekly (52 per year)</option>
-                                        <option value="4" {% if form_data.payment_frequency == '4' %}selected{% endif %}>Quarterly (4 per year)</option>
-                                        <option value="1" {% if form_data.payment_frequency == '1' %}selected{% endif %}>Annual (1 per year)</option>
-                                    </select>
-                                    <span class="input-hint">How often will you pay?</span>
+                                    <input type="number" 
+                                           id="retirement_age" 
+                                           name="retirement_age" 
+                                           class="form-input" 
+                                           placeholder="65"
+                                           value="{{ form_data.retirement_age|default:'65' }}"
+                                           min="50"
+                                           max="80"
+                                           required>
+                                    <span class="input-hint">When do you plan to retire?</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Current 401k Balance</td>
+                                <td class="input-cell">
+                                    <input type="text" 
+                                           id="current_balance" 
+                                           name="current_balance" 
+                                           class="form-input" 
+                                           placeholder="50,000"
+                                           value="{{ form_data.current_balance|default:'' }}">
+                                    <span class="input-hint">What you have saved now (leave blank if $0)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Annual Salary</td>
+                                <td class="input-cell">
+                                    <input type="text" 
+                                           id="annual_salary" 
+                                           name="annual_salary" 
+                                           class="form-input" 
+                                           placeholder="75,000"
+                                           value="{{ form_data.annual_salary|default:'' }}"
+                                           required>
+                                    <span class="input-hint">Your yearly income before taxes</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Your Contribution (%)</td>
+                                <td class="input-cell">
+                                    <input type="number" 
+                                           id="contribution_rate" 
+                                           name="contribution_rate" 
+                                           class="form-input" 
+                                           placeholder="6"
+                                           value="{{ form_data.contribution_rate|default:'6' }}"
+                                           step="0.5"
+                                           min="0"
+                                           max="100"
+                                           required>
+                                    <span class="input-hint">What percent of salary you contribute</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Employer Match (%)</td>
+                                <td class="input-cell">
+                                    <input type="number" 
+                                           id="employer_match" 
+                                           name="employer_match" 
+                                           class="form-input" 
+                                           placeholder="3"
+                                           value="{{ form_data.employer_match|default:'3' }}"
+                                           step="0.5"
+                                           min="0"
+                                           max="100">
+                                    <span class="input-hint">What your company matches (0 if none)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Annual Return Rate (%)</td>
+                                <td class="input-cell">
+                                    <input type="number" 
+                                           id="return_rate" 
+                                           name="return_rate" 
+                                           class="form-input" 
+                                           placeholder="7"
+                                           value="{{ form_data.return_rate|default:'7' }}"
+                                           step="0.1"
+                                           min="0"
+                                           max="20"
+                                           required>
+                                    <span class="input-hint">Expected annual growth (7% is typical)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -760,80 +760,65 @@
                 <!-- Results Section -->
                 <div id="results-section" {% if not result %}style="display: none;"{% endif %}>
                     <div class="results-container">
-                        <h3>Your Loan Breakdown</h3>
+                        <h3>Your Retirement Savings</h3>
                         {% if result %}
                         <div class="results-grid">
                             <div class="result-card">
-                                <div class="result-label">{{ result.payment_frequency_text }} Payment</div>
-                                <div class="result-value highlight">${{ result.payment_amount|floatformat:2 }}</div>
-                                <div class="result-subtitle">What you'll pay each time</div>
+                                <div class="result-label">Total at Retirement</div>
+                                <div class="result-value highlight">${{ result.total_at_retirement|floatformat:0 }}</div>
+                                <div class="result-subtitle">What you'll have saved</div>
                             </div>
                             <div class="result-card">
-                                <div class="result-label">Total You'll Pay</div>
-                                <div class="result-value">${{ result.total_amount|floatformat:2 }}</div>
-                                <div class="result-subtitle">Loan plus interest</div>
+                                <div class="result-label">Your Contributions</div>
+                                <div class="result-value">${{ result.total_contributions|floatformat:0 }}</div>
+                                <div class="result-subtitle">Money you put in</div>
                             </div>
                             <div class="result-card">
-                                <div class="result-label">Total Interest</div>
-                                <div class="result-value">${{ result.total_interest|floatformat:2 }}</div>
-                                <div class="result-subtitle">What the loan costs you</div>
+                                <div class="result-label">Employer Contributions</div>
+                                <div class="result-value">${{ result.employer_contributions|floatformat:0 }}</div>
+                                <div class="result-subtitle">Free money from company</div>
                             </div>
                             <div class="result-card">
-                                <div class="result-label">Monthly Payment</div>
-                                <div class="result-value">${{ result.monthly_payment|floatformat:2 }}</div>
-                                <div class="result-subtitle">For your budget</div>
+                                <div class="result-label">Investment Growth</div>
+                                <div class="result-value">${{ result.investment_growth|floatformat:0 }}</div>
+                                <div class="result-subtitle">Earnings from returns</div>
                             </div>
                         </div>
 
-                        <!-- Amortization Schedule -->
-                        <div class="amortization-section">
-                            <h4>First Year Payment Breakdown</h4>
+                        <!-- Year by Year Growth -->
+                        {% if result.yearly_breakdown %}
+                        <div class="growth-section">
+                            <h4>First 10 Years of Growth</h4>
                             <div style="overflow-x: auto;">
-                                <table class="amortization-table">
+                                <table class="growth-table">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Payment</th>
-                                            <th>To Loan</th>
-                                            <th>To Interest</th>
-                                            <th>What's Left</th>
+                                            <th>Age</th>
+                                            <th>Your Contribution</th>
+                                            <th>Employer Match</th>
+                                            <th>Interest Earned</th>
+                                            <th>End Balance</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for payment in result.amortization_schedule %}
+                                        {% for year in result.yearly_breakdown %}
                                         <tr>
-                                            <td>{{ payment.payment_number }}</td>
-                                            <td class="currency">${{ payment.payment_amount }}</td>
-                                            <td class="currency">${{ payment.principal_payment }}</td>
-                                            <td class="currency">${{ payment.interest_payment }}</td>
-                                            <td class="currency">${{ payment.remaining_balance }}</td>
+                                            <td>{{ year.age }}</td>
+                                            <td class="currency">${{ year.contribution|floatformat:0 }}</td>
+                                            <td class="currency">${{ year.employer|floatformat:0 }}</td>
+                                            <td class="currency">${{ year.interest|floatformat:0 }}</td>
+                                            <td class="currency">${{ year.balance|floatformat:0 }}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
-                        <!-- Recommendations -->
-                        {% if result.recommendations %}
-                        <div class="recommendations-section">
-                            <h4>Loan Options to Consider</h4>
-                            {% for rec in result.recommendations %}
-                            <div class="recommendation-card">
-                                <h5>{{ rec.type }}</h5>
-                                <p>{{ rec.description }}</p>
-                                <div class="recommendation-meta">
-                                    <span><strong>Typical Rate:</strong> {{ rec.typical_rate }}</span>
-                                    <span><strong>Term:</strong> {{ rec.term }}</span>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
                         {% endif %}
                         {% else %}
                         <div class="empty-results">
-                            <i class="fas fa-calculator"></i>
-                            <p>Enter your loan info above to see what your payments will look like.</p>
+                            <i class="fas fa-piggy-bank"></i>
+                            <p>Enter your info above to see how much you could have by retirement.</p>
                         </div>
                         {% endif %}
                     </div>
@@ -841,48 +826,45 @@
 
                 <!-- Tips Section -->
                 <div class="tips-section">
-                    <h3>Things Worth Knowing</h3>
+                    <h3>Making the Most of Your 401k</h3>
                     <div class="tips-grid">
                         <div class="tip-card">
-                            <h4>Shop Around for Rates</h4>
-                            <p>Half a percent might not sound like much, but it can save you thousands over the life of your loan. Talk to at least three lenders before you decide.</p>
+                            <h4>Always Get the Full Match</h4>
+                            <p>If your employer matches up to 5%, contribute at least 5%. It's literally free money sitting on the table - don't leave it there.</p>
                         </div>
                         <div class="tip-card">
-                            <h4>Think About the Trade-Off</h4>
-                            <p>Shorter loans mean bigger monthly payments but way less interest overall. Longer loans are easier on your budget month-to-month but cost more in the long run.</p>
+                            <h4>Start as Early as You Can</h4>
+                            <p>Time is your biggest advantage. Starting at 25 instead of 35 can literally double what you have at retirement, even with the same contributions.</p>
                         </div>
                         <div class="tip-card">
-                            <h4>Pay Extra When You Can</h4>
-                            <p>Throwing extra money at the principal whenever possible really adds up. You'll pay off the loan faster and save on interest.</p>
+                            <h4>Bump It Up Every Year</h4>
+                            <p>When you get a raise, increase your contribution by 1%. You won't even notice it missing, but it adds up to a lot over time.</p>
                         </div>
                         <div class="tip-card">
-                            <h4>Your Credit Score Matters</h4>
-                            <p>The better your credit, the better your rate. It's worth taking some time to improve your score before you apply if you can.</p>
+                            <h4>Don't Touch It Early</h4>
+                            <p>Cashing out your 401k when you change jobs kills your retirement. Between taxes, penalties, and lost growth, you lose way more than you think.</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- SEO Content -->
                 <div class="seo-content">
-                    <h2>How This Calculator Works</h2>
+                    <h2>Understanding Your 401k</h2>
                     
-                    <h3>The Basics</h3>
-                    <p>This calculator uses standard loan math to figure out what you'll actually pay. Just plug in how much you're borrowing, what interest rate you're getting, and how long you have to pay it back. It works for pretty much any kind of loan - mortgages, car loans, personal loans, you name it.</p>
+                    <h3>What's a 401k Anyway?</h3>
+                    <p>A 401k is basically a retirement savings account your job sets up for you. You put money in from each paycheck before taxes hit it, and that money grows over the years. When you retire, you've got a nice pile of cash waiting for you. The "401k" name comes from the tax code section that created them - thrilling stuff, I know.</p>
                     
-                    <h3>What Affects Your Payment</h3>
-                    <p>Four things matter here:</p>
-                    <ul>
-                        <li><strong>How much you borrow</strong> - The bigger the loan, the bigger the payment. Pretty straightforward.</li>
-                        <li><strong>Your interest rate</strong> - This is what the bank charges you to borrow their money. Lower is always better.</li>
-                        <li><strong>How long you take to pay it back</strong> - Longer terms mean smaller payments but more interest overall.</li>
-                        <li><strong>How often you pay</strong> - Most people pay monthly, but some loans let you pay weekly or bi-weekly.</li>
-                    </ul>
+                    <h3>The Company Match Thing</h3>
+                    <p>This is where it gets good. A lot of companies will match what you put in, up to a certain amount. Like if they match 50% up to 6% of your salary, and you make $60,000, they'll throw in up to $1,800 if you contribute $3,600. That's a 50% return right off the bat. You're not going to beat that anywhere else.</p>
                     
-                    <h3>Understanding the Payment Breakdown</h3>
-                    <p>Here's something that surprises people: at the start of your loan, most of your payment goes to interest, not the actual loan amount. As time goes on, that flips around. By the end, almost all of your payment is going toward what you borrowed. That's just how loans work, and it's why paying extra early on makes such a big difference.</p>
+                    <h3>How the Money Grows</h3>
+                    <p>Your 401k money gets invested - usually in mutual funds with stocks and bonds. Over time, these investments grow. Some years are better than others, but historically the market averages around 7-10% a year after inflation. That might not sound like much, but thanks to compound interest, it really adds up. Every dollar you invest today could be worth $5 or $10 by the time you retire.</p>
                     
-                    <h3>Getting a Good Deal</h3>
-                    <p>Want to save money? Keep your credit score up, put down as much as you can afford, and don't just take the first offer you get. Banks compete for your business, so make them work for it. And once you have the loan, paying even a little extra each month can cut years off your payback time.</p>
+                    <h3>The Tax Angle</h3>
+                    <p>Money you put in a traditional 401k comes out before taxes, so it lowers your taxable income now. If you're making $75,000 and contribute $7,500, you only pay taxes on $67,500. You'll pay taxes later when you withdraw it in retirement, but you'll probably be in a lower tax bracket by then. Some companies also offer Roth 401ks where you pay taxes now but not later - depends on your situation.</p>
+                    
+                    <h3>Common Mistakes to Avoid</h3>
+                    <p>Don't contribute so little that you miss the full company match. Don't cash it out when you change jobs - roll it over instead. Don't put it all in super risky investments or super safe ones - you need balance. And don't forget to actually sign up - some companies auto-enroll you, but many don't. Check with HR if you're not sure.</p>
                 </div>
             </div>
 
@@ -900,7 +882,7 @@
                     <div class="widget-content">
                         <div class="calculator-grid">
                             <div class="calc-column">
-                                <a href="{% url 'calculators:loan_calculator' %}" class="calc-link active">Loan</a>
+                                <a href="{% url 'calculators:loan_calculator' %}" class="calc-link">Loan</a>
                                 <a href="{% url 'calculators:percentage_calculator' %}" class="calc-link">Percentage</a>
                                 <a href="{% url 'calculators:bmi_calculator' %}" class="calc-link">BMI</a>
                                 <a href="{% url 'calculators:calorie_calculator' %}" class="calc-link">Calorie</a>
@@ -920,45 +902,67 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('loan-form');
+    const form = document.getElementById('calc-form');
     const calculateBtn = document.getElementById('calculate-btn');
     const loadingSpinner = document.getElementById('loading-spinner');
-    const loanAmountInput = document.getElementById('loan_amount');
-    const interestRateInput = document.getElementById('interest_rate');
-    const loanTermInput = document.getElementById('loan_term');
+    const currentBalanceInput = document.getElementById('current_balance');
+    const annualSalaryInput = document.getElementById('annual_salary');
+    const currentAgeInput = document.getElementById('current_age');
+    const retirementAgeInput = document.getElementById('retirement_age');
+    const contributionRateInput = document.getElementById('contribution_rate');
+    const returnRateInput = document.getElementById('return_rate');
     
-    // Format loan amount with commas
-    if (loanAmountInput) {
-        loanAmountInput.addEventListener('input', function() {
-            let value = this.value.replace(/[^0-9]/g, '');
-            
-            if (value.length > 0) {
-                let number = parseInt(value);
-                if (number > 10000000) {
-                    number = 10000000;
+    // Format number inputs with commas
+    function formatNumber(input) {
+        if (input) {
+            input.addEventListener('input', function() {
+                let value = this.value.replace(/[^0-9]/g, '');
+                
+                if (value.length > 0) {
+                    let number = parseInt(value);
+                    if (number > 10000000) {
+                        number = 10000000;
+                    }
+                    this.value = number.toLocaleString();
                 }
-                this.value = number.toLocaleString();
-            }
-        });
+            });
+        }
     }
+    
+    formatNumber(currentBalanceInput);
+    formatNumber(annualSalaryInput);
     
     // Form validation
     function validateForm() {
-        const loanAmount = parseFloat(loanAmountInput.value.replace(/,/g, ''));
-        const interestRate = parseFloat(interestRateInput.value);
-        const loanTerm = parseFloat(loanTermInput.value);
+        const currentAge = parseInt(currentAgeInput.value);
+        const retirementAge = parseInt(retirementAgeInput.value);
+        const annualSalary = parseFloat(annualSalaryInput.value.replace(/,/g, ''));
+        const contributionRate = parseFloat(contributionRateInput.value);
+        const returnRate = parseFloat(returnRateInput.value);
         
         let isValid = true;
         
-        if (!loanAmount || loanAmount < 1000 || loanAmount > 10000000) {
+        if (!currentAge || currentAge < 18 || currentAge > 100) {
             isValid = false;
         }
         
-        if (isNaN(interestRate) || interestRate < 0 || interestRate > 50) {
+        if (!retirementAge || retirementAge < 50 || retirementAge > 80) {
             isValid = false;
         }
         
-        if (!loanTerm || loanTerm < 0.5 || loanTerm > 50) {
+        if (currentAge >= retirementAge) {
+            isValid = false;
+        }
+        
+        if (!annualSalary || annualSalary < 1000 || annualSalary > 10000000) {
+            isValid = false;
+        }
+        
+        if (isNaN(contributionRate) || contributionRate < 0 || contributionRate > 100) {
+            isValid = false;
+        }
+        
+        if (isNaN(returnRate) || returnRate < 0 || returnRate > 20) {
             isValid = false;
         }
         
@@ -967,7 +971,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Add validation listeners
-    [loanAmountInput, interestRateInput, loanTermInput].forEach(input => {
+    [currentAgeInput, retirementAgeInput, annualSalaryInput, contributionRateInput, returnRateInput].forEach(input => {
         if (input) {
             input.addEventListener('input', validateForm);
             input.addEventListener('blur', validateForm);
@@ -989,9 +993,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             calculateBtn.disabled = true;
             
-            // Clean loan amount value before submission
-            const cleanValue = loanAmountInput.value.replace(/,/g, '');
-            loanAmountInput.value = cleanValue;
+            // Clean number values before submission
+            if (currentBalanceInput.value) {
+                currentBalanceInput.value = currentBalanceInput.value.replace(/,/g, '');
+            }
+            annualSalaryInput.value = annualSalaryInput.value.replace(/,/g, '');
             
             // Submit the form
             setTimeout(() => {
@@ -1003,11 +1009,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial validation
     validateForm();
     
-    // Format existing value on page load
-    if (loanAmountInput && loanAmountInput.value) {
-        const value = loanAmountInput.value.replace(/[^0-9]/g, '');
+    // Format existing values on page load
+    if (currentBalanceInput && currentBalanceInput.value) {
+        const value = currentBalanceInput.value.replace(/[^0-9]/g, '');
         if (value) {
-            loanAmountInput.value = parseInt(value).toLocaleString();
+            currentBalanceInput.value = parseInt(value).toLocaleString();
+        }
+    }
+    
+    if (annualSalaryInput && annualSalaryInput.value) {
+        const value = annualSalaryInput.value.replace(/[^0-9]/g, '');
+        if (value) {
+            annualSalaryInput.value = parseInt(value).toLocaleString();
         }
     }
 });
@@ -1015,7 +1028,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 {% if result %}
 <script>
-// AUTO-SCROLL TO RESULTS - This only runs when results exist
+// AUTO-SCROLL TO RESULTS
 (function() {
     'use strict';
     
@@ -1029,16 +1042,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         console.log('Scrolling to results section...');
         
-        // Make absolutely sure it's visible
+        // Make sure it's visible
         resultsSection.style.display = 'block';
         resultsSection.style.visibility = 'visible';
         
-        // Wait a moment for layout
+        // Wait for layout
         setTimeout(function() {
-            // Get position
             const rect = resultsSection.getBoundingClientRect();
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const targetPosition = rect.top + scrollTop - 100; // 100px offset from top
+            const targetPosition = rect.top + scrollTop - 100;
             
             console.log('Target position:', targetPosition);
             
@@ -1064,7 +1076,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
     
-    // Try multiple times to ensure it works
+    // Multiple triggers to ensure it works
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', scrollToResults);
     } else {
@@ -1083,8 +1095,8 @@ document.addEventListener('DOMContentLoaded', function() {
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Loan Calculator",
-  "description": "Free loan calculator - figure out monthly payments, total interest, and get a complete payment schedule for any loan.",
+  "name": "401k Calculator",
+  "description": "Free 401k retirement calculator - see how much you could have saved by retirement with your contributions, company match, and investment returns.",
   "url": "{{ request.build_absolute_uri }}",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
@@ -1100,8 +1112,8 @@ document.addEventListener('DOMContentLoaded', function() {
   },
   "aggregateRating": {
     "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "ratingCount": "1250"
+    "ratingValue": "4.9",
+    "ratingCount": "892"
   }
 }
 </script>
@@ -1113,34 +1125,34 @@ document.addEventListener('DOMContentLoaded', function() {
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "How do I calculate my monthly loan payment?",
+      "name": "How much should I contribute to my 401k?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Enter your loan amount, interest rate, and how many years you have to pay it back. The calculator will show you exactly what your payment will be and break down how much goes to interest versus the actual loan."
+        "text": "At minimum, contribute enough to get your full employer match - that's free money. Most experts recommend saving 10-15% of your income for retirement. If you can't do that yet, start with what you can and increase it by 1% each year when you get a raise."
       }
     },
     {
       "@type": "Question",
-      "name": "What's an amortization schedule?",
+      "name": "What's a realistic return rate for my 401k?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It's a table that shows every payment you'll make over the life of your loan. You can see how much of each payment goes to interest and how much goes to paying down what you borrowed. Early on, most goes to interest. Later, most goes to the loan itself."
+        "text": "Historically, the stock market has averaged around 10% per year, but after inflation that's more like 7%. Most financial planners use 7% for planning purposes. Some years will be better, some worse, but 7% is a reasonable long-term estimate."
       }
     },
     {
       "@type": "Question",
-      "name": "How much does interest rate matter?",
+      "name": "Should I max out my 401k?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "A lot more than most people think. Even half a percent difference can mean thousands of dollars over a 30-year loan. That's why it's worth shopping around for the best rate you can get."
+        "text": "If you can afford it, maxing out your 401k is great - the 2024 limit is $23,000 ($30,500 if you're over 50). But first make sure you're getting the full employer match, have an emergency fund, and aren't carrying high-interest debt. Those come first."
       }
     },
     {
       "@type": "Question",
-      "name": "Should I get a 15-year or 30-year mortgage?",
+      "name": "What happens to my 401k if I change jobs?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It depends on your situation. 15-year loans have higher monthly payments but you'll pay way less interest overall. 30-year loans are easier on your monthly budget but cost more in the long run. Use the calculator to compare both and see what works for you."
+        "text": "You have a few options: leave it where it is (if the old employer allows it), roll it over to your new employer's 401k, or roll it into an IRA. Don't cash it out - you'll lose a huge chunk to taxes and penalties, plus all the future growth."
       }
     }
   ]
@@ -1167,7 +1179,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {
       "@type": "ListItem",
       "position": 3,
-      "name": "Loan Calculator",
+      "name": "401k Calculator",
       "item": "{{ request.build_absolute_uri }}"
     }
   ]

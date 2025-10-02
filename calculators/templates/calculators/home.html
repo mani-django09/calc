@@ -4,438 +4,44 @@
 {% block title %}{{ homepage_content.title }} - Free Online Calculators{% endblock %}
 
 {% block content %}
-<!-- Compact Hero Section with Integrated Calculator -->
-<section class="hero-section">
-    <div class="container">
-        <div class="row align-items-center py-4">
-            <div class="col-lg-6">
-                <div class="hero-content" data-aos="fade-up">
-                    <div class="hero-badge">
-                        <i class="fas fa-shield-check me-2"></i>Trusted by 2M+ Users
-                    </div>
-                    
-                    <h1 class="hero-title">
-                        Professional <span class="text-gradient">Calculators</span><br>
-                        Made Simple
-                    </h1>
-                    
-                    <p class="hero-description">
-                        Get instant, accurate results for financial, health, academic, and everyday calculations. 
-                        No registration required.
-                    </p>
-                    
-                    <div class="hero-stats">
-                        <div class="stat-item">
-                            <span class="stat-number">2M+</span>
-                            <span class="stat-label">Users</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">99.9%</span>
-                            <span class="stat-label">Accurate</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">Free</span>
-                            <span class="stat-label">Always</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <!-- Embedded Quick Calculator -->
-                <div class="quick-calculator" data-aos="fade-left">
-                    <div class="calc-header">
-                        <h3>Quick Calculator</h3>
-                        <div class="calc-tabs">
-                            <button class="calc-tab active" data-calc="basic">Basic</button>
-                            <button class="calc-tab" data-calc="percentage">%</button>
-                            <button class="calc-tab" data-calc="tip">Tip</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Basic Calculator -->
-                    <div class="calc-content active" id="basic-calc">
-                        <div class="calc-display">
-                            <input type="text" id="calc-result" readonly value="0">
-                        </div>
-                        <div class="calc-buttons">
-                            <button class="calc-btn clear" onclick="clearCalc()">C</button>
-                            <button class="calc-btn" onclick="deleteCalc()">←</button>
-                            <button class="calc-btn operator" onclick="appendOperator('/')">/</button>
-                            <button class="calc-btn operator" onclick="appendOperator('*')">×</button>
-                            
-                            <button class="calc-btn number" onclick="appendNumber('7')">7</button>
-                            <button class="calc-btn number" onclick="appendNumber('8')">8</button>
-                            <button class="calc-btn number" onclick="appendNumber('9')">9</button>
-                            <button class="calc-btn operator" onclick="appendOperator('-')">-</button>
-                            
-                            <button class="calc-btn number" onclick="appendNumber('4')">4</button>
-                            <button class="calc-btn number" onclick="appendNumber('5')">5</button>
-                            <button class="calc-btn number" onclick="appendNumber('6')">6</button>
-                            <button class="calc-btn operator" onclick="appendOperator('+')">+</button>
-                            
-                            <button class="calc-btn number" onclick="appendNumber('1')">1</button>
-                            <button class="calc-btn number" onclick="appendNumber('2')">2</button>
-                            <button class="calc-btn number" onclick="appendNumber('3')">3</button>
-                            <button class="calc-btn equals" onclick="calculateResult()" rowspan="2">=</button>
-                            
-                            <button class="calc-btn number zero" onclick="appendNumber('0')">0</button>
-                            <button class="calc-btn" onclick="appendNumber('.')">.</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Percentage Calculator -->
-                    <div class="calc-content" id="percentage-calc">
-                        <div class="percentage-form">
-                            <div class="form-group">
-                                <label>What is</label>
-                                <input type="number" id="percent-value" placeholder="15">
-                                <label>% of</label>
-                                <input type="number" id="percent-total" placeholder="250">
-                            </div>
-                            <button class="calc-btn-primary" onclick="calculatePercentage()">Calculate</button>
-                            <div class="result-display" id="percent-result"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Tip Calculator -->
-                    <div class="calc-content" id="tip-calc">
-                        <div class="tip-form">
-                            <div class="form-group">
-                                <label>Bill Amount</label>
-                                <input type="number" id="bill-amount" placeholder="100">
-                            </div>
-                            <div class="form-group">
-                                <label>Tip %</label>
-                                <div class="tip-options">
-                                    <button class="tip-btn" onclick="setTip(15)">15%</button>
-                                    <button class="tip-btn" onclick="setTip(18)">18%</button>
-                                    <button class="tip-btn active" onclick="setTip(20)">20%</button>
-                                    <input type="number" id="custom-tip" placeholder="Custom" min="0" max="100">
-                                </div>
-                            </div>
-                            <button class="calc-btn-primary" onclick="calculateTip()">Calculate Tip</button>
-                            <div class="result-display" id="tip-result"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Calculator Categories -->
-<section class="calculators-section">
-    <div class="container">
-        <div class="section-header text-center" data-aos="fade-up">
-            <h2 class="section-title">Choose Your Calculator</h2>
-            <p class="section-description">Professional tools organized by category</p>
-        </div>
-        
-        <div class="row g-4" data-aos="fade-up" data-aos-delay="200">
-            <!-- Financial -->
-            <div class="col-lg-6">
-                <div class="category-card financial">
-                    <div class="category-header">
-                        <div class="category-icon"><i class="fas fa-chart-line"></i></div>
-                        <div class="category-info">
-                            <h3>Financial Planning</h3>
-                            <p>Make informed financial decisions</p>
-                        </div>
-                        <span class="category-count">2</span>
-                    </div>
-                    <div class="category-tools">
-                        <a href="{% url 'calculators:loan_calculator' %}" class="tool-item">
-                            <span class="tool-icon">🏦</span>
-                            <div class="tool-content">
-                                <h4>Loan Calculator</h4>
-                                <p>Monthly payments & interest</p>
-                            </div>
-                        </a>
-                        <a href="{% url 'calculators:percentage_calculator' %}" class="tool-item">
-                            <span class="tool-icon">📊</span>
-                            <div class="tool-content">
-                                <h4>Percentage Calculator</h4>
-                                <p>Discounts, tips, markups</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Health -->
-            <div class="col-lg-6">
-                <div class="category-card health">
-                    <div class="category-header">
-                        <div class="category-icon"><i class="fas fa-heartbeat"></i></div>
-                        <div class="category-info">
-                            <h3>Health & Wellness</h3>
-                            <p>Monitor your health metrics</p>
-                        </div>
-                        <span class="category-count">2</span>
-                    </div>
-                    <div class="category-tools">
-                        <a href="{% url 'calculators:bmi_calculator' %}" class="tool-item">
-                            <span class="tool-icon">⚖️</span>
-                            <div class="tool-content">
-                                <h4>BMI Calculator</h4>
-                                <p>Body mass index & health tips</p>
-                            </div>
-                        </a>
-                        <a href="{% url 'calculators:calorie_calculator' %}" class="tool-item">
-                            <span class="tool-icon">🔥</span>
-                            <div class="tool-content">
-                                <h4>Calorie Calculator</h4>
-                                <p>Daily calorie requirements</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Academic -->
-            <div class="col-lg-6">
-                <div class="category-card academic">
-                    <div class="category-header">
-                        <div class="category-icon"><i class="fas fa-graduation-cap"></i></div>
-                        <div class="category-info">
-                            <h3>Academic Tools</h3>
-                            <p>Educational calculations</p>
-                        </div>
-                        <span class="category-count">1</span>
-                    </div>
-                    <div class="category-tools">
-                        <a href="{% url 'calculators:gpa_calculator' %}" class="tool-item">
-                            <span class="tool-icon">🎓</span>
-                            <div class="tool-content">
-                                <h4>GPA Calculator</h4>
-                                <p>Grade point average</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Other Tools -->
-            <div class="col-lg-6">
-                <div class="category-card other">
-                    <div class="category-header">
-                        <div class="category-icon"><i class="fas fa-tools"></i></div>
-                        <div class="category-info">
-                            <h3>Utility Tools</h3>
-                            <p>Everyday calculations</p>
-                        </div>
-                        <span class="category-count">1</span>
-                    </div>
-                    <div class="category-tools">
-                        <a href="{% url 'calculators:age_calculator' %}" class="tool-item">
-                            <span class="tool-icon">🎂</span>
-                            <div class="tool-content">
-                                <h4>Age Calculator</h4>
-                                <p>Exact age calculation</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Enhanced "Built for Everyone" Features Section -->
-<section class="features-section">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-5" data-aos="fade-right">
-                <div class="features-content">
-                    <div class="section-badge">Why Choose Us</div>
-                    <h2 class="section-title">Built for Everyone</h2>
-                    <p class="section-description">
-                        Whether you're a student, professional, or just need quick calculations, 
-                        our tools are designed with simplicity and accuracy in mind.
-                    </p>
-                    
-                    <div class="feature-highlights">
-                        <div class="highlight-item">
-                            <div class="highlight-icon">
-                                <i class="fas fa-bolt"></i>
-                            </div>
-                            <div class="highlight-content">
-                                <h4>Lightning Fast</h4>
-                                <p>Instant results in under 0.1 seconds</p>
-                            </div>
-                        </div>
-                        
-                        <div class="highlight-item">
-                            <div class="highlight-icon">
-                                <i class="fas fa-shield-check"></i>
-                            </div>
-                            <div class="highlight-content">
-                                <h4>99.9% Accurate</h4>
-                                <p>Scientifically validated formulas</p>
-                            </div>
-                        </div>
-                        
-                        <div class="highlight-item">
-                            <div class="highlight-icon">
-                                <i class="fas fa-heart"></i>
-                            </div>
-                            <div class="highlight-content">
-                                <h4>Always Free</h4>
-                                <p>No subscriptions or hidden fees</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-cta">
-                        <a href="#calculators" class="btn btn-primary">
-                            <i class="fas fa-calculator me-2"></i>Start Calculating
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-7" data-aos="fade-left">
-                <div class="features-visual">
-                    <div class="device-mockup">
-                        <div class="device-frame">
-                            <div class="device-screen">
-                                <!-- Animated Feature Demo -->
-                                <div class="demo-content">
-                                    <div class="demo-header">
-                                        <h4>BMI Calculator</h4>
-                                        <span class="demo-badge">Live Demo</span>
-                                    </div>
-                                    
-                                    <div class="demo-form">
-                                        <div class="input-row">
-                                            <label>Height</label>
-                                            <div class="input-with-unit">
-                                                <input type="text" value="175" readonly>
-                                                <span>cm</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="input-row">
-                                            <label>Weight</label>
-                                            <div class="input-with-unit">
-                                                <input type="text" value="70" readonly>
-                                                <span>kg</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="demo-result">
-                                            <div class="result-value">22.9</div>
-                                            <div class="result-status normal">Normal Weight</div>
-                                            <div class="result-range">18.5 - 24.9</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Feature Icons Grid -->
-                                <div class="features-grid">
-                                    <div class="feature-box">
-                                        <i class="fas fa-mobile-alt"></i>
-                                        <span>Mobile Ready</span>
-                                    </div>
-                                    <div class="feature-box">
-                                        <i class="fas fa-lock"></i>
-                                        <span>Privacy First</span>
-                                    </div>
-                                    <div class="feature-box">
-                                        <i class="fas fa-globe"></i>
-                                        <span>Global Access</span>
-                                    </div>
-                                    <div class="feature-box">
-                                        <i class="fas fa-headset"></i>
-                                        <span>24/7 Support</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Compact Statistics Section -->
-<section class="stats-section">
-    <div class="container">
-        <div class="stats-grid" data-aos="fade-up">
-            <div class="stat-card">
-                <div class="stat-number" data-target="2000000">0</div>
-                <div class="stat-label">Happy Users</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" data-target="50000000">0</div>
-                <div class="stat-label">Calculations</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" data-target="195">0</div>
-                <div class="stat-label">Countries</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" data-target="98">0</div>
-                <div class="stat-label">Satisfaction</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Compact CTA Section -->
-<section class="cta-section">
-    <div class="container">
-        <div class="cta-content" data-aos="fade-up">
-            <h2 class="cta-title">Ready to Calculate?</h2>
-            <p class="cta-description">
-                Join millions who trust our calculators for accurate results
-            </p>
-            <div class="cta-actions">
-                <a href="{% url 'calculators:age_calculator' %}" class="btn btn-light btn-lg">
-                    <i class="fas fa-birthday-cake me-2"></i>Age Calculator
-                </a>
-                <a href="{% url 'calculators:bmi_calculator' %}" class="btn btn-outline-light btn-lg">
-                    <i class="fas fa-weight-scale me-2"></i>BMI Calculator
-                </a>
-            </div>
-            <div class="cta-features">
-                <span><i class="fas fa-check"></i> No Registration</span>
-                <span><i class="fas fa-check"></i> Instant Results</span>
-                <span><i class="fas fa-check"></i> Always Free</span>
-            </div>
-        </div>
-    </div>
-</section>
-
 <style>
 :root {
     --primary: #2563eb;
-    --primary-dark: #1d4ed8;
+    --primary-dark: #1e40af;
+    --primary-light: #3b82f6;
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
+    --purple: #8b5cf6;
+    --cyan: #06b6d4;
     --dark: #1e293b;
     --light: #f8fafc;
     --white: #ffffff;
     --gray: #64748b;
+    --gray-light: #f1f5f9;
     
-    /* Updated blue gradient for hero */
     --gradient-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
-    --gradient-hero: linear-gradient(135deg, #1e3a8a 0%, #1e40af 25%, #3b82f6 75%, #60a5fa 100%);
-    --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --gradient-hero: linear-gradient(135deg, #1e3a8a 0%, #1e40af 30%, #3b82f6 70%, #60a5fa 100%);
     
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    --transition: all 0.3s ease;
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Compact Hero Section */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Hero Section */
 .hero-section {
     background: var(--gradient-hero);
     color: white;
-    padding: 3rem 0;
+    padding: 1.5rem 0 1.25rem;
     position: relative;
     overflow: hidden;
 }
@@ -448,11 +54,10 @@
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(30, 64, 175, 0.2) 0%, transparent 50%);
+        radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.25) 0%, transparent 50%);
+    opacity: 0.6;
 }
-
 
 .hero-content {
     position: relative;
@@ -462,603 +67,552 @@
 .hero-badge {
     display: inline-flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 4px 12px;
     border-radius: 20px;
-    font-size: 0.875rem;
+    font-size: 0.7rem;
     font-weight: 500;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hero-badge i {
+    font-size: 0.75rem;
 }
 
 .hero-title {
-    font-size: 2.5rem;
+    font-size: 1.9rem;
     font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 1rem;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
 }
 
 .text-gradient {
     background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
 .hero-description {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    opacity: 0.9;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    opacity: 0.92;
     line-height: 1.5;
 }
 
-.hero-stats {
+.hero-features-compact {
     display: flex;
-    gap: 2rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.85rem;
 }
 
-.stat-item {
-    text-align: center;
+.feature-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 9px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
 }
 
-.stat-number {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
+.feature-badge i {
+    font-size: 0.75rem;
 }
 
-.stat-label {
-    font-size: 0.875rem;
-    opacity: 0.8;
+.hero-cta {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
 }
 
-/* Quick Calculator */
-.quick-calculator {
+/* Hero Visual */
+.hero-visual {
+    position: relative;
+    z-index: 2;
+}
+
+.calculator-preview {
     background: white;
-    border-radius: 16px;
-    box-shadow: var(--shadow-lg);
-    overflow: hidden;
-    max-width: 400px;
+    border-radius: 12px;
+    padding: 1.1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    max-width: 420px;
     margin-left: auto;
 }
 
-.calc-header {
-    background: #f8fafc;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #e2e8f0;
+.preview-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--gray-light);
 }
 
-.calc-header h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: var(--dark);
-    font-weight: 600;
-}
-
-.calc-tabs {
+.preview-dots {
     display: flex;
-    gap: 0.5rem;
+    gap: 4px;
 }
 
-.calc-tab {
-    padding: 4px 12px;
-    border: 1px solid #e2e8f0;
-    background: white;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: var(--transition);
+.preview-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gray-light);
 }
 
-.calc-tab.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
+.preview-dots span:nth-child(1) { background: #ef4444; }
+.preview-dots span:nth-child(2) { background: #f59e0b; }
+.preview-dots span:nth-child(3) { background: #10b981; }
+
+.preview-title {
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.85rem;
 }
 
-.calc-content {
-    display: none;
-    padding: 1.5rem;
-}
-
-.calc-content.active {
-    display: block;
-}
-
-/* Calculator Display */
-.calc-display {
-    margin-bottom: 1rem;
-}
-
-.calc-display input {
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.5rem;
-    text-align: right;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    background: #f8fafc;
-    font-family: 'Courier New', monospace;
-}
-
-/* Calculator Buttons */
-.calc-buttons {
+.preview-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
 }
 
-.calc-btn {
-    padding: 1rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.calc-btn.number {
-    background: #f1f5f9;
-    color: var(--dark);
-}
-
-.calc-btn.operator {
-    background: var(--primary);
-    color: white;
-}
-
-.calc-btn.equals {
-    background: var(--success);
-    color: white;
-    grid-row: span 2;
-}
-
-.calc-btn.clear {
-    background: var(--danger);
-    color: white;
-}
-
-.calc-btn.zero {
-    grid-column: span 2;
-}
-
-.calc-btn:hover {
-    transform: translateY(-1px);
-    opacity: 0.9;
-}
-
-/* Percentage & Tip Calculator Forms */
-.percentage-form, .tip-form {
+.preview-stat {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.form-group label {
-    font-weight: 500;
-    color: var(--dark);
-    font-size: 0.9rem;
-}
-
-.form-group input {
+    align-items: center;
+    gap: 0.6rem;
     padding: 0.75rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 1rem;
-}
-
-.calc-btn-primary {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
+    background: var(--gray-light);
+    border-radius: 9px;
     transition: var(--transition);
 }
 
-.calc-btn-primary:hover {
-    background: var(--primary-dark);
+.preview-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
 }
 
-.tip-options {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.tip-btn {
-    padding: 0.5rem 1rem;
-    border: 2px solid #e2e8f0;
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: var(--transition);
-}
-
-.tip-btn.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-}
-
-.result-display {
-    background: #f0fdf4;
-    border: 2px solid #bbf7d0;
+.stat-icon {
+    width: 38px;
+    height: 38px;
     border-radius: 8px;
-    padding: 1rem;
-    text-align: center;
-    font-weight: 600;
-    color: var(--success);
-    min-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.95rem;
+    color: white;
+    flex-shrink: 0;
 }
 
-/* Calculator Categories */
-.calculators-section {
-    padding: 4rem 0;
-    background: #f8fafc;
+.stat-icon.financial { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+.stat-icon.health { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+.stat-icon.academic { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+.stat-icon.other { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: var(--gray);
+    margin-top: 2px;
+}
+
+.preview-highlight {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    padding: 0.75rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    color: #92400e;
+    font-weight: 600;
+    font-size: 0.8rem;
+    animation: pulse 2s infinite;
+}
+
+.preview-highlight i {
+    color: #f59e0b;
+    font-size: 0.95rem;
+}
+
+/* Popular Section */
+.popular-section {
+    padding: 2.5rem 0;
+    background: var(--light);
 }
 
 .section-header {
-    margin-bottom: 3rem;
-}
-
-.section-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--dark);
-    margin-bottom: 0.5rem;
-}
-
-.section-description {
-    color: var(--gray);
-    font-size: 1.1rem;
-}
-
-.category-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-    height: 100%;
-    border-left: 4px solid transparent;
-}
-
-.category-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
-}
-
-.category-card.financial { border-left-color: var(--success); }
-.category-card.health { border-left-color: var(--danger); }
-.category-card.academic { border-left-color: #8b5cf6; }
-.category-card.other { border-left-color: #06b6d4; }
-
-.category-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.category-icon {
-    background: var(--light);
-    color: var(--primary);
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-}
-
-.category-info {
-    flex: 1;
-}
-
-.category-info h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    color: var(--dark);
-}
-
-.category-info p {
-    color: var(--gray);
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-.category-count {
-    background: var(--primary);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.category-tools {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.tool-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    background: #f8fafc;
-    border-radius: 8px;
-    text-decoration: none;
-    color: inherit;
-    transition: var(--transition);
-}
-
-.tool-item:hover {
-    background: #e2e8f0;
-    transform: translateX(3px);
-}
-
-.tool-icon {
-    font-size: 1.5rem;
-}
-
-.tool-content h4 {
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    color: var(--dark);
-}
-
-.tool-content p {
-    color: var(--gray);
-    margin: 0;
-    font-size: 0.8rem;
-}
-
-/* Enhanced Features Section */
-.features-section {
-    padding: 4rem 0;
-    background: white;
-}
-
-.features-content {
-    padding-right: 2rem;
+    margin-bottom: 2rem;
 }
 
 .section-badge {
     display: inline-block;
     background: var(--gradient-primary);
     color: white;
-    padding: 6px 16px;
+    padding: 5px 14px;
     border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-}
-
-.feature-highlights {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin: 2rem 0;
-}
-
-.highlight-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.highlight-icon {
-    background: var(--gradient-primary);
-    color: white;
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-.highlight-content h4 {
-    font-size: 1.1rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.6rem;
+}
+
+.section-title {
+    font-size: 1.85rem;
+    font-weight: 700;
     color: var(--dark);
+    margin-bottom: 0.4rem;
 }
 
-.highlight-content p {
+.section-subtitle {
     color: var(--gray);
+    font-size: 0.95rem;
     margin: 0;
-    font-size: 0.9rem;
 }
 
-.feature-cta {
-    margin-top: 2rem;
-}
-
-/* Features Visual */
-.features-visual {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.device-mockup {
-    position: relative;
-    max-width: 350px;
-    width: 100%;
-}
-
-.device-frame {
-    background: #1f2937;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: var(--shadow-lg);
-}
-
-.device-screen {
+.popular-card {
     background: white;
     border-radius: 12px;
-    padding: 1.5rem;
-    min-height: 400px;
+    padding: 1.35rem;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
 }
 
-.demo-content {
-    margin-bottom: 2rem;
-}
-
-.demo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid #e2e8f0;
-}
-
-.demo-header h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--dark);
-    margin: 0;
-}
-
-.demo-badge {
-    background: var(--success);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    animation: pulse 2s infinite;
-}
-
-.demo-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.input-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.input-row label {
-    font-weight: 500;
-    color: var(--dark);
-    font-size: 0.9rem;
-}
-
-.input-with-unit {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.input-with-unit input {
-    width: 80px;
-    padding: 0.5rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 6px;
-    text-align: center;
-    font-weight: 600;
-}
-
-.input-with-unit span {
-    color: var(--gray);
-    font-size: 0.9rem;
-}
-
-.demo-result {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    border: 2px solid #bbf7d0;
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    margin-top: 1rem;
-}
-
-.result-value {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--success);
-    margin-bottom: 0.5rem;
-}
-
-.result-status {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.result-status.normal {
-    color: var(--success);
-}
-
-.result-range {
-    color: var(--gray);
-    font-size: 0.9rem;
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-}
-
-.feature-box {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 1rem;
-    text-align: center;
+.popular-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
     transition: var(--transition);
 }
 
-.feature-box:hover {
-    background: #e2e8f0;
+.popular-card:hover::before {
+    transform: scaleX(1);
 }
 
-.feature-box i {
-    font-size: 1.5rem;
-    color: var(--primary);
-    margin-bottom: 0.5rem;
-    display: block;
+.popular-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
 }
 
-.feature-box span {
-    font-size: 0.8rem;
-    font-weight: 500;
+.popular-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: white;
+    margin-bottom: 0.85rem;
+}
+
+.popular-icon.financial { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+.popular-icon.health { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+.popular-icon.academic { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+.popular-icon.other { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+
+.popular-card h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
     color: var(--dark);
+    margin-bottom: 0.4rem;
 }
 
-/* Compact Statistics */
-.stats-section {
+.popular-card p {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin-bottom: 0.85rem;
+    line-height: 1.4;
+}
+
+.popular-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 4px 9px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: var(--gray-light);
+    color: var(--gray);
+}
+
+.popular-badge i {
+    font-size: 0.75rem;
+}
+
+/* All Calculators Section */
+.calculators-section {
+    padding: 2.5rem 0;
+    background: white;
+}
+
+.calculator-category {
+    margin-bottom: 2.5rem;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding: 1.25rem;
+    background: var(--gray-light);
+    border-radius: 12px;
+}
+
+.category-icon-large {
+    width: 65px;
+    height: 65px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.85rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.category-icon-large.financial { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+.category-icon-large.health { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+.category-icon-large.academic { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+.category-icon-large.other { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+
+.category-info h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.2rem;
+}
+
+.category-info p {
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin: 0;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.9rem;
+}
+
+.calculator-item {
+    background: white;
+    border: 2px solid var(--gray-light);
+    border-radius: 11px;
+    padding: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+    position: relative;
+}
+
+.calculator-item:hover {
+    border-color: var(--primary);
+    transform: translateX(5px);
+    box-shadow: var(--shadow);
+}
+
+.calc-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.calc-icon.financial { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+.calc-icon.health { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+.calc-icon.academic { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+.calc-icon.other { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+
+.calc-content {
+    flex: 1;
+}
+
+.calc-content h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.2rem;
+}
+
+.calc-content p {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin: 0;
+    line-height: 1.35;
+}
+
+.calc-arrow {
+    color: var(--gray);
+    font-size: 0.95rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: var(--transition);
+}
+
+.calculator-item:hover .calc-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--primary);
+}
+
+/* Features Modern */
+.features-modern {
     padding: 3rem 0;
+    background: var(--light);
+}
+
+.features-content {
+    padding-right: 1.5rem;
+}
+
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    margin-top: 1.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1.15rem;
+    background: white;
+    border-radius: 11px;
+    transition: var(--transition);
+    border: 2px solid transparent;
+}
+
+.feature-item:hover {
+    border-color: var(--primary);
+    transform: translateX(5px);
+    box-shadow: var(--shadow);
+}
+
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: var(--gradient-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.feature-text h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.2rem;
+}
+
+.feature-text p {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.features-visual-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
+}
+
+.visual-card {
+    background: white;
+    padding: 1.35rem;
+    border-radius: 11px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 2px solid var(--gray-light);
+}
+
+.visual-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+.visual-card .visual-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 11px;
+    background: var(--gradient-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin: 0 auto 0.85rem;
+}
+
+.visual-card h5 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.4rem;
+}
+
+.visual-card p {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin: 0;
+}
+
+.visual-card.card-1 { animation: float 3s ease-in-out infinite; }
+.visual-card.card-2 { animation: float 3s ease-in-out infinite 0.5s; }
+.visual-card.card-3 { animation: float 3s ease-in-out infinite 1s; }
+.visual-card.card-4 { animation: float 3s ease-in-out infinite 1.5s; }
+
+/* Statistics Compact */
+.stats-compact {
+    padding: 2.5rem 0;
     background: var(--gradient-primary);
     color: white;
 }
@@ -1066,25 +620,36 @@
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
+    gap: 1.5rem;
 }
 
 .stat-card {
     text-align: center;
-    padding: 1.5rem 1rem;
+    padding: 1.35rem 1rem;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    border-radius: 11px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+}
+
+.stat-card i {
+    font-size: 1.85rem;
+    margin-bottom: 0.65rem;
+    display: block;
+    opacity: 0.9;
 }
 
 .stat-card .stat-number {
-    font-size: 2rem;
+    font-size: 2.3rem;
     font-weight: 800;
-    margin-bottom: 0.5rem;
     display: block;
+    margin-bottom: 0.4rem;
 }
 
 .stat-card .stat-label {
@@ -1092,58 +657,61 @@
     opacity: 0.9;
 }
 
-/* Compact CTA */
-.cta-section {
-    padding: 3rem 0;
+/* CTA Modern */
+.cta-modern {
+    padding: 2.5rem 0;
     background: var(--dark);
     color: white;
     text-align: center;
 }
 
-.cta-title {
-    font-size: 2rem;
+.cta-content h2 {
+    font-size: 2.1rem;
     font-weight: 700;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.6rem;
 }
 
-.cta-description {
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
+.cta-content p {
+    font-size: 1.05rem;
+    margin-bottom: 1.75rem;
     opacity: 0.9;
 }
 
-.cta-actions {
+.cta-buttons {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 0.9rem;
+    margin-bottom: 1.35rem;
     flex-wrap: wrap;
 }
 
 .cta-features {
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    font-size: 0.9rem;
+    gap: 1.75rem;
+    font-size: 0.85rem;
     opacity: 0.8;
+    flex-wrap: wrap;
 }
 
 .cta-features span {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.45rem;
 }
 
+/* Buttons */
 .btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: var(--transition);
-    border: 2px solid transparent;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: 2px solid transparent;
+    transition: var(--transition);
     cursor: pointer;
 }
 
@@ -1155,6 +723,18 @@
 .btn-primary:hover {
     background: var(--primary-dark);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-outline-primary {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary);
+    color: white;
 }
 
 .btn-light {
@@ -1163,7 +743,7 @@
 }
 
 .btn-light:hover {
-    background: #f8fafc;
+    background: var(--gray-light);
     transform: translateY(-2px);
 }
 
@@ -1176,58 +756,38 @@
 .btn-outline-light:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: white;
-    color: white;
 }
 
 .btn-lg {
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
+    padding: 0.95rem 1.85rem;
+    font-size: 0.95rem;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 /* Responsive Design */
-@media (max-width: 992px) {
-    .hero-title {
-        font-size: 2rem;
-    }
-    
-    .hero-stats {
-        justify-content: center;
-        margin-top: 2rem;
-    }
-    
-    .quick-calculator {
-        margin-top: 2rem;
-        margin-left: 0;
-    }
-    
-    .features-content {
-        padding-right: 0;
-        margin-bottom: 2rem;
-    }
-    
-    .stats-grid {
+@media (max-width: 1200px) {
+    .calculator-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-    }
-    
-    .cta-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .cta-features {
-        flex-direction: column;
-        gap: 1rem;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .hero-section {
-        padding: 2rem 0;
+        padding: 1.25rem 0 1rem;
     }
     
     .hero-title {
-        font-size: 1.8rem;
+        font-size: 1.7rem;
         text-align: center;
     }
     
@@ -1235,43 +795,67 @@
         text-align: center;
     }
     
-    .hero-stats {
-        flex-direction: column;
-        gap: 1rem;
+    .hero-features-compact {
+        justify-content: center;
     }
     
-    .calc-tabs {
-        flex-direction: column;
-        gap: 0.25rem;
+    .hero-cta {
+        justify-content: center;
     }
     
-    .calc-buttons {
-        gap: 0.25rem;
+    .calculator-preview {
+        margin-left: 0;
+        margin-top: 1.5rem;
+        max-width: 100%;
     }
     
-    .calc-btn {
-        padding: 0.75rem;
-        font-size: 0.9rem;
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .features-content {
+        padding-right: 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 1.55rem;
+    }
+    
+    .hero-description {
+        font-size: 0.85rem;
+    }
+    
+    .section-title {
+        font-size: 1.65rem;
+    }
+    
+    .preview-stats {
+        grid-template-columns: 1fr;
     }
     
     .category-header {
         flex-direction: column;
         text-align: center;
-        gap: 0.75rem;
     }
     
-    .highlight-item {
+    .category-info h3 {
+        font-size: 1.15rem;
+    }
+    
+    .feature-list {
+        gap: 0.9rem;
+    }
+    
+    .feature-item {
         flex-direction: column;
         text-align: center;
-        gap: 0.75rem;
-    }
-    
-    .device-mockup {
-        max-width: 300px;
-    }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
     }
     
     .stats-grid {
@@ -1279,82 +863,683 @@
         gap: 1rem;
     }
     
-    .section-title {
-        font-size: 1.8rem;
+    .cta-content h2 {
+        font-size: 1.65rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-buttons .btn {
+        width: 100%;
+        max-width: 300px;
     }
 }
 
 @media (max-width: 576px) {
+    .hero-section {
+        padding: 1rem 0 0.85rem;
+    }
+    
     .hero-title {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
     }
     
-    .quick-calculator {
-        max-width: 100%;
+    .calculator-preview {
+        padding: 0.95rem;
     }
     
-    .calc-content {
-        padding: 1rem;
+    .popular-card {
+        padding: 1.15rem;
     }
     
-    .tip-options {
-        flex-direction: column;
+    .category-icon-large {
+        width: 55px;
+        height: 55px;
+        font-size: 1.65rem;
     }
     
-    .cta-title {
-        font-size: 1.6rem;
+    .calculator-item {
+        padding: 0.95rem;
     }
     
-    .btn-lg {
-        width: 100%;
-        max-width: 280px;
+    .calc-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
     }
-}
-
-/* Animations */
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
+    
+    .features-visual-grid {
+        grid-template-columns: 1fr;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Loading states */
-.loading {
-    opacity: 0.7;
-    pointer-events: none;
-}
-
-.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid #fff;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
 }
 </style>
 
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center py-2">
+            <div class="col-lg-7">
+                <div class="hero-content" data-aos="fade-up">
+                    <div class="hero-badge">
+                        <i class="fas fa-shield-check me-2"></i>Trusted by 2M+ Users Worldwide
+                    </div>
+                    
+                    <h1 class="hero-title">
+                        Professional Calculators
+                        <span class="text-gradient">Made Simple & Free</span>
+                    </h1>
+                    
+                    <p class="hero-description">
+                        Instant, accurate results for financial, health, academic calculations. No registration required.
+                    </p>
+                    
+                    <div class="hero-features-compact">
+                        <div class="feature-badge">
+                            <i class="fas fa-bolt"></i>
+                            <span>Instant Results</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="fas fa-check-circle"></i>
+                            <span>99.9% Accurate</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="fas fa-lock"></i>
+                            <span>Privacy First</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Mobile Ready</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-cta">
+                        <a href="#calculators" class="btn btn-primary btn-lg">
+                            <i class="fas fa-calculator me-2"></i>Browse Calculators
+                        </a>
+                        <a href="#popular" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-star me-2"></i>Popular Tools
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-5">
+                <div class="hero-visual" data-aos="fade-left">
+                    <div class="calculator-preview">
+                        <div class="preview-header">
+                            <div class="preview-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="preview-title">Quick Calculate</span>
+                        </div>
+                        <div class="preview-content">
+                            <div class="preview-stats">
+                                <div class="preview-stat">
+                                    <div class="stat-icon financial">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <span class="stat-number">4</span>
+                                        <span class="stat-label">Financial</span>
+                                    </div>
+                                </div>
+                                <div class="preview-stat">
+                                    <div class="stat-icon health">
+                                        <i class="fas fa-heartbeat"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <span class="stat-number">4</span>
+                                        <span class="stat-label">Health</span>
+                                    </div>
+                                </div>
+                                <div class="preview-stat">
+                                    <div class="stat-icon academic">
+                                        <i class="fas fa-<!-- CONTINUATION FROM PREVIOUS FILE -->
+<!-- This continues from the hero section -->
+
+graduation-cap"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <span class="stat-number">3</span>
+                                        <span class="stat-label">Academic</span>
+                                    </div>
+                                </div>
+                                <div class="preview-stat">
+                                    <div class="stat-icon other">
+                                        <i class="fas fa-tools"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <span class="stat-number">2</span>
+                                        <span class="stat-label">Other</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="preview-highlight">
+                                <i class="fas fa-fire"></i>
+                                <span>50M+ Calculations This Year</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Calculators Section -->
+<section class="popular-section" id="popular">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-badge">Most Used</span>
+            <h2 class="section-title">Popular Calculators</h2>
+            <p class="section-subtitle">Start with our most frequently used tools</p>
+        </div>
+        
+        <div class="row g-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-3 col-md-6">
+                <a href="{% url 'calculators:loan_calculator' %}" class="popular-card">
+                    <div class="popular-icon financial">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h4>Loan Calculator</h4>
+                    <p>Calculate monthly payments & interest</p>
+                    <div class="popular-badge">
+                        <i class="fas fa-fire"></i> Trending
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="{% url 'calculators:bmi_calculator' %}" class="popular-card">
+                    <div class="popular-icon health">
+                        <i class="fas fa-weight-scale"></i>
+                    </div>
+                    <h4>BMI Calculator</h4>
+                    <p>Check your body mass index</p>
+                    <div class="popular-badge">
+                        <i class="fas fa-star"></i> Popular
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="{% url 'calculators:gpa_calculator' %}" class="popular-card">
+                    <div class="popular-icon academic">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4>GPA Calculator</h4>
+                    <p>Calculate grade point average</p>
+                    <div class="popular-badge">
+                        <i class="fas fa-chart-line"></i> Top Rated
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="{% url 'calculators:age_calculator' %}" class="popular-card">
+                    <div class="popular-icon other">
+                        <i class="fas fa-birthday-cake"></i>
+                    </div>
+                    <h4>Age Calculator</h4>
+                    <p>Calculate exact age from birth date</p>
+                    <div class="popular-badge">
+                        <i class="fas fa-heart"></i> Favorite
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- All Calculators Section -->
+<section class="calculators-section" id="calculators">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <h2 class="section-title">All Calculators</h2>
+            <p class="section-subtitle">Professional tools organized by category</p>
+        </div>
+        
+        <!-- Financial Calculators -->
+        <div class="calculator-category" data-aos="fade-up" data-aos-delay="100">
+            <div class="category-header">
+                <div class="category-icon-large financial">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Financial Planning & Money Management</h3>
+                    <p>Make informed financial decisions with our comprehensive calculators</p>
+                </div>
+            </div>
+            <div class="calculator-grid">
+                <a href="{% url 'calculators:loan_calculator' %}" class="calculator-item">
+                    <div class="calc-icon financial">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>Loan Calculator</h4>
+                        <p>Monthly payments, interest & amortization</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+                
+                <a href="{% url 'calculators:mortgage_calculator' %}" class="calculator-item">
+                    <div class="calc-icon financial">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>Mortgage Calculator</h4>
+                        <p>Home loan payments with taxes & insurance</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+                
+                <a href="{% url 'calculators:401k_calculator' %}" class="calculator-item">
+                    <div class="calc-icon financial">
+                        <i class="fas fa-piggy-bank"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>401k Calculator</h4>
+                        <p>Retirement savings & investment growth</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+                
+                <a href="{% url 'calculators:percentage_calculator' %}" class="calculator-item">
+                    <div class="calc-icon financial">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>Percentage Calculator</h4>
+                        <p>Discounts, tips, markups & changes</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Health & Fitness Calculators -->
+        <div class="calculator-category" data-aos="fade-up" data-aos-delay="200">
+            <div class="category-header">
+                <div class="category-icon-large health">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Health & Fitness Tracking</h3>
+                    <p>Monitor and improve your health with accurate calculations</p>
+                </div>
+            </div>
+            <div class="calculator-grid">
+                <a href="{% url 'calculators:bmi_calculator' %}" class="calculator-item">
+                    <div class="calc-icon health">
+                        <i class="fas fa-weight-scale"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>BMI Calculator</h4>
+                        <p>Body mass index & health category</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+                
+                <a href="{% url 'calculators:bmr_calculator' %}" class="calculator-item">
+                    <div class="calc-icon health">
+                        <i class="fas fa-fire-flame-curved"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>BMR Calculator</h4>
+                        <p>Basal metabolic rate & daily calories</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+                
+                <a href="{% url 'calculators:calorie_calculator' %}" class="calculator-item">
+                    <div class="calc-icon health">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>Calorie Calculator</h4>
+                        <p>Daily calorie needs for weight goals</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+                
+                <a href="{% url 'calculators:pregnancy_calculator' %}" class="calculator-item">
+                    <div class="calc-icon health">
+                        <i class="fas fa-baby"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>Pregnancy Calculator</h4>
+                        <p>Due date & week-by-week tracker</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Academic Calculators -->
+        <div class="calculator-category" data-aos="fade-up" data-aos-delay="300">
+            <div class="category-header">
+                <div class="category-icon-large academic">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Academic & Educational Tools</h3>
+                    <p>Track your academic progress and plan for success</p>
+                </div>
+            </div>
+            <div class="calculator-grid">
+                <a href="{% url 'calculators:gpa_calculator' %}" class="calculator-item">
+                    <div class="calc-icon academic">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>GPA Calculator</h4>
+                        <p>Calculate grade point average</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+                
+                <a href="{% url 'calculators:grade_calculator' %}" class="calculator-item">
+                    <div class="calc-icon academic">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>Grade Calculator</h4>
+                        <p>Final grades & test score calculator</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+                
+                <a href="{% url 'calculators:citation_generator' %}" class="calculator-item">
+                    <div class="calc-icon academic">
+                        <i class="fas fa-quote-right"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>Citation Generator</h4>
+                        <p>APA, MLA, Chicago formats</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Other Utility Tools -->
+        <div class="calculator-category" data-aos="fade-up" data-aos-delay="400">
+            <div class="category-header">
+                <div class="category-icon-large other">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Everyday Utility Tools</h3>
+                    <p>Useful calculators for daily life and planning</p>
+                </div>
+            </div>
+            <div class="calculator-grid">
+                <a href="{% url 'calculators:age_calculator' %}" class="calculator-item">
+                    <div class="calc-icon other">
+                        <i class="fas fa-birthday-cake"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>Age Calculator</h4>
+                        <p>Calculate exact age from birth date</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+                
+                <a href="{% url 'calculators:date_of_birth_calculator' %}" class="calculator-item">
+                    <div class="calc-icon other">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="calc-content">
+                        <h4>Date of Birth Calculator</h4>
+                        <p>Age from DOB with full breakdown</p>
+                    </div>
+                    <i class="fas fa-arrow-right calc-arrow"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-modern">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="features-content">
+                    <span class="section-badge">Why Choose Us</span>
+                    <h2 class="section-title">Built for Everyone</h2>
+                    <p class="section-subtitle">
+                        Whether you're a student, professional, or just need quick calculations, 
+                        our tools are designed with simplicity and accuracy in mind.
+                    </p>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Lightning Fast</h4>
+                                <p>Get instant results in under 0.1 seconds</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-check"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>99.9% Accurate</h4>
+                                <p>Scientifically validated formulas</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Privacy First</h4>
+                                <p>No data collection or tracking</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Always Free</h4>
+                                <p>No subscriptions or hidden fees</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="features-visual-grid">
+                    <div class="visual-card card-1">
+                        <div class="visual-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h5>Mobile Ready</h5>
+                        <p>Works on all devices</p>
+                    </div>
+                    <div class="visual-card card-2">
+                        <div class="visual-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h5>Global Access</h5>
+                        <p>195+ countries</p>
+                    </div>
+                    <div class="visual-card card-3">
+                        <div class="visual-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h5>24/7 Support</h5>
+                        <p>Always here to help</p>
+                    </div>
+                    <div class="visual-card card-4">
+                        <div class="visual-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h5>Regular Updates</h5>
+                        <p>New tools monthly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics -->
+<section class="stats-compact">
+    <div class="container">
+        <div class="stats-grid" data-aos="fade-up">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-number" data-target="2000000">0</div>
+                <div class="stat-label">Happy Users</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-calculator"></i>
+                <div class="stat-number" data-target="50000000">0</div>
+                <div class="stat-label">Calculations</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-globe-americas"></i>
+                <div class="stat-number" data-target="195">0</div>
+                <div class="stat-label">Countries</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-smile"></i>
+                <div class="stat-number" data-target="98">0</div>
+                <div class="stat-label">Satisfaction</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-modern">
+    <div class="container">
+        <div class="cta-content" data-aos="fade-up">
+            <h2>Ready to Calculate?</h2>
+            <p>Join millions who trust our calculators for accurate results</p>
+            <div class="cta-buttons">
+                <a href="#calculators" class="btn btn-light btn-lg">
+                    <i class="fas fa-calculator me-2"></i>Browse All Tools
+                </a>
+                <a href="{% url 'calculators:loan_calculator' %}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-university me-2"></i>Start with Loan
+                </a>
+            </div>
+            <div class="cta-features">
+                <span><i class="fas fa-check"></i> No Registration</span>
+                <span><i class="fas fa-check"></i> Instant Results</span>
+                <span><i class="fas fa-check"></i> Always Free</span>
+            </div>
+        </div>
+    </div>
+</section>
+
 <script>
-// Enhanced JavaScript functionality
+// Mini Calculator Variables
+let miniCalcValue = '0';
+let miniCalcOperator = null;
+let miniCalcPreviousValue = null;
+let miniCalcWaitingForOperand = false;
+
+// Mini Calculator Functions
+function miniCalcAppend(value) {
+    const display = document.getElementById('mini-calc-display');
+    
+    if (miniCalcWaitingForOperand) {
+        miniCalcValue = value;
+        miniCalcWaitingForOperand = false;
+    } else {
+        if (value === '.' && miniCalcValue.includes('.')) return;
+        miniCalcValue = miniCalcValue === '0' ? value : miniCalcValue + value;
+    }
+    
+    display.value = miniCalcValue;
+}
+
+function miniCalcClear() {
+    miniCalcValue = '0';
+    miniCalcOperator = null;
+    miniCalcPreviousValue = null;
+    miniCalcWaitingForOperand = false;
+    document.getElementById('mini-calc-display').value = miniCalcValue;
+}
+
+function miniCalcDelete() {
+    miniCalcValue = miniCalcValue.length > 1 ? miniCalcValue.slice(0, -1) : '0';
+    document.getElementById('mini-calc-display').value = miniCalcValue;
+}
+
+function miniCalcCalculate() {
+    const inputValue = parseFloat(miniCalcValue);
+    
+    if (miniCalcPreviousValue !== null && miniCalcOperator) {
+        const result = performCalculation(miniCalcPreviousValue, inputValue, miniCalcOperator);
+        miniCalcValue = String(result);
+        miniCalcPreviousValue = null;
+        miniCalcOperator = null;
+        miniCalcWaitingForOperand = true;
+        document.getElementById('mini-calc-display').value = miniCalcValue;
+    }
+}
+
+function performCalculation(a, b, operator) {
+    switch (operator) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return b !== 0 ? a / b : 0;
+        default: return b;
+    }
+}
+
+// Update miniCalcAppend to handle operators
+window.miniCalcAppend = function(value) {
+    const display = document.getElementById('mini-calc-display');
+    
+    // Check if it's an operator
+    if (['+', '-', '*', '/'].includes(value)) {
+        const inputValue = parseFloat(miniCalcValue);
+        
+        if (miniCalcPreviousValue === null) {
+            miniCalcPreviousValue = inputValue;
+        } else if (miniCalcOperator) {
+            const result = performCalculation(miniCalcPreviousValue, inputValue, miniCalcOperator);
+            miniCalcValue = String(result);
+            miniCalcPreviousValue = result;
+            display.value = miniCalcValue;
+        }
+        
+        miniCalcWaitingForOperand = true;
+        miniCalcOperator = value;
+        return;
+    }
+    
+    // Handle numbers and decimal
+    if (miniCalcWaitingForOperand) {
+        miniCalcValue = value;
+        miniCalcWaitingForOperand = false;
+    } else {
+        if (value === '.' && miniCalcValue.includes('.')) return;
+        miniCalcValue = miniCalcValue === '0' ? value : miniCalcValue + value;
+    }
+    
+    display.value = miniCalcValue;
+};
+
+window.miniCalcClear = miniCalcClear;
+window.miniCalcDelete = miniCalcDelete;
+window.miniCalcCalculate = miniCalcCalculate;
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize AOS if available
     if (typeof AOS !== 'undefined') {
@@ -1365,146 +1550,6 @@ document.addEventListener('DOMContentLoaded', function() {
             offset: 50
         });
     }
-
-    // Calculator functionality
-    let currentCalc = 'basic';
-    let displayValue = '0';
-    let operator = null;
-    let previousValue = null;
-    let waitingForNewValue = false;
-
-    // Calculator tab switching
-    document.querySelectorAll('.calc-tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-            document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.calc-content').forEach(c => c.classList.remove('active'));
-            
-            this.classList.add('active');
-            currentCalc = this.dataset.calc;
-            document.getElementById(currentCalc + '-calc').classList.add('active');
-        });
-    });
-
-    // Basic calculator functions
-    window.appendNumber = function(number) {
-        if (waitingForNewValue) {
-            displayValue = number;
-            waitingForNewValue = false;
-        } else {
-            displayValue = displayValue === '0' ? number : displayValue + number;
-        }
-        updateDisplay();
-    };
-
-    window.appendOperator = function(nextOperator) {
-        const inputValue = parseFloat(displayValue);
-
-        if (previousValue === null) {
-            previousValue = inputValue;
-        } else if (operator) {
-            const currentValue = previousValue || 0;
-            const newValue = calculate(currentValue, inputValue, operator);
-            displayValue = String(newValue);
-            previousValue = newValue;
-        }
-
-        waitingForNewValue = true;
-        operator = nextOperator;
-        updateDisplay();
-    };
-
-    window.calculateResult = function() {
-        const inputValue = parseFloat(displayValue);
-
-        if (previousValue !== null && operator) {
-            const newValue = calculate(previousValue, inputValue, operator);
-            displayValue = String(newValue);
-            previousValue = null;
-            operator = null;
-            waitingForNewValue = true;
-            updateDisplay();
-        }
-    };
-
-    window.clearCalc = function() {
-        displayValue = '0';
-        previousValue = null;
-        operator = null;
-        waitingForNewValue = false;
-        updateDisplay();
-    };
-
-    window.deleteCalc = function() {
-        displayValue = displayValue.slice(0, -1) || '0';
-        updateDisplay();
-    };
-
-    function calculate(firstValue, secondValue, operator) {
-        switch (operator) {
-            case '+': return firstValue + secondValue;
-            case '-': return firstValue - secondValue;
-            case '*': return firstValue * secondValue;
-            case '/': return secondValue !== 0 ? firstValue / secondValue : 0;
-            default: return secondValue;
-        }
-    }
-
-    function updateDisplay() {
-        document.getElementById('calc-result').value = displayValue;
-    }
-
-    // Percentage calculator
-    window.calculatePercentage = function() {
-        const percent = parseFloat(document.getElementById('percent-value').value);
-        const total = parseFloat(document.getElementById('percent-total').value);
-        
-        if (!isNaN(percent) && !isNaN(total)) {
-            const result = (percent / 100) * total;
-            document.getElementById('percent-result').innerHTML = `
-                <strong>${result}</strong><br>
-                <small>${percent}% of ${total} = ${result}</small>
-            `;
-        }
-    };
-
-    // Tip calculator
-    let selectedTip = 20;
-
-    window.setTip = function(percentage) {
-        selectedTip = percentage;
-        document.querySelectorAll('.tip-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-        document.getElementById('custom-tip').value = '';
-    };
-
-    window.calculateTip = function() {
-        const billAmount = parseFloat(document.getElementById('bill-amount').value);
-        const customTip = parseFloat(document.getElementById('custom-tip').value);
-        const tipPercentage = customTip || selectedTip;
-        
-        if (!isNaN(billAmount) && billAmount > 0) {
-            const tipAmount = (billAmount * tipPercentage) / 100;
-            const totalAmount = billAmount + tipAmount;
-            
-            document.getElementById('tip-result').innerHTML = `
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                    <span>Tip (${tipPercentage}%):</span>
-                    <strong>$${tipAmount.toFixed(2)}</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 0.5rem;">
-                    <span>Total:</span>
-                    <strong>$${totalAmount.toFixed(2)}</strong>
-                </div>
-            `;
-        }
-    };
-
-    // Custom tip input handler
-    document.getElementById('custom-tip')?.addEventListener('input', function() {
-        if (this.value) {
-            document.querySelectorAll('.tip-btn').forEach(btn => btn.classList.remove('active'));
-        }
-    });
 
     // Counter animation for statistics
     function animateCounters() {
@@ -1520,9 +1565,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     current += increment;
                     
                     if (target >= 1000000) {
-                        counter.textContent = (current / 1000000).toFixed(1) + 'M+';
+                        counter.textContent = (current / 1000000).toFixed(1) + 'M';
                     } else if (target >= 1000) {
-                        counter.textContent = Math.ceil(current).toLocaleString() + '+';
+                        counter.textContent = Math.ceil(current).toLocaleString();
                     } else {
                         counter.textContent = Math.ceil(current) + '%';
                     }
@@ -1544,7 +1589,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Intersection Observer for counter animation
-    const statsSection = document.querySelector('.stats-section');
+    const statsSection = document.querySelector('.stats-compact');
     if (statsSection) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1553,7 +1598,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.5 });
+        }, { threshold: 0.3 });
         
         observer.observe(statsSection);
     }
@@ -1577,13 +1622,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add loading states to buttons
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            if (this.href && !this.href.includes('#')) {
-                this.classList.add('loading');
-                setTimeout(() => this.classList.remove('loading'), 2000);
-            }
+    // Add hover effects enhancement
+    const calcItems = document.querySelectorAll('.calculator-item, .popular-card');
+    calcItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+    });
+
+    // Track calculator clicks (optional - for analytics)
+    const calculatorLinks = document.querySelectorAll('.calculator-item, .popular-card');
+    calculatorLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            const calculatorName = this.querySelector('h4').textContent;
+            console.log('Calculator clicked:', calculatorName);
         });
     });
 });

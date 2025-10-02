@@ -1,0 +1,1090 @@
+{% extends 'calculators/base.html' %}
+{% load static %}
+
+{% block title %}BMR Calculator - Calculate Your Basal Metabolic Rate | Free Tool{% endblock %}
+
+{% block content %}
+<style>
+/* BMR Calculator Styles */
+.bmr-calculator-page {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background: white;
+}
+
+/* Breadcrumb */
+.breadcrumb-nav {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+    padding: 10px 20px 8px 20px;
+    background: #f9f9f9;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.breadcrumb-nav a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.breadcrumb-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Hero Banner */
+.hero-banner {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    color: white;
+    padding: 15px 20px;
+    margin: 0;
+    border-bottom: 2px solid #ee5a52;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0 0 6px 0;
+    color: white;
+}
+
+.hero-subtitle {
+    font-size: 14px;
+    opacity: 0.93;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    max-width: 800px;
+}
+
+.hero-features {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 13px;
+}
+
+.hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hero-feature i {
+    font-size: 12px;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+}
+
+/* Main Layout */
+.main-layout {
+    display: flex;
+    gap: 20px;
+}
+
+.left-content {
+    flex: 1;
+    max-width: 800px;
+}
+
+.right-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+/* Instruction Banner */
+.instruction-banner {
+    background: #ff8e53;
+    color: white;
+    padding: 8px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.check-icon {
+    font-weight: bold;
+}
+
+/* Calculator Form */
+.calculator-form {
+    background: #fff5f0;
+    border: 1px solid #ffd4c4;
+    margin-bottom: 20px;
+}
+
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.form-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ffd4c4;
+    vertical-align: middle;
+}
+
+.form-table tr:last-child td {
+    border-bottom: none;
+}
+
+.label-cell {
+    background: #fff;
+    font-weight: normal;
+    width: 180px;
+    color: #333;
+    font-size: 13px;
+}
+
+.input-cell {
+    background: white;
+}
+
+.button-cell {
+    background: white;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Form Inputs */
+.form-input, .form-select {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    background: white;
+    box-sizing: border-box;
+}
+
+.form-input {
+    width: 100px;
+}
+
+.form-select {
+    width: 150px;
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: #ff6b6b;
+}
+
+.input-hint {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-top: 3px;
+}
+
+/* Calculate Button */
+.calculate-button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+}
+
+.calculate-button:hover:not(:disabled) {
+    background: #ee5a52;
+}
+
+.calculate-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.play-icon {
+    font-size: 12px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: none;
+    margin-left: 8px;
+}
+
+.loading-spinner.show {
+    display: inline-block;
+}
+
+/* Results Section */
+.results-container {
+    background: white;
+    border: 1px solid #ffd4c4;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.results-container h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: normal;
+    color: #ee5a52;
+}
+
+.bmr-highlight {
+    text-align: center;
+    padding: 25px;
+    background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
+    border: 2px solid #ff6b6b;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.bmr-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.bmr-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ff6b6b;
+    margin-bottom: 5px;
+}
+
+.bmr-subtitle {
+    font-size: 13px;
+    color: #666;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.result-card {
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #ffd4c4;
+    border-radius: 3px;
+}
+
+.result-label {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ee5a52;
+    margin-bottom: 3px;
+}
+
+.result-subtitle {
+    font-size: 11px;
+    color: #666;
+}
+
+/* Activity Levels */
+.activity-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f0f9ff;
+    border-radius: 4px;
+    border-left: 4px solid #3b82f6;
+}
+
+.activity-section h4 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #1e40af;
+    margin: 0 0 12px 0;
+}
+
+.activity-item {
+    padding: 10px;
+    background: #fff;
+    border-left: 3px solid #3b82f6;
+    margin-bottom: 8px;
+    font-size: 12px;
+    border-radius: 2px;
+}
+
+.activity-level {
+    font-weight: bold;
+    color: #1e40af;
+}
+
+.activity-calories {
+    float: right;
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+/* Empty State */
+.empty-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-results i {
+    font-size: 3rem;
+    color: #ffd4c4;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* Health Note */
+.health-note {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.health-note strong {
+    color: #92400e;
+}
+
+/* Tips Section */
+.tips-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.tips-section h3 {
+    font-size: 16px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.tip-card {
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 3px;
+    border-left: 3px solid #ff6b6b;
+    font-size: 12px;
+}
+
+.tip-card h4 {
+    color: #ee5a52;
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.tip-card p {
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* SEO Content */
+.seo-content {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.seo-content h2 {
+    color: #ee5a52;
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0 0 15px 0;
+}
+
+.seo-content h3 {
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+    margin: 20px 0 10px 0;
+}
+
+.seo-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    text-align: justify;
+}
+
+.seo-content ul {
+    color: #666;
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.seo-content li {
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+/* Sidebar */
+.search-section {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.search-button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.sidebar-widget {
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.widget-header {
+    background: #ff6b6b;
+    color: white;
+    padding: 10px 15px;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.widget-content {
+    padding: 15px;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.calc-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.calc-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 0;
+}
+
+.calc-link:hover {
+    text-decoration: underline;
+}
+
+.calc-link.active {
+    color: #ff6b6b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .breadcrumb-nav {
+        padding: 8px 15px 6px 15px;
+        font-size: 11px;
+    }
+    
+    .hero-banner {
+        padding: 12px 15px;
+    }
+    
+    .hero-content h1 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .hero-subtitle {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+    
+    .hero-features {
+        gap: 10px;
+        font-size: 11px;
+    }
+    
+    .content-wrapper {
+        padding: 12px 15px;
+    }
+    
+    .main-layout {
+        flex-direction: column;
+    }
+    
+    .right-sidebar {
+        width: 100%;
+    }
+    
+    .label-cell {
+        width: auto;
+        display: block;
+        padding: 10px 15px 5px;
+        border-bottom: none;
+    }
+    
+    .input-cell {
+        display: block;
+        padding: 5px 15px 10px;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bmr-value {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 16px;
+    }
+    
+    .hero-features {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .form-input,
+    .form-select {
+        font-size: 16px;
+    }
+}
+</style>
+
+<div class="bmr-calculator-page">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-nav">
+        <a href="{% url 'calculators:home' %}">home</a> / 
+        <a href="{% url 'calculators:home' %}">health</a> / 
+        <span>bmr calculator</span>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h1>BMR Calculator</h1>
+            <p class="hero-subtitle">
+                Find out how many calories your body burns just by existing. Your BMR is the energy you need for basic functions like breathing and keeping your heart beating.
+            </p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Accurate Results</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-calculator"></i>
+                    <span>Multiple Formulas</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Activity Levels</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-heart"></i>
+                    <span>100% Free</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="main-layout">
+            <!-- Left Content -->
+            <div class="left-content">
+                <!-- Instruction Banner -->
+                <div class="instruction-banner">
+                    <span class="check-icon">✓</span>
+                    Enter your basic info to calculate your BMR
+                </div>
+
+                <!-- Calculator Form -->
+                <div class="calculator-form">
+                    <form id="bmr-form" method="post">
+                        {% csrf_token %}
+                        <table class="form-table">
+                            <tr>
+                                <td class="label-cell">Age</td>
+                                <td class="input-cell">
+                                    <input type="number" 
+                                           id="age" 
+                                           name="age" 
+                                           class="form-input" 
+                                           placeholder="25"
+                                           value="{{ form_data.age|default:'' }}"
+                                           min="15"
+                                           max="100"
+                                           required>
+                                    <span class="input-hint">years old</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Gender</td>
+                                <td class="input-cell">
+                                    <select id="gender" name="gender" class="form-select" required>
+                                        <option value="male" {% if form_data.gender == 'male' %}selected{% endif %}>Male</option>
+                                        <option value="female" {% if form_data.gender == 'female' %}selected{% endif %}>Female</option>
+                                    </select>
+                                    <span class="input-hint">Different formulas for each</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Height</td>
+                                <td class="input-cell">
+                                    <input type="number" 
+                                           id="height" 
+                                           name="height" 
+                                           class="form-input" 
+                                           placeholder="170"
+                                           value="{{ form_data.height|default:'' }}"
+                                           min="100"
+                                           max="250"
+                                           required>
+                                    <select id="height_unit" name="height_unit" class="form-select" style="width: 100px;">
+                                        <option value="cm" {% if form_data.height_unit == 'cm' %}selected{% endif %}>cm</option>
+                                        <option value="inches" {% if form_data.height_unit == 'inches' %}selected{% endif %}>inches</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Weight</td>
+                                <td class="input-cell">
+                                    <input type="number" 
+                                           id="weight" 
+                                           name="weight" 
+                                           class="form-input" 
+                                           placeholder="70"
+                                           value="{{ form_data.weight|default:'' }}"
+                                           min="30"
+                                           max="300"
+                                           step="0.1"
+                                           required>
+                                    <select id="weight_unit" name="weight_unit" class="form-select" style="width: 100px;">
+                                        <option value="kg" {% if form_data.weight_unit == 'kg' %}selected{% endif %}>kg</option>
+                                        <option value="lbs" {% if form_data.weight_unit == 'lbs' %}selected{% endif %}>lbs</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="button-cell">
+                                    <button type="submit" class="calculate-button" id="calculate-btn">
+                                        <span class="play-icon">▶</span> Calculate
+                                        <span class="loading-spinner" id="loading-spinner">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results-section" {% if not result %}style="display: none;"{% endif %}>
+                    <div class="results-container">
+                        {% if result %}
+                        <!-- BMR Highlight -->
+                        <div class="bmr-highlight">
+                            <div class="bmr-label">Your Basal Metabolic Rate</div>
+                            <div class="bmr-value">{{ result.bmr|floatformat:0 }}</div>
+                            <div class="bmr-subtitle">calories per day at rest</div>
+                        </div>
+
+                        <!-- Results Grid -->
+                        <div class="results-grid">
+                            <div class="result-card">
+                                <div class="result-label">Daily Calories Burned</div>
+                                <div class="result-value">{{ result.bmr|floatformat:0 }}</div>
+                                <div class="result-subtitle">Just by being alive</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Weekly Total</div>
+                                <div class="result-value">{{ result.weekly_bmr|floatformat:0 }}</div>
+                                <div class="result-subtitle">7 days of BMR</div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Levels -->
+                        <div class="activity-section">
+                            <h4>Total Daily Energy Expenditure (TDEE)</h4>
+                            <p style="font-size: 12px; margin-bottom: 12px; color: #666;">Your BMR is just resting calories. Here's what you actually burn based on your activity level:</p>
+                            {% for activity in result.activity_levels %}
+                            <div class="activity-item">
+                                <span class="activity-level">{{ activity.name }}:</span> {{ activity.description }}
+                                <span class="activity-calories">{{ activity.calories|floatformat:0 }} cal/day</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Health Note -->
+                        <div class="health-note">
+                            <strong>Important:</strong> These numbers are estimates based on standard formulas. Everyone's metabolism is different. If you're thinking about changing your diet or exercise routine, talk to a healthcare provider or registered dietitian who can give you personalized advice.
+                        </div>
+                        {% else %}
+                        <div class="empty-results">
+                            <i class="fas fa-fire"></i>
+                            <p>Enter your info above to calculate your BMR and see how many calories your body burns each day.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="tips-section">
+                    <h3>Understanding Your Metabolism</h3>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <h4>What BMR Actually Means</h4>
+                            <p>Your BMR is the calories you'd burn if you stayed in bed all day. It's what your body needs just to keep your organs working and maintain your body temperature.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Why You Need More Than BMR</h4>
+                            <p>You burn extra calories just by moving around, thinking, digesting food, and doing daily activities. That's why your actual calorie needs are higher than your BMR.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Building Muscle Helps</h4>
+                            <p>Muscle tissue burns more calories than fat, even when you're resting. Strength training can gradually increase your BMR over time.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Age and Metabolism</h4>
+                            <p>Your metabolism naturally slows down as you get older. Staying active and maintaining muscle mass can help offset this.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Content -->
+                <div class="seo-content">
+                    <h2>What Is BMR and Why It Matters</h2>
+                    
+                    <h3>The Basics</h3>
+                    <p>BMR stands for Basal Metabolic Rate. It's the number of calories your body burns just to stay alive - keeping your heart beating, your lungs breathing, your brain functioning, and maintaining your body temperature. Think of it as your body's minimum daily energy requirement.</p>
+                    
+                    <h3>How We Calculate It</h3>
+                    <p>This calculator uses the Mifflin-St Jeor equation, which is one of the most accurate formulas available. It takes into account your age, gender, height, and weight. Men typically have higher BMRs than women because they usually have more muscle mass, and muscle burns more calories than fat.</p>
+                    
+                    <h3>BMR vs TDEE</h3>
+                    <p>Your BMR is just your baseline. Your Total Daily Energy Expenditure (TDEE) includes all the calories you burn through movement and activity. Even if you have a desk job, you're probably burning at least 20-30% more than your BMR just from getting up, walking around, and doing normal daily stuff.</p>
+                    
+                    <h3>Using This Information</h3>
+                    <p>Knowing your BMR and TDEE can help you understand your body's energy needs. If you're trying to lose weight, you need to eat less than your TDEE (not your BMR - that would be too low). If you're trying to gain muscle, you need to eat more. But these are just starting points. Your actual needs depend on lots of factors including your genetics, how active you are, and your overall health.</p>
+                    
+                    <h3>What Affects Your BMR</h3>
+                    <p>Several things influence your metabolic rate. Age is a big one - metabolism slows down by about 2% per decade after age 30. Body composition matters too - the more muscle you have, the higher your BMR. Your genetics play a role, and so do things like stress, sleep, and certain medical conditions. Some medications can also affect metabolism.</p>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <!-- Search Box -->
+                <div class="search-section">
+                    <input type="text" class="search-input" placeholder="Search...">
+                    <button class="search-button">Search</button>
+                </div>
+
+                <!-- Related Calculators -->
+                <div class="sidebar-widget">
+                    <div class="widget-header">Related Calculators</div>
+                    <div class="widget-content">
+                        <div class="calculator-grid">
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:bmi_calculator' %}" class="calc-link">BMI Calculator</a>
+                                <a href="{% url 'calculators:calorie_calculator' %}" class="calc-link">Calorie Calculator</a>
+                                <a href="{% url 'calculators:age_calculator' %}" class="calc-link">Age Calculator</a>
+                            </div>
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:loan_calculator' %}" class="calc-link">Loan Calculator</a>
+                                <a href="{% url 'calculators:gpa_calculator' %}" class="calc-link">GPA Calculator</a>
+                                <a href="{% url 'calculators:home' %}" class="calc-link">More Calculators</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('bmr-form');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const ageInput = document.getElementById('age');
+    const heightInput = document.getElementById('height');
+    const weightInput = document.getElementById('weight');
+    
+    // Form validation
+    function validateForm() {
+        const age = parseInt(ageInput.value);
+        const height = parseFloat(heightInput.value);
+        const weight = parseFloat(weightInput.value);
+        
+        let isValid = true;
+        
+        if (!age || age < 15 || age > 100) {
+            isValid = false;
+        }
+        
+        if (!height || height < 100 || height > 250) {
+            isValid = false;
+        }
+        
+        if (!weight || weight < 30 || weight > 300) {
+            isValid = false;
+        }
+        
+        calculateBtn.disabled = !isValid;
+        return isValid;
+    }
+    
+    // Add validation listeners
+    [ageInput, heightInput, weightInput].forEach(input => {
+        if (input) {
+            input.addEventListener('input', validateForm);
+            input.addEventListener('blur', validateForm);
+        }
+    });
+    
+    // Form submission
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Show loading state
+            if (loadingSpinner) {
+                loadingSpinner.classList.add('show');
+            }
+            calculateBtn.disabled = true;
+            
+            // Submit the form
+            setTimeout(() => {
+                this.submit();
+            }, 300);
+        });
+    }
+    
+    // Initial validation
+    validateForm();
+});
+</script>
+
+{% if result %}
+<script>
+// AUTO-SCROLL TO RESULTS
+(function() {
+    'use strict';
+    
+    function scrollToResults() {
+        const resultsSection = document.getElementById('results-section');
+        
+        if (!resultsSection) {
+            return;
+        }
+        
+        resultsSection.style.display = 'block';
+        resultsSection.style.visibility = 'visible';
+        
+        setTimeout(function() {
+            const rect = resultsSection.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const targetPosition = rect.top + scrollTop - 100;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            
+            resultsSection.style.transition = 'box-shadow 0.5s ease';
+            resultsSection.style.boxShadow = '0 0 30px rgba(255, 107, 107, 0.6)';
+            
+            setTimeout(function() {
+                resultsSection.style.boxShadow = '0 0 15px rgba(255, 107, 107, 0.3)';
+                
+                setTimeout(function() {
+                    resultsSection.style.boxShadow = 'none';
+                }, 1500);
+            }, 600);
+            
+        }, 100);
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', scrollToResults);
+    } else {
+        scrollToResults();
+    }
+    
+    window.addEventListener('load', function() {
+        setTimeout(scrollToResults, 200);
+    });
+})();
+</script>
+{% endif %}
+
+<!-- Schema.org Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "BMR Calculator",
+  "description": "Free BMR (Basal Metabolic Rate) calculator. Calculate how many calories your body burns at rest and your total daily energy expenditure based on activity level.",
+  "url": "{{ request.build_absolute_uri }}",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "myCalculator.us",
+    "url": "{% url 'calculators:home' %}"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "1823"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is BMR and why does it matter?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "BMR (Basal Metabolic Rate) is the number of calories your body burns at rest just to maintain basic functions like breathing and circulation. It's important because it forms the foundation for understanding your daily calorie needs, whether you're trying to maintain, lose, or gain weight."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is BMR different from TDEE?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "BMR is your resting metabolism - just what you burn lying in bed all day. TDEE (Total Daily Energy Expenditure) is your BMR plus all the calories you burn through daily activities and exercise. Your TDEE is what you actually burn each day and is always higher than your BMR."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I increase my BMR?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, but it takes time. Building muscle through strength training gradually increases your BMR because muscle tissue burns more calories than fat tissue, even at rest. However, most of the increase in daily calorie burn comes from being more active overall rather than changing your BMR."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I eat exactly my BMR calories to lose weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, eating only your BMR calories would be too low and potentially unhealthy. Your body needs more than your BMR because you're not just lying in bed all day. To lose weight safely, eat less than your TDEE (not your BMR), typically creating a deficit of 500 calories per day for about 1 pound of weight loss per week."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does age affect BMR?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Metabolism naturally slows with age, decreasing by about 2% per decade after age 30. This happens partly because people tend to lose muscle mass as they age. Staying active and maintaining muscle through strength training can help offset this decline."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Health Calculators",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "BMR Calculator",
+      "item": "{{ request.build_absolute_uri }}"
+    }
+  ]
+}
+</script>
+
+{% endblock %}

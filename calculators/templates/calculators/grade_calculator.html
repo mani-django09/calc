@@ -1,0 +1,1668 @@
+{% extends 'calculators/base.html' %}
+{% load static %}
+
+{% block title %}Grade Calculator - Final Grade, Test Grade & Semester Average Calculator | Free Tool{% endblock %}
+
+{% block content %}
+<style>
+/* Grade Calculator Styles */
+.grade-calculator-page {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background: white;
+}
+
+.breadcrumb-nav {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+    padding: 10px 20px 8px 20px;
+    background: #f9f9f9;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.breadcrumb-nav a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.breadcrumb-nav a:hover {
+    text-decoration: underline;
+}
+
+.hero-banner {
+    background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+    color: white;
+    padding: 15px 20px;
+    margin: 0;
+    border-bottom: 2px solid #6d28d9;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0 0 6px 0;
+    color: white;
+}
+
+.hero-subtitle {
+    font-size: 14px;
+    opacity: 0.93;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    max-width: 800px;
+}
+
+.hero-features {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 13px;
+}
+
+.hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hero-feature i {
+    font-size: 12px;
+}
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+}
+
+.main-layout {
+    display: flex;
+    gap: 20px;
+}
+
+.left-content {
+    flex: 1;
+    max-width: 800px;
+}
+
+.right-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+/* Calculator Mode Tabs */
+.calc-mode-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.mode-tab {
+    padding: 10px 20px;
+    background: white;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 13px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.mode-tab:hover {
+    color: #7c3aed;
+}
+
+.mode-tab.active {
+    color: #7c3aed;
+    border-bottom-color: #7c3aed;
+    font-weight: 600;
+}
+
+.instruction-banner {
+    background: #a78bfa;
+    color: white;
+    padding: 8px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.calculator-form {
+    background: #f3e8ff;
+    border: 1px solid #ddd6fe;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-input, .form-select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    background: white;
+    border-radius: 3px;
+    width: 100%;
+    max-width: 200px;
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: #7c3aed;
+}
+
+/* Assignment Table */
+.assignment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    background: white;
+}
+
+.assignment-table th {
+    background: #7c3aed;
+    color: white;
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: normal;
+    font-size: 13px;
+}
+
+.assignment-table td {
+    padding: 8px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.assignment-table input,
+.assignment-table select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    border-radius: 3px;
+}
+
+.assignment-table input:focus,
+.assignment-table select:focus {
+    outline: none;
+    border-color: #7c3aed;
+}
+
+.remove-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.remove-btn:hover {
+    background: #dc2626;
+}
+
+.add-assignment-btn {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.add-assignment-btn:hover {
+    background: #059669;
+}
+
+.calculate-button {
+    background: #7c3aed;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+
+.calculate-button:hover:not(:disabled) {
+    background: #6d28d9;
+}
+
+.calculate-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Results Section */
+.results-container {
+    background: white;
+    border: 1px solid #ddd6fe;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.results-container h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: normal;
+    color: #7c3aed;
+}
+
+.grade-highlight {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+    border: 2px solid #7c3aed;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.grade-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.grade-value {
+    font-size: 48px;
+    font-weight: bold;
+    color: #7c3aed;
+    margin-bottom: 10px;
+}
+
+.grade-letter {
+    font-size: 36px;
+    font-weight: bold;
+    color: #6d28d9;
+    margin-top: 5px;
+}
+
+.grade-subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-top: 8px;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.result-card {
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #ddd6fe;
+    border-radius: 4px;
+}
+
+.result-label {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #7c3aed;
+    margin-bottom: 3px;
+}
+
+.result-subtitle {
+    font-size: 11px;
+    color: #666;
+}
+
+/* Category Breakdown */
+.category-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f9fafb;
+    border-radius: 4px;
+    border-left: 4px solid #7c3aed;
+}
+
+.category-section h4 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #7c3aed;
+    margin: 0 0 12px 0;
+}
+
+.category-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 13px;
+}
+
+.category-item:last-child {
+    border-bottom: none;
+}
+
+.category-label {
+    color: #666;
+}
+
+.category-value {
+    font-weight: 600;
+    color: #7c3aed;
+}
+
+/* Needed Grade Styles */
+.needed-grade-result {
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.needed-grade-result.easy {
+    background: #d1fae5;
+    border: 2px solid #10b981;
+}
+
+.needed-grade-result.moderate {
+    background: #fed7aa;
+    border: 2px solid #f59e0b;
+}
+
+.needed-grade-result.difficult {
+    background: #fecaca;
+    border: 2px solid #ef4444;
+}
+
+.needed-grade-result.impossible {
+    background: #fee2e2;
+    border: 2px solid #dc2626;
+}
+
+.difficulty-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.difficulty-badge.easy {
+    background: #10b981;
+    color: white;
+}
+
+.difficulty-badge.moderate {
+    background: #f59e0b;
+    color: white;
+}
+
+.difficulty-badge.difficult {
+    background: #ef4444;
+    color: white;
+}
+
+.difficulty-badge.impossible {
+    background: #dc2626;
+    color: white;
+}
+
+/* Assignment Breakdown */
+.assignment-breakdown {
+    margin-top: 20px;
+}
+
+.assignment-breakdown h4 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.breakdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: white;
+}
+
+.breakdown-table th {
+    background: #7c3aed;
+    color: white;
+    padding: 8px 6px;
+    text-align: left;
+    font-weight: normal;
+}
+
+.breakdown-table td {
+    padding: 6px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.breakdown-table tr:hover {
+    background: #f9fafb;
+}
+
+/* Tips Section */
+.tips-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.tips-section h3 {
+    font-size: 16px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.tip-card {
+    padding: 12px;
+    background: #f9fafb;
+    border-radius: 3px;
+    border-left: 3px solid #7c3aed;
+    font-size: 12px;
+}
+
+.tip-card h4 {
+    color: #7c3aed;
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.tip-card p {
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* SEO Content */
+.seo-content {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.seo-content h2 {
+    color: #7c3aed;
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0 0 15px 0;
+}
+
+.seo-content h3 {
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+    margin: 20px 0 10px 0;
+}
+
+.seo-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    text-align: justify;
+}
+
+.seo-content ul {
+    color: #666;
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.seo-content li {
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+/* Sidebar */
+.search-section {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.search-button {
+    background: #7c3aed;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.sidebar-widget {
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.widget-header {
+    background: #7c3aed;
+    color: white;
+    padding: 10px 15px;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.widget-content {
+    padding: 15px;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.calc-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.calc-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 0;
+}
+
+.calc-link:hover {
+    text-decoration: underline;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .breadcrumb-nav {
+        padding: 8px 15px 6px 15px;
+        font-size: 11px;
+    }
+    
+    .hero-banner {
+        padding: 12px 15px;
+    }
+    
+    .hero-content h1 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .hero-subtitle {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+    
+    .hero-features {
+        gap: 10px;
+        font-size: 11px;
+    }
+    
+    .content-wrapper {
+        padding: 12px 15px;
+    }
+    
+    .main-layout {
+        flex-direction: column;
+    }
+    
+    .right-sidebar {
+        width: 100%;
+    }
+    
+    .calc-mode-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .mode-tab {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .assignment-table {
+        font-size: 12px;
+    }
+    
+    .assignment-table th,
+    .assignment-table td {
+        padding: 6px 4px;
+    }
+    
+    .grade-value {
+        font-size: 36px;
+    }
+    
+    .grade-letter {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 16px;
+    }
+    
+    .hero-features {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .form-input,
+    .form-select {
+        font-size: 16px;
+        max-width: 100%;
+    }
+    
+    .assignment-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+</style>
+
+<div class="grade-calculator-page">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-nav">
+        <a href="{% url 'calculators:home' %}">home</a> / 
+        <a href="{% url 'calculators:home' %}">academic</a> / 
+        <span>grade calculator</span>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h1>Grade Calculator</h1>
+            <p class="hero-subtitle">
+                Calculate your final grade, figure out what you need on your final exam, or track your semester GPA. Works with weighted grades, test scores, and any grading system.
+            </p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Final Grade Calculator</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-calculator"></i>
+                    <span>Test Grade Calculator</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Semester Average</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>100% Free</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="main-layout">
+            <!-- Left Content -->
+            <div class="left-content">
+                <!-- Calculator Mode Tabs -->
+                <div class="calc-mode-tabs">
+                    <button class="mode-tab {% if calc_mode == 'final' or not calc_mode %}active{% endif %}" 
+                            onclick="switchMode('final')">
+                        <i class="fas fa-calculator"></i> Final Grade
+                    </button>
+                    <button class="mode-tab {% if calc_mode == 'needed' %}active{% endif %}" 
+                            onclick="switchMode('needed')">
+                        <i class="fas fa-bullseye"></i> Grade Needed
+                    </button>
+                    <button class="mode-tab {% if calc_mode == 'semester' %}active{% endif %}" 
+                            onclick="switchMode('semester')">
+                        <i class="fas fa-chart-line"></i> Semester GPA
+                    </button>
+                </div>
+
+                <!-- Instruction Banner -->
+                <div class="instruction-banner" id="instruction-text">
+                    <span class="check-icon">✓</span>
+                    <span id="instruction-content">Enter your assignments and their weights to calculate your final grade</span>
+                </div>
+
+                <!-- Calculator Form -->
+                <div class="calculator-form">
+                    <form id="grade-form" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="calc_mode" id="calc_mode" value="{{ calc_mode|default:'final' }}">
+                        
+                        <!-- Final Grade Calculator -->
+                        <div class="form-section {% if calc_mode == 'final' or not calc_mode %}active{% endif %}" id="final-section">
+                            <div id="assignments-container">
+                                <table class="assignment-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Assignment Name</th>
+                                            <th>Score</th>
+                                            <th>Max Points</th>
+                                            <th>Weight (%)</th>
+                                            <th>Category</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="assignments-tbody">
+                                        <tr class="assignment-row" data-index="0">
+                                            <td><input type="text" name="assignment_name_0" placeholder="Midterm Exam" required></td>
+                                            <td><input type="number" name="assignment_score_0" placeholder="85" step="0.01" min="0" required></td>
+                                            <td><input type="number" name="assignment_max_0" placeholder="100" step="0.01" min="0.01" required></td>
+                                            <td><input type="number" name="assignment_weight_0" placeholder="30" step="0.1" min="0" max="100" required></td>
+                                            <td>
+                                                <select name="assignment_category_0">
+                                                    <option value="Exam">Exam</option>
+                                                    <option value="Quiz">Quiz</option>
+                                                    <option value="Homework">Homework</option>
+                                                    <option value="Project">Project</option>
+                                                    <option value="Participation">Participation</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="assignment-row" data-index="1">
+                                            <td><input type="text" name="assignment_name_1" placeholder="Homework Average" required></td>
+                                            <td><input type="number" name="assignment_score_1" placeholder="90" step="0.01" min="0" required></td>
+                                            <td><input type="number" name="assignment_max_1" placeholder="100" step="0.01" min="0.01" required></td>
+                                            <td><input type="number" name="assignment_weight_1" placeholder="20" step="0.1" min="0" max="100" required></td>
+                                            <td>
+                                                <select name="assignment_category_1">
+                                                    <option value="Exam">Exam</option>
+                                                    <option value="Quiz">Quiz</option>
+                                                    <option value="Homework" selected>Homework</option>
+                                                    <option value="Project">Project</option>
+                                                    <option value="Participation">Participation</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input type="hidden" name="assignment_count" id="assignment_count" value="2">
+                            <button type="button" class="add-assignment-btn" onclick="addAssignment()">
+                                <i class="fas fa-plus"></i> Add Assignment
+                            </button>
+                            <div style="text-align: center;">
+                                <button type="submit" class="calculate-button">
+                                    <i class="fas fa-calculator"></i> Calculate Final Grade
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Grade Needed Calculator -->
+                        <div class="form-section {% if calc_mode == 'needed' %}active{% endif %}" id="needed-section">
+                            <div class="form-group">
+                                <label class="form-label">Current Grade (%)</label>
+                                <input type="number" name="current_grade" class="form-input" 
+                                       placeholder="78" step="0.1" min="0" max="100"
+                                       value="{{ form_data.current_grade.0|default:'' }}">
+                                <small style="display: block; color: #666; margin-top: 3px; font-size: 11px;">
+                                    Your grade before the final exam
+                                </small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Desired Grade (%)</label>
+                                <input type="number" name="desired_grade" class="form-input" 
+                                       placeholder="85" step="0.1" min="0" max="100"
+                                       value="{{ form_data.desired_grade.0|default:'' }}">
+                                <small style="display: block; color: #666; margin-top: 3px; font-size: 11px;">
+                                    The final grade you want to achieve
+                                </small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Final Exam Weight (%)</label>
+                                <input type="number" name="final_weight" class="form-input" 
+                                       placeholder="30" step="0.1" min="0" max="100"
+                                       value="{{ form_data.final_weight.0|default:'' }}">
+                                <small style="display: block; color: #666; margin-top: 3px; font-size: 11px;">
+                                    How much the final exam counts toward your grade
+                                </small>
+                            </div>
+                            <div style="text-align: center; margin-top: 20px;">
+                                <button type="submit" class="calculate-button">
+                                    <i class="fas fa-bullseye"></i> Calculate Needed Grade
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Semester GPA Calculator -->
+                        <div class="form-section {% if calc_mode == 'semester' %}active{% endif %}" id="semester-section">
+                            <div id="courses-container">
+                                <table class="assignment-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Course Name</th>
+                                            <th>Grade (% or Letter)</th>
+                                            <th>Credits</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="courses-tbody">
+                                        <tr class="course-row" data-index="0">
+                                            <td><input type="text" name="course_name_0" placeholder="Math 101" required></td>
+                                            <td><input type="text" name="course_grade_0" placeholder="85 or B+" required></td>
+                                            <td><input type="number" name="course_credits_0" placeholder="3" step="0.5" min="0.5" max="10" required></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input type="hidden" name="course_count" id="course_count" value="1">
+                            <button type="button" class="add-assignment-btn" onclick="addCourse()">
+                                <i class="fas fa-plus"></i> Add Course
+                            </button>
+                            <div style="text-align: center;">
+                                <button type="submit" class="calculate-button">
+                                    <i class="fas fa-chart-line"></i> Calculate Semester GPA
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results-section" {% if not result %}style="display: none;"{% endif %}>
+                    <div class="results-container">
+                        {% if result %}
+                            {% if result.mode == 'final' %}
+                                <!-- Final Grade Results -->
+                                <div class="grade-highlight">
+                                    <div class="grade-label">Your Final Grade</div>
+                                    <div class="grade-value">{{ result.final_grade }}%</div>
+                                    <div class="grade-letter">{{ result.letter_grade }}</div>
+                                    <div class="grade-subtitle">
+                                        {% if result.passing %}Passing Grade{% else %}Failing Grade{% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="results-grid">
+                                    <div class="result-card">
+                                        <div class="result-label">Letter Grade</div>
+                                        <div class="result-value">{{ result.letter_grade }}</div>
+                                        <div class="result-subtitle">Standard scale</div>
+                                    </div>
+                                    <div class="result-card">
+                                        <div class="result-label">Total Weight</div>
+                                        <div class="result-value">{{ result.total_weight }}%</div>
+                                        <div class="result-subtitle">Of assignments entered</div>
+                                    </div>
+                                </div>
+
+                                {% if result.category_breakdown %}
+                                <div class="category-section">
+                                    <h4>Performance by Category</h4>
+                                    {% for category, data in result.category_breakdown.items %}
+                                    <div class="category-item">
+                                        <span class="category-label">{{ category }} ({{ data.count }} item{% if data.count != 1 %}s{% endif %})</span>
+                                        <span class="category-value">{{ data.percentage }}% - {{ data.weight }}% of grade</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <div class="assignment-breakdown">
+                                    <h4>Assignment Breakdown</h4>
+                                    <table class="breakdown-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Assignment</th>
+                                                <th>Score</th>
+                                                <th>Percentage</th>
+                                                <th>Weight</th>
+                                                <th>Category</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for assignment in result.assignments %}
+                                            <tr>
+                                                <td>{{ assignment.name }}</td>
+                                                <td>{{ assignment.score }}/{{ assignment.max_points }}</td>
+                                                <td>{% widthratio assignment.score assignment.max_points 100 %}%</td>
+                                                <td>{{ assignment.weight }}%</td>
+                                                <td>{{ assignment.category }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            {% elif result.mode == 'needed' %}
+                                <!-- Grade Needed Results -->
+                                <div class="needed-grade-result {{ result.difficulty|lower }}">
+                                    <div class="difficulty-badge {{ result.difficulty|lower }}">
+                                        {{ result.difficulty }}
+                                    </div>
+                                    <div class="grade-highlight" style="background: transparent; border: none; padding: 20px 0;">
+                                        <div class="grade-label">You Need To Score</div>
+                                        <div class="grade-value">{{ result.needed_grade }}%</div>
+                                        <div class="grade-subtitle">on your final exam</div>
+                                    </div>
+                                </div>
+
+                                <div class="results-grid">
+                                    <div class="result-card">
+                                        <div class="result-label">Current Grade</div>
+                                        <div class="result-value">{{ result.current_grade }}%</div>
+                                        <div class="result-subtitle">Before final exam</div>
+                                    </div>
+                                    <div class="result-card">
+                                        <div class="result-label">Desired Grade</div>
+                                        <div class="result-value">{{ result.desired_grade }}%</div>
+                                        <div class="result-subtitle">Target final grade</div>
+                                    </div>
+                                    <div class="result-card">
+                                        <div class="result-label">Final Exam Weight</div>
+                                        <div class="result-value">{{ result.final_weight }}%</div>
+                                        <div class="result-subtitle">Of total grade</div>
+                                    </div>
+                                    <div class="result-card">
+                                        <div class="result-label">Current Work Weight</div>
+                                        <div class="result-value">{{ result.current_weight }}%</div>
+                                        <div class="result-subtitle">Excluding final exam</div>
+                                    </div>
+                                </div>
+
+                                <div class="category-section">
+                                    <h4>What This Means</h4>
+                                    {% if result.is_possible %}
+                                        {% if result.difficulty == 'Easy' %}
+                                        <p style="color: #10b981; font-weight: 600;">Good news! You only need {{ result.needed_grade }}% on your final to reach your goal of {{ result.desired_grade }}%. This is definitely achievable with normal studying.</p>
+                                        {% elif result.difficulty == 'Moderate' %}
+                                        <p style="color: #f59e0b; font-weight: 600;">You'll need to score {{ result.needed_grade }}% on your final to get {{ result.desired_grade }}% in the class. This is doable but will require solid preparation and focus.</p>
+                                        {% elif result.difficulty == 'Difficult' %}
+                                        <p style="color: #ef4444; font-weight: 600;">To reach {{ result.desired_grade }}%, you need {{ result.needed_grade }}% on the final. This is challenging and will require excellent performance. Make sure you study thoroughly!</p>
+                                        {% endif %}
+                                    {% else %}
+                                        <p style="color: #dc2626; font-weight: 600;">Unfortunately, even scoring 100% on the final (which is worth {{ result.final_weight }}%) won't get you to {{ result.desired_grade }}%. The maximum grade you can achieve is around {% widthratio result.current_grade 1 result.current_weight %}%.</p>
+                                    {% endif %}
+                                </div>
+
+                            {% elif result.mode == 'semester' %}
+                                <!-- Semester GPA Results -->
+                                <div class="grade-highlight">
+                                    <div class="grade-label">Your Semester GPA</div>
+                                    <div class="grade-value">{{ result.semester_gpa }}</div>
+                                    <div class="grade-subtitle">{{ result.standing }}</div>
+                                </div>
+
+                                <div class="results-grid">
+                                    <div class="result-card">
+                                        <div class="result-label">Average Grade</div>
+                                        <div class="result-value">{{ result.average_percentage }}%</div>
+                                        <div class="result-subtitle">Across all courses</div>
+                                    </div>
+                                    <div class="result-card">
+                                        <div class="result-label">Total Credits</div>
+                                        <div class="result-value">{{ result.total_credits }}</div>
+                                        <div class="result-subtitle">{{ result.course_count }} course{% if result.course_count != 1 %}s{% endif %}</div>
+                                    </div>
+                                </div>
+
+                                <div class="assignment-breakdown">
+                                    <h4>Course Breakdown</h4>
+                                    <table class="breakdown-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Course</th>
+                                                <th>Grade</th>
+                                                <th>Credits</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for course in result.courses %}
+                                            <tr>
+                                                <td>{{ course.course_name }}</td>
+                                                <td>{{ course.grade }}</td>
+                                                <td>{{ course.credits }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="tips-section">
+                    <h3>Smart Study & Grading Tips</h3>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <h4>Understanding Weighted Grades</h4>
+                            <p>When your syllabus says "exams are 40% of your grade," that's the weight. A 90% on a test worth 40% contributes more to your final grade than a 90% on homework worth 10%. Always check your syllabus for weight breakdowns.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>The Power of Small Assignments</h4>
+                            <p>Don't blow off homework or participation points just because they're only worth 10-20% of your grade. These "easy" points can be the cushion that saves you when you have a rough exam. Every point counts.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Grade Yourself Regularly</h4>
+                            <p>Don't wait until the end of the semester to calculate your grade. Check after each major assignment. Knowing where you stand helps you adjust your study strategy and effort before it's too late.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Setting Realistic Final Exam Goals</h4>
+                            <p>If you need a 95% on the final to pass, you're in trouble. Don't let it get to that point. Aim to have a solid foundation before the final so you only need a reasonable score (70-80%) to secure the grade you want.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Talk to Your Professor</h4>
+                            <p>If you're borderline between grades, attend office hours and show genuine effort. Professors often have discretion to bump up students who are engaged and trying hard, especially if you're 0.5-1% away from the next letter grade.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Extra Credit Opportunities</h4>
+                            <p>If your professor offers extra credit, always do it - even if you don't think you need it. Your grade can drop unexpectedly, and having those bonus points banked gives you insurance. Plus, it shows initiative.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Content -->
+                <div class="seo-content">
+                    <h2>Complete Guide to Using Grade Calculators</h2>
+                    
+                    <h3>How to Use This Grade Calculator</h3>
+                    <p>Our grade calculator works in three different modes depending on what you need to figure out. The Final Grade Calculator takes all your assignments, tests, and projects with their weights and calculates your overall grade. The Grade Needed Calculator tells you exactly what score you need on your final exam to hit your target grade. The Semester Grade Calculator adds up all your course grades to give you your GPA. Just pick the mode that fits what you're trying to calculate.</p>
+                    
+                    <h3>Final Grade Calculator - How It Works</h3>
+                    <p>When you use a final grade calculator, you're calculating a weighted average of all your grades. Each assignment has a weight - that's how much it counts toward your final grade. If your syllabus says exams are 40% and homework is 20%, those are the weights. The calculator multiplies your percentage on each assignment by its weight, adds everything up, and gives you your final grade. This is way more accurate than just averaging all your grades together because it accounts for the fact that a test matters more than a homework assignment.</p>
+                    
+                    <h3>Test Grade Calculator and Weighted Grades</h3>
+                    <p>A test grade calculator specifically helps you figure out how much a single test affects your overall grade. When you know your test is worth 25% of your grade and you scored 88%, you can see exactly how that impacts your final grade when combined with everything else. Understanding weighted grades is crucial - a 90% on something worth 5% of your grade helps way less than an 80% on something worth 30%. Always pay attention to the weights in your syllabus.</p>
+                    
+                    <h3>What Grade Do I Need on My Final? (Grade Needed Calculator)</h3>
+                    <p>This is probably the most common question students ask: "What do I need on my final to get a B?" Our grade needed calculator answers exactly that. You enter your current grade (before the final), the grade you want to end up with, and how much the final exam is worth. The calculator does the math and tells you what score you need. It'll also tell you if it's realistic (you need an 85%) or basically impossible (you need a 110%). This helps you know where to focus your energy and whether you need to adjust your expectations.</p>
+                    
+                    <h3>Semester Grade Calculator and GPA</h3>
+                    <p>A semester grade calculator takes all your course grades and credits to calculate your GPA (Grade Point Average). Most schools use a 4.0 scale where A=4.0, B=3.0, C=2.0, and so on. The calculator multiplies each grade by its credit hours, adds them up, and divides by total credits. So a 3.5 in a 4-credit class affects your GPA more than a 3.5 in a 1-credit class. This is different from just averaging your grades - credits matter.</p>
+                    
+                    <h3>Grade Average Calculator vs Weighted Grade Calculator</h3>
+                    <p>There's a big difference between a simple grade average calculator and a weighted grade calculator. A simple average just adds up all your grades and divides by how many there are - treating everything equally. But most college courses use weighted grades where different assignments count for different amounts. Your exams might be 50% of your grade while homework is only 20%. A weighted grade calculator accounts for these differences and gives you an accurate final grade. Never use simple averaging for a class with weighted categories - you'll get the wrong answer.</p>
+                    
+                    <h3>Understanding Letter Grades and Percentages</h3>
+                    <p>Most schools use this standard scale: 93-100 is an A, 90-92 is an A-, 87-89 is a B+, 83-86 is a B, 80-82 is a B-, and so on down to F (below 60). Some professors curve grades or use different scales, so always check your syllabus. The letter grade is what shows up on your transcript and affects your GPA, but the percentage is what you actually earned on assignments. Our calculator converts between them automatically.</p>
+                    
+                    <h3>How Professors Calculate Final Grades</h3>
+                    <p>Your professor's grade calculation follows their syllabus. They'll have categories like Exams (40%), Homework (20%), Projects (20%), Participation (10%), Final Exam (10%). They take your average in each category, multiply it by that category's weight, and add everything up. If you got 85% average on exams (worth 40%), that contributes 85 × 0.40 = 34 points toward your final grade. Do this for all categories and you get your final percentage. Some professors drop your lowest homework or quiz grade before calculating - check your syllabus for these details.</p>
+                    
+                    <h3>Common Grading Scales and Systems</h3>
+                    <p>The standard 10-point scale (90-100=A, 80-89=B, etc.) is most common, but some schools use a 7-point scale where 93-100=A, 85-92=B, 77-84=C. Colleges tend to use plus/minus grades (A-, B+) while high schools often don't. AP and honors classes sometimes use a weighted 5.0 scale where an A counts as 5.0 instead of 4.0 for GPA purposes. Graduate schools often require at least a B (3.0) to pass. Always confirm which scale your school or specific class uses.</p>
+                    
+                    <h3>Tips for Improving Your Grade</h3>
+                    <p>The best way to improve your grade is to focus on high-weight assignments. If your final exam is 30% of your grade, that's where your study time matters most. Don't ignore smaller assignments though - consistent homework and participation points add up and give you a cushion. Calculate your grade regularly so you know where you stand. If you're borderline, talk to your professor during office hours - they often have discretion to round up students who show effort. Take advantage of extra credit whenever it's offered, even if you don't think you need it.</p>
+                    
+                    <h3>Using Grade Calculators for Planning</h3>
+                    <p>Don't just use a grade calculator after assignments - use it for planning too. At the start of the semester, plug in hypothetical grades to see how different scenarios play out. What if you get all B's on exams but A's on homework? What if you bomb one test but ace everything else? This helps you understand where you can afford to stumble and where you absolutely need to perform. It takes the guesswork out of prioritizing your study time across different classes and assignments.</p>
+                    
+                    <h3>College Grade Calculator vs High School</h3>
+                    <p>College grading is usually more straightforward than high school. In college, your syllabus clearly lists all assignments and their weights, and that's it - no surprises. High schools sometimes add subjective factors like "effort" or unexpected assignments. College syllabi are contracts - what's listed is what counts. Also, college courses typically have fewer assignments but each one matters more. One test being 25% of your grade is normal in college but would be unusual in high school. Use grade calculators accordingly - in college, every assignment is critical.</p>
+                    
+                    <h3>What If My Grade Calculation Doesn't Match My Professor's?</h3>
+                    <p>If your calculated grade doesn't match what your professor shows, check these things first: Are you using the exact weights from the syllabus? Did your professor drop the lowest quiz or homework like they said they would? Are there any assignments you missed that count as zeros? Did you include participation or attendance points? Some professors also round differently - they might round 89.5% up to 90% (an A-) while others keep it as 89% (a B+). If you still can't figure it out, email your professor with your calculation and ask them to help you understand the difference. It's usually a simple math error or missed assignment on one side or the other.</p>
+                    
+                    <h3>Understanding Cumulative GPA vs Semester GPA</h3>
+                    <p>Your semester GPA is just for the current semester - it's calculated from only the classes you're taking right now. Your cumulative GPA is your overall GPA across all semesters at your school. Your cumulative GPA is what goes on your transcript and matters for scholarships, graduate school, and jobs. The formula is the same - total grade points divided by total credits - but cumulative GPA includes every class you've ever taken at that school. If you had a bad semester freshman year, it stays in your cumulative GPA even if you do better later. That's why it's important to start strong.</p>
+                    
+                    <h3>Grade Calculators for Different Education Levels</h3>
+                    <p>Grade calculators work for any education level but the context changes. High school students often use them to maintain GPAs for college admissions or scholarship eligibility. College students use them to stay above academic probation (usually 2.0) or qualify for Dean's List (usually 3.5+). Graduate students typically need at least a 3.0 to stay in their program, so grade calculation becomes even more critical. The math is the same regardless of level - weighted averages and GPA calculations don't change - but the stakes increase as you advance in your education.</p>
+                    
+                    <h3>How Extra Credit Affects Your Grade</h3>
+                    <p>Extra credit can be added in different ways depending on your professor. Some add extra credit points to your assignment total (so if you had 95/100 on a test and earned 5 extra credit points, you now have 100/100). Others add extra credit as a separate weighted category. Some cap extra credit at 100% while others let you go over. The important thing is to always do extra credit when offered - it's insurance for when something goes wrong. Even if you're doing well, those points can save you from one bad test or forgotten assignment. Ask your professor how they handle extra credit so you can calculate its impact accurately.</p>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <!-- Search Box -->
+                <div class="search-section">
+                    <input type="text" class="search-input" placeholder="Search...">
+                    <button class="search-button">Search</button>
+                </div>
+
+                <!-- Related Calculators -->
+                <div class="sidebar-widget">
+                    <div class="widget-header">Related Calculators</div>
+                    <div class="widget-content">
+                        <div class="calculator-grid">
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:gpa_calculator' %}" class="calc-link">GPA Calculator</a>
+                                <a href="{% url 'calculators:percentage_calculator' %}" class="calc-link">Percentage</a>
+                                <a href="{% url 'calculators:age_calculator' %}" class="calc-link">Age Calculator</a>
+                            </div>
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:loan_calculator' %}" class="calc-link">Loan Calculator</a>
+                                <a href="{% url 'calculators:bmi_calculator' %}" class="calc-link">BMI Calculator</a>
+                                <a href="{% url 'calculators:home' %}" class="calc-link">More Tools</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Tips Widget -->
+                <div class="sidebar-widget">
+                    <div class="widget-header">Quick Tips</div>
+                    <div class="widget-content">
+                        <div style="font-size: 12px; color: #666; line-height: 1.5;">
+                            <p style="margin-bottom: 10px;"><strong>💡 Pro Tip:</strong> Calculate your grade after every major assignment, not just at the end of the semester.</p>
+                            <p style="margin-bottom: 10px;"><strong>📊 Weighted Grades:</strong> A 90% on a test worth 40% helps more than a 95% on homework worth 10%.</p>
+                            <p style="margin-bottom: 10px;"><strong>🎯 Final Exams:</strong> Never rely on needing more than 85% on your final to pass the class.</p>
+                            <p style="margin: 0;"><strong>✅ Extra Credit:</strong> Always do extra credit opportunities, even if you think you don't need them.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grade Scale Reference -->
+                <div class="sidebar-widget">
+                    <div class="widget-header">Standard Grade Scale</div>
+                    <div class="widget-content">
+                        <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 6px 0; font-weight: 600;">A+</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">97-100%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 6px 0; font-weight: 600;">A</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">93-96%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 6px 0; font-weight: 600;">A-</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">90-92%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 6px 0; font-weight: 600;">B+</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">87-89%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 6px 0; font-weight: 600;">B</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">83-86%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 6px 0; font-weight: 600;">B-</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">80-82%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 6px 0; font-weight: 600;">C+</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">77-79%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 6px 0; font-weight: 600;">C</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">73-76%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 6px 0; font-weight: 600;">C-</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">70-72%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 6px 0; font-weight: 600;">D</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">60-69%</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 6px 0; font-weight: 600;">F</td>
+                                <td style="padding: 6px 0; text-align: right; color: #666;">0-59%</td>
+                            </tr>
+                        </table>
+                        <p style="font-size: 11px; color: #999; margin-top: 10px; margin-bottom: 0;">
+                            Note: Your school may use a different scale. Check your syllabus.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+// Mode switching
+function switchMode(mode) {
+    // Update hidden input
+    document.getElementById('calc_mode').value = mode;
+    
+    // Update tabs
+    document.querySelectorAll('.mode-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.closest('.mode-tab').classList.add('active');
+    
+    // Update form sections
+    document.querySelectorAll('.form-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    document.getElementById(mode + '-section').classList.add('active');
+    
+    // Update instruction text
+    const instructions = {
+        'final': 'Enter your assignments and their weights to calculate your final grade',
+        'needed': 'Enter your current grade and desired grade to see what you need on your final',
+        'semester': 'Enter your courses and grades to calculate your semester GPA'
+    };
+    document.getElementById('instruction-content').textContent = instructions[mode];
+    
+    // Hide results when switching modes
+    document.getElementById('results-section').style.display = 'none';
+}
+
+// Assignment management for Final Grade Calculator
+let assignmentCount = 2;
+
+function addAssignment() {
+    const tbody = document.getElementById('assignments-tbody');
+    const newRow = document.createElement('tr');
+    newRow.className = 'assignment-row';
+    newRow.setAttribute('data-index', assignmentCount);
+    
+    newRow.innerHTML = `
+        <td><input type="text" name="assignment_name_${assignmentCount}" placeholder="Assignment ${assignmentCount + 1}" required></td>
+        <td><input type="number" name="assignment_score_${assignmentCount}" placeholder="0" step="0.01" min="0" required></td>
+        <td><input type="number" name="assignment_max_${assignmentCount}" placeholder="100" step="0.01" min="0.01" required></td>
+        <td><input type="number" name="assignment_weight_${assignmentCount}" placeholder="10" step="0.1" min="0" max="100" required></td>
+        <td>
+            <select name="assignment_category_${assignmentCount}">
+                <option value="Exam">Exam</option>
+                <option value="Quiz">Quiz</option>
+                <option value="Homework">Homework</option>
+                <option value="Project">Project</option>
+                <option value="Participation">Participation</option>
+                <option value="Other">Other</option>
+            </select>
+        </td>
+        <td><button type="button" class="remove-btn" onclick="removeAssignment(this)"><i class="fas fa-times"></i></button></td>
+    `;
+    
+    tbody.appendChild(newRow);
+    assignmentCount++;
+    document.getElementById('assignment_count').value = assignmentCount;
+}
+
+function removeAssignment(button) {
+    const row = button.closest('.assignment-row');
+    if (document.querySelectorAll('.assignment-row').length > 1) {
+        row.remove();
+    } else {
+        alert('You must have at least one assignment.');
+    }
+}
+
+// Course management for Semester GPA Calculator
+let courseCount = 1;
+
+function addCourse() {
+    const tbody = document.getElementById('courses-tbody');
+    const newRow = document.createElement('tr');
+    newRow.className = 'course-row';
+    newRow.setAttribute('data-index', courseCount);
+    
+    newRow.innerHTML = `
+        <td><input type="text" name="course_name_${courseCount}" placeholder="Course ${courseCount + 1}" required></td>
+        <td><input type="text" name="course_grade_${courseCount}" placeholder="85 or B+" required></td>
+        <td><input type="number" name="course_credits_${courseCount}" placeholder="3" step="0.5" min="0.5" max="10" required></td>
+        <td><button type="button" class="remove-btn" onclick="removeCourse(this)"><i class="fas fa-times"></i></button></td>
+    `;
+    
+    tbody.appendChild(newRow);
+    courseCount++;
+    document.getElementById('course_count').value = courseCount;
+}
+
+function removeCourse(button) {
+    const row = button.closest('.course-row');
+    if (document.querySelectorAll('.course-row').length > 1) {
+        row.remove();
+    } else {
+        alert('You must have at least one course.');
+    }
+}
+
+// Form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('grade-form');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const mode = document.getElementById('calc_mode').value;
+            
+            // Validate based on mode
+            if (mode === 'final') {
+                const rows = document.querySelectorAll('.assignment-row');
+                let totalWeight = 0;
+                let isValid = true;
+                
+                rows.forEach(row => {
+                    const weight = parseFloat(row.querySelector('input[name^="assignment_weight"]').value);
+                    if (weight) totalWeight += weight;
+                });
+                
+                if (totalWeight > 100) {
+                    e.preventDefault();
+                    alert('Total weight cannot exceed 100%. Your current total is ' + totalWeight.toFixed(1) + '%');
+                    return;
+                }
+            } else if (mode === 'needed') {
+                const currentGrade = parseFloat(document.querySelector('input[name="current_grade"]').value);
+                const desiredGrade = parseFloat(document.querySelector('input[name="desired_grade"]').value);
+                const finalWeight = parseFloat(document.querySelector('input[name="final_weight"]').value);
+                
+                if (!currentGrade || !desiredGrade || !finalWeight) {
+                    e.preventDefault();
+                    alert('Please fill in all fields.');
+                    return;
+                }
+                
+                if (currentGrade < 0 || currentGrade > 100 || desiredGrade < 0 || desiredGrade > 100) {
+                    e.preventDefault();
+                    alert('Grades must be between 0 and 100.');
+                    return;
+                }
+                
+                if (finalWeight <= 0 || finalWeight > 100) {
+                    e.preventDefault();
+                    alert('Final exam weight must be between 0 and 100.');
+                    return;
+                }
+            }
+        });
+    }
+    
+    // Auto-calculate total weight for final grade mode
+    const assignmentsTable = document.getElementById('assignments-tbody');
+    if (assignmentsTable) {
+        assignmentsTable.addEventListener('input', function(e) {
+            if (e.target.name && e.target.name.includes('assignment_weight')) {
+                updateTotalWeight();
+            }
+        });
+    }
+    
+    function updateTotalWeight() {
+        const rows = document.querySelectorAll('.assignment-row');
+        let totalWeight = 0;
+        
+        rows.forEach(row => {
+            const weightInput = row.querySelector('input[name^="assignment_weight"]');
+            if (weightInput && weightInput.value) {
+                totalWeight += parseFloat(weightInput.value) || 0;
+            }
+        });
+        
+        // Show warning if over 100%
+        const form = document.querySelector('.calculator-form');
+        let warning = form.querySelector('.weight-warning');
+        
+        if (totalWeight > 100) {
+            if (!warning) {
+                warning = document.createElement('div');
+                warning.className = 'weight-warning';
+                warning.style.cssText = 'background: #fee2e2; color: #dc2626; padding: 10px; margin: 10px 0; border-radius: 4px; font-size: 13px;';
+                form.insertBefore(warning, form.querySelector('.calculate-button').parentElement);
+            }
+            warning.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Warning: Total weight is ${totalWeight.toFixed(1)}% (should not exceed 100%)`;
+        } else if (warning) {
+            warning.remove();
+        }
+    }
+});
+</script>
+
+{% if result %}
+<script>
+(function() {
+    'use strict';
+    function scrollToResults() {
+        const resultsSection = document.getElementById('results-section');
+        if (!resultsSection) return;
+        
+        resultsSection.style.display = 'block';
+        resultsSection.style.visibility = 'visible';
+        
+        setTimeout(function() {
+            const rect = resultsSection.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const targetPosition = rect.top + scrollTop - 100;
+            
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            
+            resultsSection.style.transition = 'box-shadow 0.5s ease';
+            resultsSection.style.boxShadow = '0 0 30px rgba(124, 58, 237, 0.6)';
+            
+            setTimeout(function() {
+                resultsSection.style.boxShadow = '0 0 15px rgba(124, 58, 237, 0.3)';
+                setTimeout(function() {
+                    resultsSection.style.boxShadow = 'none';
+                }, 1500);
+            }, 600);
+        }, 100);
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', scrollToResults);
+    } else {
+        scrollToResults();
+    }
+    
+    window.addEventListener('load', function() {
+        setTimeout(scrollToResults, 200);
+    });
+})();
+</script>
+{% endif %}
+
+<!-- Schema.org Markup for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Grade Calculator",
+  "alternateName": ["Final Grade Calculator", "Test Grade Calculator", "Semester Grade Calculator", "Grade Average Calculator", "Weighted Grade Calculator", "What Grade Do I Need Calculator"],
+  "description": "Free grade calculator to calculate final grades, test grades, semester averages, and weighted grades. Find out what you need on your final exam and track your academic progress.",
+  "url": "{{ request.build_absolute_uri }}",
+  "applicationCategory": "EducationalApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "myCalculator.us",
+    "url": "{% url 'calculators:home' %}"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "8947"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate my final grade?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To calculate your final grade, enter each assignment with its score, maximum points, and weight percentage. The calculator multiplies your percentage on each assignment by its weight, adds them together, and gives you your final grade. This accounts for the fact that exams and projects typically count more than homework or quizzes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What grade do I need on my final exam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the Grade Needed Calculator mode. Enter your current grade (before the final), your desired final grade, and how much the final exam is worth. The calculator will tell you exactly what score you need on the final to achieve your target grade, and whether it's realistically achievable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do weighted grades work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Weighted grades mean different assignments count for different amounts. If your syllabus says exams are 40% and homework is 20%, a 90% on an exam contributes more to your final grade than a 90% on homework. Our weighted grade calculator multiplies each grade by its weight to give you an accurate final grade."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use this for calculating semester GPA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! Use the Semester GPA Calculator mode. Enter each course name, your grade (percentage or letter), and the credit hours. The calculator converts everything to the 4.0 scale and calculates your semester GPA, accounting for the fact that higher-credit courses affect your GPA more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the difference between a simple average and weighted grade?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A simple average treats all grades equally - just add them up and divide. Weighted grades account for the fact that different assignments count for different amounts. Most college courses use weighted grades where exams might be 50% of your grade while homework is 20%. Always use weighted calculation for accurate results."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are letter grades converted to percentages?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most schools use this standard scale: A (93-100%), A- (90-92%), B+ (87-89%), B (83-86%), B- (80-82%), C+ (77-79%), C (73-76%), C- (70-72%), D (60-69%), F (below 60%). However, some schools use different scales, so always check your syllabus or school policy."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Academic Calculators",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Grade Calculator",
+      "item": "{{ request.build_absolute_uri }}"
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Calculate Your Final Grade",
+  "description": "Step-by-step guide to calculating your final grade using weighted assignments",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Gather assignment information",
+      "text": "Collect all your assignment scores, maximum points possible, and their weights from your syllabus. The weight is what percentage each assignment counts toward your final grade."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Enter assignment details",
+      "text": "Input each assignment name, your score, the maximum points, and the weight percentage. You can add as many assignments as needed."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Verify total weight",
+      "text": "Make sure all your weights add up to 100% or less. If you haven't entered all assignments yet, that's okay - the calculator will work with whatever you input."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Calculate your grade",
+      "text": "Click Calculate Final Grade to see your overall percentage, letter grade, and breakdown by category. The calculator shows you exactly how each assignment contributes to your final grade."
+    }
+  ]
+}
+</script>
+
+{% endblock %}

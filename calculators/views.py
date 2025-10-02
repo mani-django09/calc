@@ -586,3 +586,544 @@ def robots_txt(request):
     ]
     
     return HttpResponse("\n".join(lines), content_type="text/plain")
+
+
+# Add this view function to your views.py file
+
+from .utils import calculate_401k
+
+def k401_calculator(request, calculator=None):
+    """401k retirement calculator view"""
+    if not calculator:
+        try:
+            calculator = Calculator.objects.get(slug='401k-calculator')
+        except Calculator.DoesNotExist:
+            calculator = Calculator(
+                name="401k Calculator",
+                description="Calculate your retirement savings with compound interest and employer matching",
+                slug="401k-calculator"
+            )
+    
+    result = None
+    form_data = None
+    
+    if request.method == 'POST':
+        try:
+            current_age = request.POST.get('current_age')
+            retirement_age = request.POST.get('retirement_age')
+            current_balance = request.POST.get('current_balance', '0')
+            annual_salary = request.POST.get('annual_salary')
+            contribution_rate = request.POST.get('contribution_rate')
+            employer_match = request.POST.get('employer_match', '0')
+            return_rate = request.POST.get('return_rate')
+            
+            if current_age and retirement_age and annual_salary and contribution_rate and return_rate:
+                result = calculate_401k(
+                    current_age=current_age,
+                    retirement_age=retirement_age,
+                    current_balance=current_balance,
+                    annual_salary=annual_salary,
+                    contribution_rate=contribution_rate,
+                    employer_match=employer_match,
+                    return_rate=return_rate
+                )
+                
+                # Store form data for display
+                form_data = {
+                    'current_age': current_age,
+                    'retirement_age': retirement_age,
+                    'current_balance': current_balance,
+                    'annual_salary': annual_salary,
+                    'contribution_rate': contribution_rate,
+                    'employer_match': employer_match,
+                    'return_rate': return_rate
+                }
+                
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True, 'result': result})
+                    
+        except (ValueError, TypeError) as e:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Invalid input values. Please check your entries.'})
+            messages.error(request, 'Invalid input values. Please check your entries.')
+    
+    # Get related calculators
+    related_calculators = Calculator.objects.filter(
+        is_active=True
+    ).exclude(slug='401k-calculator')[:3]
+    
+    context = {
+        'calculator': calculator,
+        'result': result,
+        'form_data': form_data,
+        'related_calculators': related_calculators,
+        'page_title': '401k Calculator - Plan Your Retirement Savings | Free Retirement Tool',
+        'meta_description': 'Free 401k retirement calculator. See how much you could save by retirement with contributions, employer matching, and compound interest. Plan your financial future today.',
+        'meta_keywords': '401k calculator, retirement calculator, retirement savings calculator, 401k planner, retirement planning tool, compound interest calculator, employer match calculator, retirement nest egg, 401k projection, retirement fund calculator'
+    }
+    
+    return render(request, 'calculators/401k_calculator.html', context)
+
+# Add this view function to your views.py file
+
+from .utils import calculate_pregnancy
+
+def pregnancy_calculator(request, calculator=None):
+    """Pregnancy due date calculator view"""
+    if not calculator:
+        try:
+            calculator = Calculator.objects.get(slug='pregnancy-calculator')
+        except Calculator.DoesNotExist:
+            calculator = Calculator(
+                name="Pregnancy Calculator",
+                description="Calculate your pregnancy due date and track your pregnancy week by week",
+                slug="pregnancy-calculator"
+            )
+    
+    result = None
+    form_data = None
+    
+    if request.method == 'POST':
+        try:
+            calc_method = request.POST.get('calc_method', 'lmp')
+            cycle_length = int(request.POST.get('cycle_length', 28))
+            
+            # Get date based on calculation method
+            if calc_method == 'lmp':
+                month = request.POST.get('lmp_month')
+                day = request.POST.get('lmp_day')
+                year = request.POST.get('lmp_year')
+            elif calc_method == 'conception':
+                month = request.POST.get('con_month')
+                day = request.POST.get('con_day')
+                year = request.POST.get('con_year')
+            elif calc_method == 'due_date':
+                month = request.POST.get('due_month')
+                day = request.POST.get('due_day')
+                year = request.POST.get('due_year')
+            else:
+                raise ValueError("Invalid calculation method")
+            
+            if month and day and year:
+                result = calculate_pregnancy(
+                    calc_method=calc_method,
+                    month=month,
+                    day=day,
+                    year=year,
+                    cycle_length=cycle_length
+                )
+                
+                # Store form data for display
+                form_data = {
+                    'calc_method': calc_method,
+                    'cycle_length': cycle_length
+                }
+                
+                if calc_method == 'lmp':
+                    form_data.update({
+                        'lmp_month': month,
+                        'lmp_day': day,
+                        'lmp_year': year
+                    })
+                elif calc_method == 'conception':
+                    form_data.update({
+                        'con_month': month,
+                        'con_day': day,
+                        'con_year': year
+                    })
+                elif calc_method == 'due_date':
+                    form_data.update({
+                        'due_month': month,
+                        'due_day': day,
+                        'due_year': year
+                    })
+                
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True, 'result': result})
+                    
+        except (ValueError, TypeError) as e:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Invalid input values. Please check your dates.'})
+            messages.error(request, 'Invalid input values. Please check your dates.')
+    
+    # Get related calculators
+    related_calculators = Calculator.objects.filter(
+        is_active=True
+    ).exclude(slug='pregnancy-calculator')[:3]
+    
+    context = {
+        'calculator': calculator,
+        'result': result,
+        'form_data': form_data,
+        'related_calculators': related_calculators,
+        'page_title': 'Pregnancy Calculator - Due Date & Week Calculator | Free Pregnancy Tool',
+        'meta_description': 'Free pregnancy calculator and pregnancy due date calculator. Calculate your baby\'s due date, track pregnancy week by week, understand calculation of pregnancy, and learn about early signs of pregnancy. Accurate and easy to use.',
+        'meta_keywords': 'pregnancy calculator, pregnancy due date calculator, due date calculator, calculation of pregnancy, early signs of pregnancy, pregnancy week calculator, how to calculate pregnancy, pregnancy tracker, conception calculator, trimester calculator, pregnancy symptoms'
+    }
+    
+    return render(request, 'calculators/pregnancy_calculator.html', context)
+
+
+
+def citation_generator(request, calculator=None):
+    """Citation generator view - client-side only"""
+    if not calculator:
+        try:
+            calculator = Calculator.objects.get(slug='citation-generator')
+        except Calculator.DoesNotExist:
+            calculator = Calculator(
+                name="Citation Generator",
+                description="Generate citations in APA, MLA, or Chicago format",
+                slug="citation-generator"
+            )
+    
+    # Get related calculators
+    related_calculators = Calculator.objects.filter(
+        is_active=True
+    ).exclude(slug='citation-generator')[:3]
+    
+    context = {
+        'calculator': calculator,
+        'related_calculators': related_calculators,
+        'page_title': 'Citation Generator - Create APA, MLA, Chicago Citations | Free Tool',
+        'meta_description': 'Free citation generator for APA, MLA, and Chicago styles. Create properly formatted citations for books, websites, journals, magazines, and videos. Copy and paste ready citations for your academic papers.',
+        'meta_keywords': 'citation generator, APA citation, MLA citation, Chicago citation, bibliography generator, reference generator, cite sources, academic citation tool, format citations, works cited generator'
+    }
+    
+    return render(request, 'calculators/citation_generator.html', context)
+
+
+from .utils import calculate_bmr
+
+def bmr_calculator(request, calculator=None):
+    """BMR calculator view"""
+    if not calculator:
+        try:
+            calculator = Calculator.objects.get(slug='bmr-calculator')
+        except Calculator.DoesNotExist:
+            calculator = Calculator(
+                name="BMR Calculator",
+                description="Calculate your Basal Metabolic Rate and daily calorie needs",
+                slug="bmr-calculator"
+            )
+    
+    result = None
+    form_data = None
+    
+    if request.method == 'POST':
+        try:
+            age = request.POST.get('age')
+            gender = request.POST.get('gender')
+            height = request.POST.get('height')
+            height_unit = request.POST.get('height_unit')
+            weight = request.POST.get('weight')
+            weight_unit = request.POST.get('weight_unit')
+            
+            if age and gender and height and weight:
+                result = calculate_bmr(
+                    age=age,
+                    gender=gender,
+                    height=height,
+                    height_unit=height_unit,
+                    weight=weight,
+                    weight_unit=weight_unit
+                )
+                
+                form_data = {
+                    'age': age,
+                    'gender': gender,
+                    'height': height,
+                    'height_unit': height_unit,
+                    'weight': weight,
+                    'weight_unit': weight_unit
+                }
+                
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True, 'result': result})
+                    
+        except (ValueError, TypeError) as e:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Invalid input values. Please check your entries.'})
+            messages.error(request, 'Invalid input values. Please check your entries.')
+    
+    related_calculators = Calculator.objects.filter(
+        is_active=True
+    ).exclude(slug='bmr-calculator')[:3]
+    
+    context = {
+        'calculator': calculator,
+        'result': result,
+        'form_data': form_data,
+        'related_calculators': related_calculators,
+        'page_title': 'BMR Calculator - Calculate Your Basal Metabolic Rate | Free Tool',
+        'meta_description': 'Free BMR calculator - calculate your Basal Metabolic Rate and find out how many calories your body burns at rest. Get your TDEE for different activity levels.',
+        'meta_keywords': 'BMR calculator, basal metabolic rate, metabolism calculator, calories burned at rest, TDEE calculator, daily calorie needs, metabolic rate calculator, resting energy expenditure'
+    }
+    
+    return render(request, 'calculators/bmr_calculator.html', context)
+
+
+from .utils import calculate_mortgage
+
+def mortgage_calculator(request, calculator=None):
+    """Mortgage calculator view"""
+    if not calculator:
+        try:
+            calculator = Calculator.objects.get(slug='mortgage-calculator')
+        except Calculator.DoesNotExist:
+            calculator = Calculator(
+                name="Mortgage Calculator",
+                description="Calculate monthly mortgage payments with taxes, insurance, and PMI",
+                slug="mortgage-calculator"
+            )
+    
+    result = None
+    form_data = None
+    
+    if request.method == 'POST':
+        try:
+            home_price = request.POST.get('home_price')
+            down_payment = request.POST.get('down_payment')
+            interest_rate = request.POST.get('interest_rate')
+            loan_term = request.POST.get('loan_term')
+            property_tax = request.POST.get('property_tax', 0)
+            home_insurance = request.POST.get('home_insurance', 0)
+            hoa_fees = request.POST.get('hoa_fees', 0)
+            
+            if home_price and down_payment and interest_rate and loan_term:
+                result = calculate_mortgage(
+                    home_price=home_price,
+                    down_payment=down_payment,
+                    interest_rate=interest_rate,
+                    loan_term=loan_term,
+                    property_tax=property_tax,
+                    home_insurance=home_insurance,
+                    hoa_fees=hoa_fees
+                )
+                
+                form_data = {
+                    'home_price': home_price,
+                    'down_payment': down_payment,
+                    'interest_rate': interest_rate,
+                    'loan_term': loan_term,
+                    'property_tax': property_tax,
+                    'home_insurance': home_insurance,
+                    'hoa_fees': hoa_fees
+                }
+                
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True, 'result': result})
+                    
+        except (ValueError, TypeError) as e:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'error': str(e)})
+            messages.error(request, 'Invalid input values.')
+    
+    related_calculators = Calculator.objects.filter(
+        is_active=True
+    ).exclude(slug='mortgage-calculator')[:3]
+    
+    context = {
+        'calculator': calculator,
+        'result': result,
+        'form_data': form_data,
+        'related_calculators': related_calculators,
+        'page_title': 'Mortgage Calculator - Calculate Monthly Payments & Payoff Schedule | Free Tool',
+        'meta_description': 'Free mortgage calculator and mortgage payment calculator. Calculate your monthly mortgage payment including property taxes, insurance, PMI, and HOA fees. See your mortgage payoff schedule and total interest. Simple mortgage rate calculator for home buyers.',
+        'meta_keywords': 'mortgage calculator, mortgage payment calculator, mortgage loan calculator, mortgage payoff calculator, mortgage rate calculator, simple mortgage calculator, home loan calculator, monthly mortgage payment, calculate mortgage, mortgage estimator'
+    }
+    
+    return render(request, 'calculators/mortgage_calculator.html', context)
+
+
+
+# Add this view function to your views.py file
+
+from .utils import calculate_final_grade, calculate_needed_grade, calculate_semester_grade
+
+def grade_calculator(request, calculator=None):
+    """Grade calculator view with multiple calculation modes"""
+    if not calculator:
+        try:
+            calculator = Calculator.objects.get(slug='grade-calculator')
+        except Calculator.DoesNotExist:
+            calculator = Calculator(
+                name="Grade Calculator",
+                description="Calculate final grades, test grades, semester averages, and weighted grades",
+                slug="grade-calculator"
+            )
+    
+    result = None
+    form_data = None
+    calc_mode = request.POST.get('calc_mode', 'final') if request.method == 'POST' else 'final'
+    
+    if request.method == 'POST':
+        try:
+            if calc_mode == 'final':
+                # Final Grade Calculator
+                assignments = []
+                assignment_count = int(request.POST.get('assignment_count', 0))
+                
+                for i in range(assignment_count):
+                    name = request.POST.get(f'assignment_name_{i}')
+                    score = request.POST.get(f'assignment_score_{i}')
+                    max_points = request.POST.get(f'assignment_max_{i}')
+                    weight = request.POST.get(f'assignment_weight_{i}')
+                    category = request.POST.get(f'assignment_category_{i}', 'Assignment')
+                    
+                    if name and score and max_points and weight:
+                        assignments.append({
+                            'name': name,
+                            'score': score,
+                            'max_points': max_points,
+                            'weight': weight,
+                            'category': category
+                        })
+                
+                if assignments:
+                    result = calculate_final_grade(assignments)
+                    result['mode'] = 'final'
+                    
+            elif calc_mode == 'needed':
+                # Grade Needed Calculator
+                current_grade = request.POST.get('current_grade')
+                desired_grade = request.POST.get('desired_grade')
+                final_weight = request.POST.get('final_weight')
+                
+                if current_grade and desired_grade and final_weight:
+                    result = calculate_needed_grade(current_grade, desired_grade, final_weight)
+                    result['mode'] = 'needed'
+                    
+            elif calc_mode == 'semester':
+                # Semester Grade Calculator
+                courses = []
+                course_count = int(request.POST.get('course_count', 0))
+                
+                for i in range(course_count):
+                    course_name = request.POST.get(f'course_name_{i}')
+                    grade = request.POST.get(f'course_grade_{i}')
+                    credits = request.POST.get(f'course_credits_{i}')
+                    
+                    if course_name and grade and credits:
+                        courses.append({
+                            'course_name': course_name,
+                            'grade': grade,
+                            'credits': credits
+                        })
+                
+                if courses:
+                    result = calculate_semester_grade(courses)
+                    result['mode'] = 'semester'
+            
+            # Store form data
+            form_data = dict(request.POST)
+            form_data['calc_mode'] = calc_mode
+            
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'result': result})
+                
+        except (ValueError, TypeError) as e:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'error': str(e)})
+            messages.error(request, str(e))
+    
+    # Get related calculators
+    related_calculators = Calculator.objects.filter(
+        is_active=True
+    ).exclude(slug='grade-calculator')[:3]
+    
+    context = {
+        'calculator': calculator,
+        'result': result,
+        'form_data': form_data,
+        'calc_mode': calc_mode,
+        'related_calculators': related_calculators,
+        'page_title': 'Grade Calculator - Final Grade, Test Grade & Semester Average Calculator | Free Tool',
+        'meta_description': 'Free grade calculator to calculate final grades, test grades, semester averages, and weighted grades. Find out what you need on your final exam. Calculate GPA and track your academic progress with our grade average calculator.',
+        'meta_keywords': 'grade calculator, final grade calculator, test grade calculator, semester grade calculator, grade average calculator, weighted grade calculator, what grade do I need calculator, calculate my grade, final exam grade calculator, college grade calculator'
+    }
+    
+    return render(request, 'calculators/grade_calculator.html', context)
+
+# Add this function to your views.py file
+
+from .utils import calculate_age_between_dates
+
+def date_of_birth_calculator(request, calculator=None):
+    """Date of birth calculator view"""
+    if not calculator:
+        try:
+            calculator = Calculator.objects.get(slug='date-of-birth-calculator')
+        except Calculator.DoesNotExist:
+            calculator = Calculator(
+                name="Date of Birth Calculator",
+                description="Calculate your exact age from date of birth instantly",
+                slug="date-of-birth-calculator"
+            )
+    
+    result = None
+    form_data = {}
+    
+    # Generate year ranges
+    current_year = date.today().year
+    year_range = range(current_year, 1899, -1)  # From current year back to 1900
+    target_year_range = range(current_year + 50, current_year - 100, -1)  # Future and past
+    
+    # Get today's date for default values
+    today = date.today()
+    
+    if request.method == 'POST':
+        try:
+            birth_month = int(request.POST.get('birth_month'))
+            birth_day = int(request.POST.get('birth_day'))
+            birth_year = int(request.POST.get('birth_year'))
+            
+            target_month = int(request.POST.get('target_month'))
+            target_day = int(request.POST.get('target_day'))
+            target_year = int(request.POST.get('target_year'))
+            
+            birth_date = date(birth_year, birth_month, birth_day)
+            target_date = date(target_year, target_month, target_day)
+            
+            if birth_date > target_date:
+                messages.error(request, 'Birth date cannot be after the target date.')
+            else:
+                result = calculate_age_between_dates(birth_date, target_date)
+                
+                # Store form data for display
+                form_data = {
+                    'birth_month': str(birth_month),
+                    'birth_day': str(birth_day),
+                    'birth_year': str(birth_year),
+                    'target_month': str(target_month),
+                    'target_day': str(target_day),
+                    'target_year': str(target_year)
+                }
+                
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True, 'result': result})
+                    
+        except (ValueError, TypeError) as e:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Invalid date values. Please check your entries.'})
+            messages.error(request, 'Invalid date values. Please check your entries.')
+    
+    # Get related calculators
+    related_calculators = Calculator.objects.filter(
+        is_active=True
+    ).exclude(slug='date-of-birth-calculator')[:3]
+    
+    context = {
+        'calculator': calculator,
+        'result': result,
+        'form_data': form_data,
+        'year_range': year_range,
+        'target_year_range': target_year_range,
+        'today': today,
+        'related_calculators': related_calculators,
+        'page_title': 'Date of Birth Calculator - Calculate Age from Date of Birth | Free Age Calculator Online',
+        'meta_description': 'Free date of birth calculator to calculate age from date of birth instantly. Age calculator online by date of birth shows your exact age in years, months, days, hours, and seconds. Calculate age based on date of birth accurately.',
+        'meta_keywords': 'date of birth calculator, calculate age from date of birth, age calculator online by date of birth, calculate age based on date of birth, age from dob, birth date age calculator, exact age calculator, age calculator by date of birth, how to calculate age from date of birth, find age from date of birth'
+    }
+    
+    return render(request, 'calculators/date_of_birth_calculator.html', context)

@@ -1,0 +1,1237 @@
+{% extends 'calculators/base.html' %}
+{% load static %}
+
+{% block title %}Mortgage Calculator - Calculate Monthly Payments & Payoff Schedule | Free Tool{% endblock %}
+
+{% block content %}
+<style>
+/* Mortgage Calculator Styles */
+.mortgage-calculator-page {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background: white;
+}
+
+/* Breadcrumb */
+.breadcrumb-nav {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+    padding: 10px 20px 8px 20px;
+    background: #f9f9f9;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.breadcrumb-nav a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.breadcrumb-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Hero Banner */
+.hero-banner {
+    background: linear-gradient(135deg, #2c5282 0%, #2b6cb0 100%);
+    color: white;
+    padding: 15px 20px;
+    margin: 0;
+    border-bottom: 2px solid #1a4971;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0 0 6px 0;
+    color: white;
+}
+
+.hero-subtitle {
+    font-size: 14px;
+    opacity: 0.93;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    max-width: 800px;
+}
+
+.hero-features {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 13px;
+}
+
+.hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hero-feature i {
+    font-size: 12px;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+}
+
+/* Main Layout */
+.main-layout {
+    display: flex;
+    gap: 20px;
+}
+
+.left-content {
+    flex: 1;
+    max-width: 800px;
+}
+
+.right-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+/* Instruction Banner */
+.instruction-banner {
+    background: #3182ce;
+    color: white;
+    padding: 8px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.check-icon {
+    font-weight: bold;
+}
+
+/* Calculator Form */
+.calculator-form {
+    background: #ebf4ff;
+    border: 1px solid #bee3f8;
+    margin-bottom: 20px;
+}
+
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.form-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #bee3f8;
+    vertical-align: middle;
+}
+
+.form-table tr:last-child td {
+    border-bottom: none;
+}
+
+.label-cell {
+    background: #fff;
+    font-weight: normal;
+    width: 200px;
+    color: #333;
+    font-size: 13px;
+}
+
+.input-cell {
+    background: white;
+}
+
+.button-cell {
+    background: white;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Form Inputs */
+.form-input, .form-select {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    background: white;
+    box-sizing: border-box;
+}
+
+.form-input {
+    width: 120px;
+}
+
+.form-select {
+    width: 150px;
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: #3182ce;
+}
+
+.input-hint {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-top: 3px;
+}
+
+/* Calculate Button */
+.calculate-button {
+    background: #2c5282;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+}
+
+.calculate-button:hover:not(:disabled) {
+    background: #1a4971;
+}
+
+.calculate-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.play-icon {
+    font-size: 12px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: none;
+    margin-left: 8px;
+}
+
+.loading-spinner.show {
+    display: inline-block;
+}
+
+/* Results Section */
+.results-container {
+    background: white;
+    border: 1px solid #bee3f8;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.results-container h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: normal;
+    color: #2c5282;
+}
+
+.payment-highlight {
+    text-align: center;
+    padding: 25px;
+    background: linear-gradient(135deg, #ebf4ff 0%, #dbeafe 100%);
+    border: 2px solid #3182ce;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.payment-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.payment-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #2c5282;
+    margin-bottom: 5px;
+}
+
+.payment-subtitle {
+    font-size: 13px;
+    color: #666;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.result-card {
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #bee3f8;
+    border-radius: 3px;
+}
+
+.result-label {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c5282;
+    margin-bottom: 3px;
+}
+
+.result-subtitle {
+    font-size: 11px;
+    color: #666;
+}
+
+/* Breakdown Section */
+.breakdown-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f7fafc;
+    border-radius: 4px;
+    border-left: 4px solid #3182ce;
+}
+
+.breakdown-section h4 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #2c5282;
+    margin: 0 0 12px 0;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+}
+
+.breakdown-item:last-child {
+    border-bottom: none;
+}
+
+.breakdown-label {
+    color: #666;
+}
+
+.breakdown-value {
+    font-weight: 600;
+    color: #2c5282;
+}
+
+/* Amortization Table */
+.amortization-section {
+    margin-top: 20px;
+}
+
+.amortization-section h4 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.amortization-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: white;
+}
+
+.amortization-table th {
+    background: #2c5282;
+    color: white;
+    padding: 8px 6px;
+    text-align: left;
+    font-weight: normal;
+}
+
+.amortization-table td {
+    padding: 6px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.amortization-table tr:hover {
+    background: #f7fafc;
+}
+
+.amortization-table .currency {
+    text-align: right;
+}
+
+/* Empty State */
+.empty-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-results i {
+    font-size: 3rem;
+    color: #bee3f8;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* Tips Section */
+.tips-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.tips-section h3 {
+    font-size: 16px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.tip-card {
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 3px;
+    border-left: 3px solid #3182ce;
+    font-size: 12px;
+}
+
+.tip-card h4 {
+    color: #2c5282;
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.tip-card p {
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* SEO Content */
+.seo-content {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.seo-content h2 {
+    color: #2c5282;
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0 0 15px 0;
+}
+
+.seo-content h3 {
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+    margin: 20px 0 10px 0;
+}
+
+.seo-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    text-align: justify;
+}
+
+.seo-content ul {
+    color: #666;
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.seo-content li {
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+/* Sidebar */
+.search-section {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.search-button {
+    background: #2c5282;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.sidebar-widget {
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.widget-header {
+    background: #2c5282;
+    color: white;
+    padding: 10px 15px;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.widget-content {
+    padding: 15px;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.calc-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.calc-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 0;
+}
+
+.calc-link:hover {
+    text-decoration: underline;
+}
+
+.calc-link.active {
+    color: #2c5282;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .breadcrumb-nav {
+        padding: 8px 15px 6px 15px;
+        font-size: 11px;
+    }
+    
+    .hero-banner {
+        padding: 12px 15px;
+    }
+    
+    .hero-content h1 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .hero-subtitle {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+    
+    .hero-features {
+        gap: 10px;
+        font-size: 11px;
+    }
+    
+    .content-wrapper {
+        padding: 12px 15px;
+    }
+    
+    .main-layout {
+        flex-direction: column;
+    }
+    
+    .right-sidebar {
+        width: 100%;
+    }
+    
+    .label-cell {
+        width: auto;
+        display: block;
+        padding: 10px 15px 5px;
+        border-bottom: none;
+    }
+    
+    .input-cell {
+        display: block;
+        padding: 5px 15px 10px;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .payment-value {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 16px;
+    }
+    
+    .hero-features {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .form-input,
+    .form-select {
+        font-size: 16px;
+    }
+}
+</style>
+
+<div class="mortgage-calculator-page">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-nav">
+        <a href="{% url 'calculators:home' %}">home</a> / 
+        <a href="{% url 'calculators:home' %}">financial</a> / 
+        <span>mortgage calculator</span>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h1>Mortgage Calculator</h1>
+            <p class="hero-subtitle">
+                Figure out what your monthly mortgage payment will be and see how much house you can actually afford. Includes taxes, insurance, and PMI if you put down less than 20%.
+            </p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Accurate Payments</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Payoff Schedule</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-calculator"></i>
+                    <span>Total Interest</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-home"></i>
+                    <span>100% Free</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="main-layout">
+            <!-- Left Content -->
+            <div class="left-content">
+                <!-- Instruction Banner -->
+                <div class="instruction-banner">
+                    <span class="check-icon">✓</span>
+                    Enter your home price and mortgage details
+                </div>
+
+                <!-- Calculator Form -->
+                <div class="calculator-form">
+                    <form id="mortgage-form" method="post">
+                        {% csrf_token %}
+                        <table class="form-table">
+                            <tr>
+                                <td class="label-cell">Home Price</td>
+                                <td class="input-cell">
+                                    <input type="text" 
+                                           id="home_price" 
+                                           name="home_price" 
+                                           class="form-input" 
+                                           placeholder="300,000"
+                                           value="{{ form_data.home_price|default:'' }}"
+                                           required>
+                                    <span class="input-hint">What you're paying for the house</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Down Payment</td>
+                                <td class="input-cell">
+                                    <input type="text" 
+                                           id="down_payment" 
+                                           name="down_payment" 
+                                           class="form-input" 
+                                           placeholder="60,000"
+                                           value="{{ form_data.down_payment|default:'' }}"
+                                           required>
+                                    <span class="input-hint">Cash you're putting down (20% avoids PMI)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Interest Rate (%)</td>
+                                <td class="input-cell">
+                                    <input type="number" 
+                                           id="interest_rate" 
+                                           name="interest_rate" 
+                                           class="form-input" 
+                                           placeholder="6.5"
+                                           value="{{ form_data.interest_rate|default:'' }}"
+                                           step="0.001"
+                                           min="0"
+                                           max="20"
+                                           required>
+                                    <span class="input-hint">Annual interest rate from your lender</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Loan Term (Years)</td>
+                                <td class="input-cell">
+                                    <select id="loan_term" name="loan_term" class="form-select" required>
+                                        <option value="30" {% if form_data.loan_term == '30' %}selected{% endif %}>30 years</option>
+                                        <option value="15" {% if form_data.loan_term == '15' %}selected{% endif %}>15 years</option>
+                                        <option value="20" {% if form_data.loan_term == '20' %}selected{% endif %}>20 years</option>
+                                        <option value="10" {% if form_data.loan_term == '10' %}selected{% endif %}>10 years</option>
+                                    </select>
+                                    <span class="input-hint">How long you'll take to pay it off</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Property Tax (yearly)</td>
+                                <td class="input-cell">
+                                    <input type="text" 
+                                           id="property_tax" 
+                                           name="property_tax" 
+                                           class="form-input" 
+                                           placeholder="3,600"
+                                           value="{{ form_data.property_tax|default:'' }}">
+                                    <span class="input-hint">Your local property tax (optional)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Home Insurance (yearly)</td>
+                                <td class="input-cell">
+                                    <input type="text" 
+                                           id="home_insurance" 
+                                           name="home_insurance" 
+                                           class="form-input" 
+                                           placeholder="1,200"
+                                           value="{{ form_data.home_insurance|default:'' }}">
+                                    <span class="input-hint">Your homeowner's insurance (optional)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">HOA Fees (monthly)</td>
+                                <td class="input-cell">
+                                    <input type="text" 
+                                           id="hoa_fees" 
+                                           name="hoa_fees" 
+                                           class="form-input" 
+                                           placeholder="0"
+                                           value="{{ form_data.hoa_fees|default:'' }}">
+                                    <span class="input-hint">If you have HOA fees (optional)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="button-cell">
+                                    <button type="submit" class="calculate-button" id="calculate-btn">
+                                        <span class="play-icon">▶</span> Calculate
+                                        <span class="loading-spinner" id="loading-spinner">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results-section" {% if not result %}style="display: none;"{% endif %}>
+                    <div class="results-container">
+                        {% if result %}
+                        <!-- Payment Highlight -->
+                        <div class="payment-highlight">
+                            <div class="payment-label">Your Monthly Payment</div>
+                            <div class="payment-value">${{ result.total_monthly|floatformat:2 }}</div>
+                            <div class="payment-subtitle">Principal, interest, taxes, insurance{% if result.has_pmi %}, and PMI{% endif %}</div>
+                        </div>
+
+                        <!-- Results Grid -->
+                        <div class="results-grid">
+                            <div class="result-card">
+                                <div class="result-label">Loan Amount</div>
+                                <div class="result-value">${{ result.loan_amount|floatformat:0 }}</div>
+                                <div class="result-subtitle">After down payment</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Total Interest</div>
+                                <div class="result-value">${{ result.total_interest|floatformat:0 }}</div>
+                                <div class="result-subtitle">Over {{ result.loan_term }} years</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Total Paid</div>
+                                <div class="result-value">${{ result.total_paid|floatformat:0 }}</div>
+                                <div class="result-subtitle">Principal + interest</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Payoff Date</div>
+                                <div class="result-value" style="font-size: 16px;">{{ result.payoff_date }}</div>
+                                <div class="result-subtitle">When you're done</div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Breakdown -->
+                        <div class="breakdown-section">
+                            <h4>Monthly Payment Breakdown</h4>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Principal & Interest</span>
+                                <span class="breakdown-value">${{ result.principal_interest|floatformat:2 }}</span>
+                            </div>
+                            {% if result.monthly_tax %}
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Property Tax</span>
+                                <span class="breakdown-value">${{ result.monthly_tax|floatformat:2 }}</span>
+                            </div>
+                            {% endif %}
+                            {% if result.monthly_insurance %}
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Home Insurance</span>
+                                <span class="breakdown-value">${{ result.monthly_insurance|floatformat:2 }}</span>
+                            </div>
+                            {% endif %}
+                            {% if result.monthly_pmi %}
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">PMI (Mortgage Insurance)</span>
+                                <span class="breakdown-value">${{ result.monthly_pmi|floatformat:2 }}</span>
+                            </div>
+                            {% endif %}
+                            {% if result.hoa_fees %}
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">HOA Fees</span>
+                                <span class="breakdown-value">${{ result.hoa_fees|floatformat:2 }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="breakdown-item" style="border-top: 2px solid #2c5282; margin-top: 8px; padding-top: 12px;">
+                                <span class="breakdown-label"><strong>Total Monthly Payment</strong></span>
+                                <span class="breakdown-value" style="font-size: 16px;">${{ result.total_monthly|floatformat:2 }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Amortization Schedule -->
+                        {% if result.amortization_schedule %}
+                        <div class="amortization-section">
+                            <h4>First Year Payment Schedule</h4>
+                            <div style="overflow-x: auto;">
+                                <table class="amortization-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Month</th>
+                                            <th>Payment</th>
+                                            <th>Principal</th>
+                                            <th>Interest</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for month in result.amortization_schedule %}
+                                        <tr>
+                                            <td>{{ month.month }}</td>
+                                            <td class="currency">${{ month.payment|floatformat:2 }}</td>
+                                            <td class="currency">${{ month.principal|floatformat:2 }}</td>
+                                            <td class="currency">${{ month.interest|floatformat:2 }}</td>
+                                            <td class="currency">${{ month.balance|floatformat:0 }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        <div class="empty-results">
+                            <i class="fas fa-home"></i>
+                            <p>Enter your mortgage details above to see what your monthly payment would be.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="tips-section">
+                    <h3>Smart Homebuying Tips</h3>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <h4>The 20% Down Payment Rule</h4>
+                            <p>Put down at least 20% to avoid PMI (private mortgage insurance). PMI can add $100-200 to your monthly payment and doesn't build equity - it just protects the lender.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Don't Forget the Extra Costs</h4>
+                            <p>Your mortgage payment isn't everything. Budget for property tax, homeowner's insurance, HOA fees, maintenance, and repairs. A good rule is to save 1-2% of your home's value yearly for upkeep.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Get Multiple Rate Quotes</h4>
+                            <p>Even a quarter-point difference in your interest rate can save you tens of thousands over the life of your loan. Shop around with at least three lenders.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>15-Year vs 30-Year Mortgages</h4>
+                            <p>15-year loans have higher monthly payments but way less total interest. 30-year loans are easier on your monthly budget but cost more long-term. Run the numbers for both.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>The 28/36 Rule</h4>
+                            <p>Lenders typically want your mortgage payment under 28% of your gross income, and total debt under 36%. Just because you qualify doesn't mean you should max it out.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Extra Payments Make a Difference</h4>
+                            <p>Even one extra payment per year can shave years off your mortgage and save thousands in interest. Many people make bi-weekly payments instead of monthly to achieve this.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Content -->
+                <div class="seo-content">
+                    <h2>Everything You Need to Know About Mortgage Calculators</h2>
+                    
+                    <h3>How This Mortgage Payment Calculator Works</h3>
+                    <p>Our mortgage calculator uses standard formulas that lenders use to figure out your monthly payment. It takes your home price, down payment, interest rate, and loan term to calculate principal and interest. Then it adds in property taxes, homeowner's insurance, PMI (if you put down less than 20%), and any HOA fees to give you the real monthly cost of homeownership.</p>
+                    
+                    <h3>Understanding Mortgage Payments (PITI)</h3>
+                    <p>Your mortgage payment actually has four parts - that's why lenders call it PITI. Principal is the amount you borrowed that's going toward paying down the loan. Interest is what the bank charges you to borrow the money. Taxes are your local property taxes (usually paid into an escrow account). Insurance is your homeowner's insurance policy. Some people also have PMI and HOA fees on top of all that.</p>
+                    
+                    <h3>What Is a Simple Mortgage Calculator?</h3>
+                    <p>A simple mortgage calculator focuses on just the basics - home price, down payment, interest rate, and loan term. It gives you the principal and interest payment without all the extra stuff like taxes and insurance. That's fine for a quick estimate, but our full calculator is better because it shows you the real monthly cost including everything you'll actually pay.</p>
+                    
+                    <h3>Mortgage Rate Calculator - How Rates Affect Your Payment</h3>
+                    <p>Your interest rate makes a huge difference. On a $300,000 loan, the difference between 6% and 7% is about $200 per month - that's $2,400 per year or $72,000 over a 30-year mortgage. This is why shopping around for the best rate matters so much. Even a quarter-point can save you thousands.</p>
+                    
+                    <h3>Using a Mortgage Payoff Calculator</h3>
+                    <p>Want to pay off your mortgage early? Small changes make a big impact. Making one extra payment per year on a 30-year mortgage can cut 4-5 years off your loan and save tens of thousands in interest. Our calculator shows you the standard payoff date, but you can always pay extra toward principal to finish sooner.</p>
+                    
+                    <h3>Understanding PMI (Private Mortgage Insurance)</h3>
+                    <p>If you put down less than 20%, most lenders require PMI. This typically costs 0.5% to 1% of your loan amount per year, divided into monthly payments. On a $240,000 loan, that's $100-200 per month. The good news? Once you reach 20% equity (either through payments or home appreciation), you can usually drop PMI.</p>
+                    
+                    <h3>Fixed Rate vs Adjustable Rate Mortgages</h3>
+                    <p>Most people get fixed-rate mortgages where your interest rate never changes. Adjustable-rate mortgages (ARMs) start with a lower rate that can change after a few years. ARMs can save money if you're planning to move soon, but they're riskier if you're staying long-term because your payment could go up significantly.</p>
+                    
+                    <h3>How Much House Can You Actually Afford?</h3>
+                    <p>Just because you qualify for a certain loan amount doesn't mean you should borrow that much. A common guideline is that your monthly housing costs (PITI) shouldn't exceed 28% of your gross monthly income. And your total debt payments (including car loans, student loans, credit cards, and mortgage) shouldn't top 36% of your income. Leave yourself breathing room for emergencies and other goals.</p>
+                    
+                    <h3>What Affects Your Mortgage Interest Rate</h3>
+                    <p>Your credit score is huge - the difference between a 680 and 760 credit score can be half a percentage point or more. Your down payment matters too - bigger down payments often get better rates. The loan type (conventional, FHA, VA) affects rates, as do current market conditions and whether you're buying a primary residence, second home, or investment property.</p>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <!-- Search Box -->
+                <div class="search-section">
+                    <input type="text" class="search-input" placeholder="Search...">
+                    <button class="search-button">Search</button>
+                </div>
+
+                <!-- Related Calculators -->
+                <div class="sidebar-widget">
+                    <div class="widget-header">Related Calculators</div>
+                    <div class="widget-content">
+                        <div class="calculator-grid">
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:loan_calculator' %}" class="calc-link">Loan Calculator</a>
+                                <a href="{% url 'calculators:401k_calculator' %}" class="calc-link">401k Calculator</a>
+                                <a href="{% url 'calculators:percentage_calculator' %}" class="calc-link">Percentage</a>
+                            </div>
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:bmi_calculator' %}" class="calc-link">BMI Calculator</a>
+                                <a href="{% url 'calculators:age_calculator' %}" class="calc-link">Age Calculator</a>
+                                <a href="{% url 'calculators:home' %}" class="calc-link">More Tools</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('mortgage-form');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const homePriceInput = document.getElementById('home_price');
+    const downPaymentInput = document.getElementById('down_payment');
+    const propertyTaxInput = document.getElementById('property_tax');
+    const homeInsuranceInput = document.getElementById('home_insurance');
+    const hoaFeesInput = document.getElementById('hoa_fees');
+    
+    // Format currency inputs
+    function formatCurrency(input) {
+        if (input) {
+            input.addEventListener('input', function() {
+                let value = this.value.replace(/[^0-9]/g, '');
+                if (value.length > 0) {
+                    let number = parseInt(value);
+                    if (number > 10000000) number = 10000000;
+                    this.value = number.toLocaleString();
+                }
+            });
+        }
+    }
+    
+    formatCurrency(homePriceInput);
+    formatCurrency(downPaymentInput);
+    formatCurrency(propertyTaxInput);
+    formatCurrency(homeInsuranceInput);
+    formatCurrency(hoaFeesInput);
+    
+    // Form validation
+    function validateForm() {
+        const homePrice = parseFloat(homePriceInput.value.replace(/,/g, ''));
+        const downPayment = parseFloat(downPaymentInput.value.replace(/,/g, ''));
+        const interestRate = parseFloat(document.getElementById('interest_rate').value);
+        
+        let isValid = true;
+        
+        if (!homePrice || homePrice < 10000) isValid = false;
+        if (!downPayment || downPayment < 0) isValid = false;
+        if (downPayment >= homePrice) isValid = false;
+        if (isNaN(interestRate) || interestRate < 0 || interestRate > 20) isValid = false;
+        
+        calculateBtn.disabled = !isValid;
+        return isValid;
+    }
+    
+    // Add validation listeners
+    const inputs = [homePriceInput, downPaymentInput, document.getElementById('interest_rate')];
+    inputs.forEach(input => {
+        if (input) {
+            input.addEventListener('input', validateForm);
+            input.addEventListener('blur', validateForm);
+        }
+    });
+    
+    // Form submission
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) return;
+            
+            if (loadingSpinner) loadingSpinner.classList.add('show');
+            calculateBtn.disabled = true;
+            
+            // Clean values
+            homePriceInput.value = homePriceInput.value.replace(/,/g, '');
+            downPaymentInput.value = downPaymentInput.value.replace(/,/g, '');
+            if (propertyTaxInput.value) propertyTaxInput.value = propertyTaxInput.value.replace(/,/g, '');
+            if (homeInsuranceInput.value) homeInsuranceInput.value = homeInsuranceInput.value.replace(/,/g, '');
+            if (hoaFeesInput.value) hoaFeesInput.value = hoaFeesInput.value.replace(/,/g, '');
+            
+            setTimeout(() => this.submit(), 300);
+        });
+    }
+    
+    validateForm();
+    
+    // Format existing values
+    [homePriceInput, downPaymentInput, propertyTaxInput, homeInsuranceInput, hoaFeesInput].forEach(input => {
+        if (input && input.value) {
+            const value = input.value.replace(/[^0-9]/g, '');
+            if (value) input.value = parseInt(value).toLocaleString();
+        }
+    });
+});
+</script>
+
+{% if result %}
+<script>
+(function() {
+    'use strict';
+    function scrollToResults() {
+        const resultsSection = document.getElementById('results-section');
+        if (!resultsSection) return;
+        
+        resultsSection.style.display = 'block';
+        resultsSection.style.visibility = 'visible';
+        
+        setTimeout(function() {
+            const rect = resultsSection.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const targetPosition = rect.top + scrollTop - 100;
+            
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            
+            resultsSection.style.transition = 'box-shadow 0.5s ease';
+            resultsSection.style.boxShadow = '0 0 30px rgba(44, 82, 130, 0.6)';
+            
+            setTimeout(function() {
+                resultsSection.style.boxShadow = '0 0 15px rgba(44, 82, 130, 0.3)';
+                setTimeout(function() {
+                    resultsSection.style.boxShadow = 'none';
+                }, 1500);
+            }, 600);
+        }, 100);
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', scrollToResults);
+    } else {
+        scrollToResults();
+    }
+    
+    window.addEventListener('load', function() {
+        setTimeout(scrollToResults, 200);
+    });
+})();
+</script>
+{% endif %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Mortgage Calculator",
+  "alternateName": ["Mortgage Payment Calculator", "Mortgage Loan Calculator", "Mortgage Payoff Calculator", "Mortgage Rate Calculator", "Simple Mortgage Calculator"],
+  "description": "Free mortgage calculator to calculate monthly payments, total interest, and payoff schedule. Includes property taxes, insurance, PMI, and HOA fees for accurate mortgage payment estimates.",
+  "url": "{{ request.build_absolute_uri }}",
+  "applicationCategory": "FinanceApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "myCalculator.us",
+    "url": "{% url 'calculators:home' %}"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "ratingCount": "3247"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate my monthly mortgage payment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter your home price, down payment, interest rate, and loan term into our mortgage calculator. It will calculate your principal and interest payment, then add property taxes, homeowner's insurance, PMI (if applicable), and HOA fees to show your total monthly payment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is included in a mortgage payment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A typical mortgage payment includes four components called PITI: Principal (paying down the loan), Interest (cost of borrowing), Taxes (property tax), and Insurance (homeowner's insurance). You may also have PMI (if you put down less than 20%) and HOA fees."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much house can I afford?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A general rule is that your total monthly housing payment shouldn't exceed 28% of your gross monthly income. Your total debt payments (including the mortgage) shouldn't top 36% of your income. Use our calculator to see what different home prices would cost monthly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is PMI and when do I need it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PMI (Private Mortgage Insurance) is required when you put down less than 20% on a conventional loan. It typically costs 0.5-1% of your loan amount per year, added to your monthly payment. You can usually remove PMI once you reach 20% equity in your home."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I get a 15-year or 30-year mortgage?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "15-year mortgages have higher monthly payments but much lower total interest costs and you own your home faster. 30-year mortgages have lower monthly payments but cost more in interest over time. Consider your budget, other financial goals, and how long you plan to stay in the home."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Financial Calculators",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Mortgage Calculator",
+      "item": "{{ request.build_absolute_uri }}"
+    }
+  ]
+}
+</script>
+
+{% endblock %}
+

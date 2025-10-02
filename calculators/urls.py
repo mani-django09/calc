@@ -11,13 +11,20 @@ urlpatterns = [
     
     
     path('calculator/<slug:slug>/', views.calculator_detail, name='calculator_detail'),
-    # Direct calculator URLs for backward compatibility
+    path('citation-generator/', views.citation_generator, name='citation_generator'),
     path('age-calculator/', views.age_calculator, name='age_calculator'),
     path('bmi-calculator/', views.bmi_calculator, name='bmi_calculator'),
+    path('bmr-calculator/', views.bmr_calculator, name='bmr_calculator'),
+    path('mortgage-calculator/', views.mortgage_calculator, name='mortgage_calculator'),
+    path('date-of-birth-calculator/', views.date_of_birth_calculator, name='date_of_birth_calculator'),
+    path('calculator/date-of-birth-calculator/', views.calculator_detail, {'slug': 'date-of-birth-calculator'}, name='date_of_birth_calculator_detail'),
+    path('grade-calculator/', views.grade_calculator, name='grade_calculator'),
+    path('calculator/grade-calculator/', views.calculator_detail, {'slug': 'grade-calculator'}, name='grade_calculator_detail'),
     path('gpa-calculator/', views.gpa_calculator, name='gpa_calculator'),
-    # Add this to your urlpatterns
-    path('calorie-calculator/', views.calorie_calculator, name='calorie_calculator'),
-    # Add this to your urlpatterns
+    path('pregnancy-calculator/', views.pregnancy_calculator, name='pregnancy_calculator'),
+    path('calculator/pregnancy-calculator/', views.calculator_detail, {'slug': 'pregnancy-calculator'}, name='pregnancy_calculator_detail'),    path('calorie-calculator/', views.calorie_calculator, name='calorie_calculator'),
+    path('401k-calculator/', views.k401_calculator, name='401k_calculator'),
+    path('calculator/401k-calculator/', views.calculator_detail, {'slug': '401k-calculator'}, name='401k_calculator_detail'),
     path('percentage-calculator/', views.percentage_calculator, name='percentage_calculator'),
     path('loan-calculator/', views.loan_calculator, name='loan_calculator'),
     path('calculator/loan-calculator/', views.calculator_detail, {'slug': 'loan-calculator'}, name='loan_calculator_detail'),

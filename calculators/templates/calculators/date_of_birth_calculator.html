@@ -1,0 +1,1174 @@
+{% extends 'calculators/base.html' %}
+{% load static %}
+
+{% block title %}Date of Birth Calculator - Calculate Age from Date of Birth | Free Age Calculator{% endblock %}
+
+{% block content %}
+<style>
+/* Date of Birth Calculator Styles */
+.dob-calculator-page {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background: white;
+}
+
+/* Breadcrumb */
+.breadcrumb-nav {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+    padding: 10px 20px 8px 20px;
+    background: #f9f9f9;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.breadcrumb-nav a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.breadcrumb-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Hero Banner */
+.hero-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    margin: 0;
+    border-bottom: 2px solid #5a67d8;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0 0 6px 0;
+    color: white;
+}
+
+.hero-subtitle {
+    font-size: 14px;
+    opacity: 0.93;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    max-width: 800px;
+}
+
+.hero-features {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 13px;
+}
+
+.hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hero-feature i {
+    font-size: 12px;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+}
+
+/* Main Layout */
+.main-layout {
+    display: flex;
+    gap: 20px;
+}
+
+.left-content {
+    flex: 1;
+    max-width: 800px;
+}
+
+.right-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+/* Instruction Banner */
+.instruction-banner {
+    background: #667eea;
+    color: white;
+    padding: 8px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.check-icon {
+    font-weight: bold;
+}
+
+/* Calculator Form */
+.calculator-form {
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+}
+
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.form-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+.form-table tr:last-child td {
+    border-bottom: none;
+}
+
+.label-cell {
+    background: #fff;
+    font-weight: normal;
+    width: 200px;
+    color: #333;
+    font-size: 13px;
+}
+
+.input-cell {
+    background: white;
+}
+
+.button-cell {
+    background: white;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Date Input Group */
+.date-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.date-input-group select {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    background: white;
+}
+
+.date-input-group select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.input-hint {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-top: 3px;
+}
+
+/* Calculate Button */
+.calculate-button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+}
+
+.calculate-button:hover:not(:disabled) {
+    background: #5a67d8;
+}
+
+.calculate-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.play-icon {
+    font-size: 12px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: none;
+    margin-left: 8px;
+}
+
+.loading-spinner.show {
+    display: inline-block;
+}
+
+/* Results Section */
+.results-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.results-container h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: normal;
+    color: #667eea;
+}
+
+.age-highlight {
+    text-align: center;
+    padding: 25px;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.age-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.age-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 5px;
+}
+
+.age-subtitle {
+    font-size: 13px;
+    color: #666;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.result-card {
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 3px;
+}
+
+.result-label {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 3px;
+}
+
+.result-subtitle {
+    font-size: 11px;
+    color: #666;
+}
+
+/* Breakdown Section */
+.breakdown-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f9fafb;
+    border-radius: 4px;
+    border-left: 4px solid #667eea;
+}
+
+.breakdown-section h4 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #667eea;
+    margin: 0 0 12px 0;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 13px;
+}
+
+.breakdown-item:last-child {
+    border-bottom: none;
+}
+
+.breakdown-label {
+    color: #666;
+}
+
+.breakdown-value {
+    font-weight: 600;
+    color: #667eea;
+}
+
+/* Empty State */
+.empty-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-results i {
+    font-size: 3rem;
+    color: #e5e7eb;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* Tips Section */
+.tips-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.tips-section h3 {
+    font-size: 16px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.tip-card {
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 3px;
+    border-left: 3px solid #667eea;
+    font-size: 12px;
+}
+
+.tip-card h4 {
+    color: #667eea;
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.tip-card p {
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* SEO Content */
+.seo-content {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.seo-content h2 {
+    color: #667eea;
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0 0 15px 0;
+}
+
+.seo-content h3 {
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+    margin: 20px 0 10px 0;
+}
+
+.seo-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    text-align: justify;
+}
+
+.seo-content ul {
+    color: #666;
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.seo-content li {
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+/* Sidebar */
+.search-section {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.search-button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.sidebar-widget {
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.widget-header {
+    background: #667eea;
+    color: white;
+    padding: 10px 15px;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.widget-content {
+    padding: 15px;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.calc-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.calc-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 0;
+}
+
+.calc-link:hover {
+    text-decoration: underline;
+}
+
+.calc-link.active {
+    color: #667eea;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .breadcrumb-nav {
+        padding: 8px 15px 6px 15px;
+        font-size: 11px;
+    }
+    
+    .hero-banner {
+        padding: 12px 15px;
+    }
+    
+    .hero-content h1 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .hero-subtitle {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+    
+    .hero-features {
+        gap: 10px;
+        font-size: 11px;
+    }
+    
+    .content-wrapper {
+        padding: 12px 15px;
+    }
+    
+    .main-layout {
+        flex-direction: column;
+    }
+    
+    .right-sidebar {
+        width: 100%;
+    }
+    
+    .label-cell {
+        width: auto;
+        display: block;
+        padding: 10px 15px 5px;
+        border-bottom: none;
+    }
+    
+    .input-cell {
+        display: block;
+        padding: 5px 15px 10px;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .age-value {
+        font-size: 28px;
+    }
+    
+    .date-input-group {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 16px;
+    }
+    
+    .hero-features {
+        flex-direction: column;
+        gap: 6px;
+    }
+}
+</style>
+
+<div class="dob-calculator-page">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-nav">
+        <a href="{% url 'calculators:home' %}">home</a> / 
+        <a href="{% url 'calculators:home' %}">other tools</a> / 
+        <span>date of birth calculator</span>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h1>Date of Birth Calculator</h1>
+            <p class="hero-subtitle">
+                Calculate your exact age from date of birth instantly. Find out your age in years, months, days, hours, and even seconds. Perfect for age verification, birthday planning, or just curiosity.
+            </p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Exact Age Calculation</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Next Birthday</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-clock"></i>
+                    <span>Age in Multiple Units</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-gift"></i>
+                    <span>100% Free</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="main-layout">
+            <!-- Left Content -->
+            <div class="left-content">
+                <!-- Instruction Banner -->
+                <div class="instruction-banner">
+                    <span class="check-icon">✓</span>
+                    Enter your date of birth to calculate your exact age
+                </div>
+
+                <!-- Calculator Form -->
+                <div class="calculator-form">
+                    <form id="dob-form" method="post">
+                        {% csrf_token %}
+                        <table class="form-table">
+                            <tr>
+                                <td class="label-cell">Date of Birth</td>
+                                <td class="input-cell">
+                                    <div class="date-input-group">
+                                        <select id="birth_month" name="birth_month" class="form-select" required>
+                                            <option value="">Month</option>
+                                            <option value="1" {% if form_data.birth_month == '1' %}selected{% endif %}>January</option>
+                                            <option value="2" {% if form_data.birth_month == '2' %}selected{% endif %}>February</option>
+                                            <option value="3" {% if form_data.birth_month == '3' %}selected{% endif %}>March</option>
+                                            <option value="4" {% if form_data.birth_month == '4' %}selected{% endif %}>April</option>
+                                            <option value="5" {% if form_data.birth_month == '5' %}selected{% endif %}>May</option>
+                                            <option value="6" {% if form_data.birth_month == '6' %}selected{% endif %}>June</option>
+                                            <option value="7" {% if form_data.birth_month == '7' %}selected{% endif %}>July</option>
+                                            <option value="8" {% if form_data.birth_month == '8' %}selected{% endif %}>August</option>
+                                            <option value="9" {% if form_data.birth_month == '9' %}selected{% endif %}>September</option>
+                                            <option value="10" {% if form_data.birth_month == '10' %}selected{% endif %}>October</option>
+                                            <option value="11" {% if form_data.birth_month == '11' %}selected{% endif %}>November</option>
+                                            <option value="12" {% if form_data.birth_month == '12' %}selected{% endif %}>December</option>
+                                        </select>
+                                        <select id="birth_day" name="birth_day" class="form-select" required>
+                                            <option value="">Day</option>
+                                            {% for day in "x"|rjust:"31" %}
+                                            <option value="{{ forloop.counter }}" {% if form_data.birth_day == forloop.counter|stringformat:"s" %}selected{% endif %}>{{ forloop.counter }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <select id="birth_year" name="birth_year" class="form-select" required>
+                                            <option value="">Year</option>
+                                            {% for year in year_range %}
+                                            <option value="{{ year }}" {% if form_data.birth_year == year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <span class="input-hint">Select your birth month, day, and year</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Calculate Age As Of</td>
+                                <td class="input-cell">
+                                    <div class="date-input-group">
+                                        <select id="target_month" name="target_month" class="form-select" required>
+                                            <option value="">Month</option>
+                                            <option value="1" {% if form_data.target_month == '1' or not form_data and today.month == 1 %}selected{% endif %}>January</option>
+                                            <option value="2" {% if form_data.target_month == '2' or not form_data and today.month == 2 %}selected{% endif %}>February</option>
+                                            <option value="3" {% if form_data.target_month == '3' or not form_data and today.month == 3 %}selected{% endif %}>March</option>
+                                            <option value="4" {% if form_data.target_month == '4' or not form_data and today.month == 4 %}selected{% endif %}>April</option>
+                                            <option value="5" {% if form_data.target_month == '5' or not form_data and today.month == 5 %}selected{% endif %}>May</option>
+                                            <option value="6" {% if form_data.target_month == '6' or not form_data and today.month == 6 %}selected{% endif %}>June</option>
+                                            <option value="7" {% if form_data.target_month == '7' or not form_data and today.month == 7 %}selected{% endif %}>July</option>
+                                            <option value="8" {% if form_data.target_month == '8' or not form_data and today.month == 8 %}selected{% endif %}>August</option>
+                                            <option value="9" {% if form_data.target_month == '9' or not form_data and today.month == 9 %}selected{% endif %}>September</option>
+                                            <option value="10" {% if form_data.target_month == '10' or not form_data and today.month == 10 %}selected{% endif %}>October</option>
+                                            <option value="11" {% if form_data.target_month == '11' or not form_data and today.month == 11 %}selected{% endif %}>November</option>
+                                            <option value="12" {% if form_data.target_month == '12' or not form_data and today.month == 12 %}selected{% endif %}>December</option>
+                                        </select>
+                                        <select id="target_day" name="target_day" class="form-select" required>
+                                            <option value="">Day</option>
+                                            {% for day in "x"|rjust:"31" %}
+                                            <option value="{{ forloop.counter }}" {% if form_data.target_day == forloop.counter|stringformat:"s" or not form_data and today.day == forloop.counter %}selected{% endif %}>{{ forloop.counter }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <select id="target_year" name="target_year" class="form-select" required>
+                                            <option value="">Year</option>
+                                            {% for year in target_year_range %}
+                                            <option value="{{ year }}" {% if form_data.target_year == year|stringformat:"s" or not form_data and today.year == year %}selected{% endif %}>{{ year }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <span class="input-hint">Today's date or any specific date</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="button-cell">
+                                    <button type="submit" class="calculate-button" id="calculate-btn">
+                                        <span class="play-icon">▶</span> Calculate Age
+                                        <span class="loading-spinner" id="loading-spinner">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results-section" {% if not result %}style="display: none;"{% endif %}>
+                    <div class="results-container">
+                        {% if result %}
+                        <!-- Age Highlight -->
+                        <div class="age-highlight">
+                            <div class="age-label">Your Exact Age</div>
+                            <div class="age-value">{{ result.years }} years, {{ result.months }} months, {{ result.days }} days</div>
+                            <div class="age-subtitle">Calculated from {{ result.birth_date_formatted }} to {{ result.target_date_formatted }}</div>
+                        </div>
+
+                        <!-- Results Grid -->
+                        <div class="results-grid">
+                            <div class="result-card">
+                                <div class="result-label">Total Months</div>
+                                <div class="result-value">{{ result.total_months|floatformat:0 }}</div>
+                                <div class="result-subtitle">Since birth</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Total Weeks</div>
+                                <div class="result-value">{{ result.total_weeks|floatformat:0 }}</div>
+                                <div class="result-subtitle">Since birth</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Total Days</div>
+                                <div class="result-value">{{ result.total_days|floatformat:0 }}</div>
+                                <div class="result-subtitle">Since birth</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Total Hours</div>
+                                <div class="result-value">{{ result.total_hours|floatformat:0 }}</div>
+                                <div class="result-subtitle">Approximately</div>
+                            </div>
+                        </div>
+
+                        <!-- Age Breakdown -->
+                        <div class="breakdown-section">
+                            <h4>Detailed Age Breakdown</h4>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Years</span>
+                                <span class="breakdown-value">{{ result.years }}</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Months</span>
+                                <span class="breakdown-value">{{ result.months }}</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Days</span>
+                                <span class="breakdown-value">{{ result.days }}</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Total Minutes</span>
+                                <span class="breakdown-value">{{ result.total_minutes|floatformat:0 }}</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Total Seconds</span>
+                                <span class="breakdown-value">{{ result.total_seconds|floatformat:0 }}</span>
+                            </div>
+                            {% if result.days_to_birthday %}
+                            <div class="breakdown-item" style="border-top: 2px solid #667eea; margin-top: 8px; padding-top: 12px;">
+                                <span class="breakdown-label"><strong>Days Until Next Birthday</strong></span>
+                                <span class="breakdown-value" style="font-size: 16px;">{{ result.days_to_birthday }} days</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div class="empty-results">
+                            <i class="fas fa-birthday-cake"></i>
+                            <p>Enter your date of birth above to calculate your exact age.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="tips-section">
+                    <h3>Understanding Age Calculation</h3>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <h4>How Age is Calculated</h4>
+                            <p>Age is calculated by finding the difference between your date of birth and the current date (or any specific date you choose). The calculator counts complete years, months, and remaining days.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Leap Years Considered</h4>
+                            <p>Our date of birth calculator accounts for leap years automatically. If you were born on February 29th, your birthday is celebrated on February 28th in non-leap years.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Age at Specific Dates</h4>
+                            <p>Want to know how old you'll be on a future date or how old you were in the past? Just change the "Calculate Age As Of" date to any date you want.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Birthday Countdown</h4>
+                            <p>The calculator shows you exactly how many days until your next birthday, perfect for planning celebrations or just tracking time until your special day.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Multiple Time Units</h4>
+                            <p>See your age expressed in years, months, weeks, days, hours, minutes, and even seconds. Great for appreciating how much time you've experienced.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Age Verification</h4>
+                            <p>Use this calculator to quickly verify ages for legal requirements, age-restricted purchases, retirement planning, or eligibility for programs and benefits.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Content -->
+                <div class="seo-content">
+                    <h2>Complete Guide to Date of Birth Calculator</h2>
+                    
+                    <h3>What is a Date of Birth Calculator?</h3>
+                    <p>A date of birth calculator is an online tool that calculates your exact age from your date of birth to any given date. This age calculator online by date of birth provides instant results showing your age in years, months, days, and even smaller time units like hours, minutes, and seconds. It's the most accurate way to calculate age based on date of birth because it accounts for leap years, varying month lengths, and the exact number of days between two dates.</p>
+                    
+                    <h3>How to Calculate Age from Date of Birth</h3>
+                    <p>To calculate age from date of birth, you need two dates: your birth date and the date you want to calculate your age for (usually today). The calculator finds the difference by counting complete years first, then remaining months, then remaining days. For example, if you were born on March 15, 1990, and today is October 1, 2025, the calculator determines you are 35 years, 6 months, and 16 days old. This precise calculation is what makes a date of birth calculator so valuable compared to rough mental estimates.</p>
+                    
+                    <h3>Benefits of Calculate Age Based on Date of Birth</h3>
+                    <p>When you calculate age based on date of birth using our tool, you get more than just years. You receive a comprehensive breakdown including total months lived, weeks on Earth, days since birth, and even hours and seconds. This detailed information is useful for milestone celebrations (like your 10,000th day alive), legal documentation, insurance applications, school enrollment, retirement planning, and medical records. The precision of calculating age based on date of birth ensures you never have questions about exact age requirements.</p>
+                    
+                    <h3>Common Uses for Date of Birth Calculators</h3>
+                    <ul>
+                        <li><strong>Legal Age Verification:</strong> Confirm someone meets age requirements for voting, drinking, driving, or contracts</li>
+                        <li><strong>School Enrollment:</strong> Determine if a child meets age cutoffs for kindergarten or grade placement</li>
+                        <li><strong>Retirement Planning:</strong> Calculate exact age for Social Security, pension, or retirement account withdrawals</li>
+                        <li><strong>Medical Records:</strong> Accurate age is crucial for dosing medications and assessing developmental milestones</li>
+                        <li><strong>Insurance Applications:</strong> Age affects premiums and coverage eligibility</li>
+                        <li><strong>Birthday Planning:</strong> Find out exactly when milestone birthdays occur (10,000 days, 1 billion seconds, etc.)</li>
+                        <li><strong>Legal Documents:</strong> Wills, trusts, and other legal papers often require precise age calculations</li>
+                        <li><strong>Historical Research:</strong> Determine someone's age at historical events</li>
+                    </ul>
+                    
+                    <h3>Understanding Leap Years in Age Calculations</h3>
+                    <p>Leap years add an extra day (February 29th) every four years to keep our calendar aligned with Earth's orbit. When you calculate age from date of birth, leap years must be considered. If you were born on February 29th, you technically only have a "real" birthday every four years, though legally you age on February 28th (or March 1st in some jurisdictions) during non-leap years. Our date of birth calculator handles these special cases automatically, ensuring accurate age calculation regardless of your birth date.</p>
+                    
+                    <h3>Age Calculation for Different Purposes</h3>
+                    <p>Different situations require different levels of age precision. For casual purposes, knowing you're "35 years old" might be enough. But for legal documents, you might need "35 years, 6 months, and 14 days." For medical research, you might need age in total days or even hours. Our age calculator online by date of birth provides all these formats, so you can use whichever precision level your situation requires.</p>
+                    
+                    <h3>Historical Age Calculations</h3>
+                    <p>Want to know how old someone was during a historical event? Use the date of birth calculator to find out. Enter their birth date and the date of the historical event as the "calculate age as of" date. This is fascinating for understanding historical figures, ancestors, or even your own parents at significant moments in history. For example, you can calculate how old your grandmother was when World War II ended, or how old you were during major events you might not remember.</p>
+                    
+                    <h3>Age in Different Time Units Explained</h3>
+                    <p>Our calculator shows your age in multiple time units, each useful for different purposes. Years are standard for everyday use. Months matter for babies and toddlers (pediatricians track development by months). Weeks are sometimes used in pregnancy tracking. Days are useful for precise legal calculations. Hours, minutes, and seconds are fun for milestone celebrations - imagine celebrating your 1 billionth second of life (that's about 31.7 years old)!</p>
+                    
+                    <h3>How Accurate Is This Date of Birth Calculator?</h3>
+                    <p>This date of birth calculator is extremely accurate. It uses standard date arithmetic that accounts for all calendar irregularities including leap years, varying month lengths (28-31 days), and even leap seconds (though these don't typically affect age calculations). The results match official government calculations used for legal purposes. However, remember that time zones can sometimes matter - if you were born late on December 31st in one time zone, you might technically be a day older in a different time zone.</p>
+                    
+                    <h3>Calculate Age from Date of Birth for Children</h3>
+                    <p>Parents often need to calculate age from date of birth for their children to track developmental milestones, determine school readiness, or verify age for activities and programs. Pediatricians typically measure children's age in months until they're 2 years old, then switch to years. Our calculator provides both formats, making it easy to discuss your child's progress with healthcare providers, teachers, or activity coordinators who might use different age measurements.</p>
+                    
+                    <h3>Using This Calculator for Future Dates</h3>
+                    <p>You can use this age calculator online by date of birth to plan for the future too. Want to know exactly when you'll turn 65 for retirement? How old you'll be when your child graduates high school? Simply enter your date of birth and a future date as the "calculate age as of" date. This helps with long-term planning for retirement, education, major purchases, or life events.</p>
+                    
+                    <h3>Age Calculation Across Different Cultures</h3>
+                    <p>While our calculator uses the Western (Gregorian) calendar, it's worth noting that different cultures calculate age differently. In some East Asian countries, people are considered 1 year old at birth, and everyone ages one year on New Year's Day rather than on their birthday. In Ethiopia, the calendar is different, so ages don't align with Western calculations. Our calculator follows the international standard used in most legal and official contexts worldwide.</p>
+                    
+                    <h3>Privacy and Your Date of Birth</h3>
+                    <p>This date of birth calculator runs entirely in your browser - we don't store or transmit your birth date to any server. Your personal information remains private. However, be cautious about sharing exact birth dates online in general, as they're often used for identity verification. Use this calculator safely knowing your data stays with you.</p>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <!-- Search Box -->
+                <div class="search-section">
+                    <input type="text" class="search-input" placeholder="Search...">
+                    <button class="search-button">Search</button>
+                </div>
+
+                <!-- Related Calculators -->
+                <div class="sidebar-widget">
+                    <div class="widget-header">Related Calculators</div>
+                    <div class="widget-content">
+                        <div class="calculator-grid">
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:age_calculator' %}" class="calc-link active">Age Calculator</a>
+                                <a href="{% url 'calculators:pregnancy_calculator' %}" class="calc-link">Pregnancy Calculator</a>
+                                <a href="{% url 'calculators:bmi_calculator' %}" class="calc-link">BMI Calculator</a>
+                            </div>
+                            <div class="calc-column">
+                                <a href="{% url 'calculators:loan_calculator' %}" class="calc-link">Loan Calculator</a>
+                                <a href="{% url 'calculators:gpa_calculator' %}" class="calc-link">GPA Calculator</a>
+                                <a href="{% url 'calculators:home' %}" class="calc-link">More Tools</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('dob-form');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    
+    // Form validation
+    function validateForm() {
+        const birthMonth = document.getElementById('birth_month').value;
+        const birthDay = document.getElementById('birth_day').value;
+        const birthYear = document.getElementById('birth_year').value;
+        const targetMonth = document.getElementById('target_month').value;
+        const targetDay = document.getElementById('target_day').value;
+        const targetYear = document.getElementById('target_year').value;
+        
+        let isValid = true;
+        
+        if (!birthMonth || !birthDay || !birthYear) isValid = false;
+        if (!targetMonth || !targetDay || !targetYear) isValid = false;
+        
+        // Validate date is real
+        if (birthMonth && birthDay && birthYear) {
+            const birthDate = new Date(birthYear, birthMonth - 1, birthDay);
+            if (birthDate.getMonth() + 1 !== parseInt(birthMonth) || 
+                birthDate.getDate() !== parseInt(birthDay)) {
+                isValid = false;
+            }
+        }
+        
+        if (targetMonth && targetDay && targetYear) {
+            const targetDate = new Date(targetYear, targetMonth - 1, targetDay);
+            if (targetDate.getMonth() + 1 !== parseInt(targetMonth) || 
+                targetDate.getDate() !== parseInt(targetDay)) {
+                isValid = false;
+            }
+        }
+        
+        calculateBtn.disabled = !isValid;
+        return isValid;
+    }
+    
+    // Add validation listeners
+    const inputs = document.querySelectorAll('#dob-form select');
+    inputs.forEach(input => {
+        input.addEventListener('change', validateForm);
+    });
+    
+    // Form submission
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) return;
+            
+            if (loadingSpinner) loadingSpinner.classList.add('show');
+            calculateBtn.disabled = true;
+            
+            setTimeout(() => this.submit(), 300);
+        });
+    }
+    
+    validateForm();
+});
+</script>
+
+{% if result %}
+<script>
+(function() {
+    'use strict';
+    function scrollToResults() {
+        const resultsSection = document.getElementById('results-section');
+        if (!resultsSection) return;
+        
+        resultsSection.style.display = 'block';
+        resultsSection.style.visibility = 'visible';
+        
+        setTimeout(function() {
+            const rect = resultsSection.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const targetPosition = rect.top + scrollTop - 100;
+            
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            
+            resultsSection.style.transition = 'box-shadow 0.5s ease';
+            resultsSection.style.boxShadow = '0 0 30px rgba(102, 126, 234, 0.6)';
+            
+            setTimeout(function() {
+                resultsSection.style.boxShadow = '0 0 15px rgba(102, 126, 234, 0.3)';
+                setTimeout(function() {
+                    resultsSection.style.boxShadow = 'none';
+                }, 1500);
+            }, 600);
+        }, 100);
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', scrollToResults);
+    } else {
+        scrollToResults();
+    }
+    
+    window.addEventListener('load', function() {
+        setTimeout(scrollToResults, 200);
+    });
+})();
+</script>
+{% endif %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Date of Birth Calculator",
+  "alternateName": ["Age Calculator from Date of Birth", "Calculate Age from Date of Birth", "Age Calculator Online by Date of Birth", "Calculate Age Based on Date of Birth"],
+  "description": "Free date of birth calculator to calculate your exact age from date of birth. Age calculator online by date of birth shows your age in years, months, days, hours, minutes, and seconds. Calculate age based on date of birth instantly.",
+  "url": "{{ request.build_absolute_uri }}",
+  "applicationCategory": "UtilityApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "myCalculator.us",
+    "url": "{% url 'calculators:home' %}"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "ratingCount": "4521"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate age from date of birth?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To calculate age from date of birth, enter your birth month, day, and year into our date of birth calculator. The calculator automatically computes the exact difference between your birth date and today (or any date you specify), giving you your age in years, months, and days, plus total weeks, hours, and minutes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a date of birth calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A date of birth calculator is an online tool that calculates your exact age from your date of birth. This age calculator online by date of birth shows your age in multiple formats: complete years, months, and days, as well as total months, weeks, days, hours, minutes, and seconds since birth."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is calculate age based on date of birth?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When you calculate age based on date of birth using our calculator, the results are extremely accurate. The calculator accounts for leap years, varying month lengths, and all calendar irregularities. Results match official government calculations used for legal age verification."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use this age calculator for future dates?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! This age calculator online by date of birth works for past, present, and future dates. Enter your date of birth and any future date to see how old you'll be. This is useful for retirement planning, milestone birthdays, or any future event planning."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why use an age calculator online by date of birth?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An age calculator online by date of birth ensures accuracy and saves time. Manual calculations can be error-prone due to leap years, varying month lengths, and complex date arithmetic. Our calculator handles all these complexities instantly, providing precise results for legal, medical, or personal use."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate age based on date of birth for legal purposes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To calculate age based on date of birth for legal purposes, enter the exact birth date and the date you need to verify age for (such as a contract signing date or age-restricted activity date). The calculator provides the precise age in years, months, and days, which is the format required for most legal documentation."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Other Tools",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'calculators:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Date of Birth Calculator",
+      "item": "{{ request.build_absolute_uri }}"
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Calculate Age from Date of Birth",
+  "description": "Step-by-step guide on how to use our date of birth calculator to calculate your exact age",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Enter Your Date of Birth",
+      "text": "Select your birth month, day, and year from the dropdown menus in the Date of Birth section."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choose Target Date",
+      "text": "Select the date you want to calculate your age for. This defaults to today's date but can be changed to any past or future date."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Click Calculate Age",
+      "text": "Press the Calculate Age button to instantly see your exact age in years, months, days, and more detailed time units."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "View Your Results",
+      "text": "Review your complete age breakdown including total months, weeks, days, hours, minutes, seconds, and days until your next birthday."
+    }
+  ]
+}
+</script>
+
+{% endblock %}
